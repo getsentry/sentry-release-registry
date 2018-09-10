@@ -1,0 +1,63 @@
+#!/usr/bin/env python
+from __future__ import print_function
+import os
+import sys
+import json
+
+sys.path.append(os.path.abspath(os.path.dirname(__file__)))
+
+from semver import VersionInfo
+
+
+def error(msg, *args):
+    print(msg % args, file=sys.stderr)
+    sys.exit(1)
+
+
+def sync_links(path):
+    if not path.endswith('.json'):
+        error('Path %s does not end in .json', path)
+    folder, base = os.path.split(path)
+    version_info = VersionInfo.parse(base.rsplit('.', 1)[0])
+
+    with open(path) as f:
+        if version_info != VersionInfo.parse(json.load(f)['version']):
+            error('Filename does not match version (%s)' % path)
+
+    target_files = [
+        '%s.json' % version_info.major,
+        '%s.%s.json' % (version_info.major, version_info.minor),
+        '%s.%s.%s.json' % (version_info.major, version_info.minor, version_info.patch),
+        'latest.json',
+    ]
+
+    for target_file in target_files:
+        full_file = os.path.join(folder, target_file)
+        if not os.path.isfile(full_file):
+            create = True
+        else:
+            with open(full_file) as f:
+                current_version = VersionInfo.parse(json.load(f)['version'])
+                create = version_info > current_version
+
+        if not create:
+            continue
+        if target_file == base:
+            continue
+
+        try:
+            os.remove(full_file)
+        except OSError:
+            pass
+
+        print('%s -> %s' % (target_file, base))
+        os.symlink(base, full_file)
+
+
+def main():
+    for path in sys.argv[1:]:
+        sync_links(path)
+
+
+if __name__ == '__main__':
+    main()
