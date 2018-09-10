@@ -192,6 +192,17 @@ class Registry(object):
                 rv[pkg.canonical] = pkg
         return rv
 
+    def iter_sdks(self):
+        return (x for x in os.listdir(self._path('sdks')) if x[:1] != '.')
+
+    def get_sdks(self):
+        rv = {}
+        for sdk_name in self.iter_sdks():
+            sdk_info = self.get_sdk_info(sdk_name)
+            if sdk_info is not None:
+                rv[sdk_info.key] = sdk_info
+        return rv
+
 
 @app.route('/sdks/<sdk>/<version>')
 def get_sdk(sdk, version):
@@ -222,6 +233,11 @@ def get_package_versions(package):
         'latest': latest_pkg_info,
         'versions': registry.get_package_versions(package),
     })
+
+
+@app.route('/sdks')
+def get_sdk_summary():
+    return ApiResponse(registry.get_sdks())
 
 
 @app.route('/packages')
