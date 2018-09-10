@@ -18,7 +18,7 @@ if [ "$1" == 'run' ]; then
 elif [ "$1" == 'update-repo' ]; then
   set -- flask update-repo
 else
-  echo 'Invalid subcommand'
+  echo 'Commands: run | update-repo'
   exit 1
 fi
 
