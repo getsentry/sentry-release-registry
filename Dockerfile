@@ -27,6 +27,6 @@ RUN chown -R registry:registry ./
 
 COPY ./docker-entrypoint.sh /docker-entrypoint.sh
 
-EXPOSE 3050
+EXPOSE 5030
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
