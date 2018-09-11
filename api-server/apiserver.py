@@ -55,7 +55,7 @@ class Git(object):
         p.wait()
 
     def init(self):
-        if not os.path.exists(self.path):
+        if not os.path.exists(self.path) or not os.listdir(self.path):
             self._git(['clone', self.remote, self.path], cwd=None)
 
     def pull(self):
