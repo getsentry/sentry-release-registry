@@ -156,11 +156,11 @@ class Registry(object):
                 continue
         return rv
 
-    def get_sdk(self, sdk_id):
+    def get_sdk(self, sdk_id, version='latest'):
         try:
             with open(self._path('sdks', sdk_id, 'latest.json')) as f:
                 canonical = json.load(f)['canonical']
-                return self.get_package(canonical)
+                return self.get_package(canonical, version)
         except (IOError, OSError):
             pass
 
@@ -231,6 +231,25 @@ def resolve_marketing_slugs(slug):
 @app.route('/sdks')
 def get_sdk_summary():
     return ApiResponse(registry.get_sdks())
+
+
+@app.route('/sdks/<sdk_id>/<version>')
+def get_sdk_version(sdk_id, version):
+    pkg_info = registry.get_sdk(sdk_id, version)
+    if pkg_info is None:
+        abort(404)
+    return ApiResponse(pkg_info)
+
+
+@app.route('/sdks/<sdk_id>/versions')
+def get_sdk_versions(sdk_id):
+    latest_pkg_info = registry.get_sdk(sdk_id)
+    if latest_pkg_info is None:
+        abort(404)
+    return ApiResponse({
+        'latest': latest_pkg_info,
+        'versions': registry.get_package_versions(latest_pkg_info.canonical),
+    })
 
 
 @app.route('/packages')
