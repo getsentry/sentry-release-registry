@@ -1,0 +1,24 @@
+{
+  "python": {
+    "type": "sdk",
+    "target": "sentry.python"
+  },
+  "javascript": {
+    "type": "virtual_sdk",
+    "target": "sentry.javascript"
+  },
+  "browser": {
+    "type": "sdk",
+    "target": "sentry.javascript.browser"
+  },
+  "flask": {
+    "type": "integration",
+    "sdk": "sentry.python",
+    "integration": "flask"
+  },
+  "django": {
+    "type": "integration",
+    "sdk": "sentry.python",
+    "integration": "django"
+  }
+}
