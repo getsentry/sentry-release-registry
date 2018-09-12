@@ -1,7 +1,9 @@
 FROM python:3.7.0-slim
 
 RUN apt-get update \
-  && apt-get install -y build-essential git gosu
+  && apt-get install -y build-essential git gosu \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
 ENV \
   FLASK_APP=./apiserver.py\
@@ -27,6 +29,6 @@ RUN chown -R registry:registry ./
 
 COPY ./docker-entrypoint.sh /docker-entrypoint.sh
 
-EXPOSE 3050
+EXPOSE 5030
 
 ENTRYPOINT ["/docker-entrypoint.sh"]

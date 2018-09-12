@@ -33,6 +33,8 @@ class InvalidPathComponent(ValueError):
 
 
 def validate_path_component(path):
+    if not path:
+        raise InvalidPathComponent('Invalid path')
     for item in path.split('/'):
         if item == '.' or item == '..' or not item:
             raise InvalidPathComponent('Invalid path %s' % path)
@@ -55,7 +57,7 @@ class Git(object):
         p.wait()
 
     def init(self):
-        if not os.path.exists(self.path):
+        if not os.path.exists(self.path) or not os.listdir(self.path):
             self._git(['clone', self.remote, self.path], cwd=None)
 
     def pull(self):
@@ -67,40 +69,6 @@ class Git(object):
         self._git(args, cwd=self.path)
 
 
-class SdkInfo(object):
-
-    def __init__(self, registry, data):
-        self._registry = registry
-        self._data = data
-
-    @property
-    def key(self):
-        return self._data['key']
-
-    @property
-    def name(self):
-        return self._data['name']
-
-    def get_main_package(self):
-        return self._registry.get_package(self._data['main_package'])
-
-    def iter_packages(self):
-        for pkg, version in self._data['packages'].items():
-            yield self._registry.get_package(pkg, version=version)
-
-    def to_json(self):
-        rv = dict(self._data)
-        pkg = self.get_main_package()
-        rv['packages'] = packages = {}
-        main_package = None
-        for pkg in self.iter_packages():
-            packages[pkg.canonical] = pkg
-            if pkg.canonical == rv['main_package']:
-                main_package = pkg
-        rv['main_package'] = main_package if main_package else None
-        return rv
-
-
 class PackageInfo(object):
 
     def __init__(self, registry, data):
@@ -110,6 +78,10 @@ class PackageInfo(object):
     @property
     def canonical(self):
         return self._data['canonical']
+
+    @property
+    def sdk_id(self):
+        return self._data.get('sdk_id')
 
     @property
     def version(self):
@@ -129,27 +101,6 @@ class Registry(object):
         for arg in args:
             validate_path_component(arg)
         return os.path.join(self.path, *args)
-
-    def resolve_marketing_slug(self, slug):
-        """Given a marketing slug returns the resolved path for it."""
-        try:
-            rv = os.path.realpath(self._path('marketing-slugs', slug))
-            print(rv)
-        except OSerror:
-            return
-
-        sdk_base = os.path.realpath(self._path('sdks')) + os.path.sep
-        if rv.startswith(sdk_base):
-            return rv[len(sdk_base):]
-
-    def get_sdk_info(self, key, version='latest'):
-        """Returns the SDK info for the given version."""
-        try:
-            rv = os.path.realpath(self._path('sdks', key, '%s.json' % version))
-            with open(rv) as f:
-                return SdkInfo(self, json.load(f))
-        except (IOError, OSError):
-            return
 
     def get_package(self, canonical, version='latest'):
         """Looks up a package by canonical version"""
@@ -192,28 +143,57 @@ class Registry(object):
                 rv[pkg.canonical] = pkg
         return rv
 
-    def iter_sdks(self):
-        return (x for x in os.listdir(self._path('sdks')) if x[:1] != '.')
-
     def get_sdks(self):
         rv = {}
-        for sdk_name in self.iter_sdks():
-            sdk_info = self.get_sdk_info(sdk_name)
-            if sdk_info is not None:
-                rv[sdk_info.key] = sdk_info
+        for link in os.listdir(self._path('sdks')):
+            try:
+                with open(self._path('sdks', link, 'latest.json')) as f:
+                    canonical = json.load(f)['canonical']
+                    pkg = self.get_package(canonical)
+                    if pkg is not None:
+                        rv[link] = pkg
+            except (IOError, OSError):
+                continue
         return rv
 
+    def get_sdk(self, sdk_id, version='latest'):
+        try:
+            with open(self._path('sdks', sdk_id, 'latest.json')) as f:
+                canonical = json.load(f)['canonical']
+                return self.get_package(canonical, version)
+        except (IOError, OSError):
+            pass
 
-@app.route('/sdks/<sdk>/<version>')
-def get_sdk(sdk, version):
-    resolved_sdk = registry.resolve_marketing_slug(sdk)
-    if resolved_sdk is not None:
-        return redirect(url_for('get_sdk', sdk=resolved_sdk, version=version))
+    def get_marketing_slugs(self):
+        with open(self._path('misc', 'marketing-slugs.json')) as f:
+            return json.load(f)
 
-    sdk_info = registry.get_sdk_info(sdk, version=version)
-    if sdk_info is None:
-        abort(404)
-    return ApiResponse(sdk_info)
+    def resolve_marketing_slug(self, slug):
+        slugs = self.get_marketing_slugs()
+        data = slugs.get(slug)
+        if data is None:
+            return
+        target = None
+        if data['type'] == 'sdk':
+            target = self.get_sdk(data['target'])
+        elif data['type'] == 'package':
+            target = self.get_package(data['target'])
+        elif data['type'] == 'integration':
+            if data.get('sdk'):
+                package = self.get_sdk(data['sdk'])
+            elif data.get('package'):
+                package = self.get_package(data['package'])
+            else:
+                package = None
+            if package is not None:
+                target = {
+                    'package': package,
+                    'integration': data['integration'],
+                }
+        return {
+            'definition': data,
+            'target': target,
+        }
 
 
 @app.route('/packages/<path:package>/<version>')
@@ -235,9 +215,41 @@ def get_package_versions(package):
     })
 
 
+@app.route('/marketing-slugs')
+def get_marketing_slugs():
+    return ApiResponse(dict(slugs=sorted(registry.get_marketing_slugs().keys())))
+
+
+@app.route('/marketing-slugs/<slug>')
+def resolve_marketing_slugs(slug):
+    rv = registry.resolve_marketing_slug(slug)
+    if rv is None:
+        abort(404)
+    return ApiResponse(rv)
+
+
 @app.route('/sdks')
 def get_sdk_summary():
     return ApiResponse(registry.get_sdks())
+
+
+@app.route('/sdks/<sdk_id>/<version>')
+def get_sdk_version(sdk_id, version):
+    pkg_info = registry.get_sdk(sdk_id, version)
+    if pkg_info is None:
+        abort(404)
+    return ApiResponse(pkg_info)
+
+
+@app.route('/sdks/<sdk_id>/versions')
+def get_sdk_versions(sdk_id):
+    latest_pkg_info = registry.get_sdk(sdk_id)
+    if latest_pkg_info is None:
+        abort(404)
+    return ApiResponse({
+        'latest': latest_pkg_info,
+        'versions': registry.get_package_versions(latest_pkg_info.canonical),
+    })
 
 
 @app.route('/packages')

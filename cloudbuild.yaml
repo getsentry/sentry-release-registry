@@ -1,0 +1,12 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'build',
+    '-t', 'us.gcr.io/$PROJECT_ID/$REPO_NAME:latest',
+    '-t', 'us.gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA',
+    '.'
+]
+images: [
+  'us.gcr.io/$PROJECT_ID/$REPO_NAME:latest',
+  'us.gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA'
+]
