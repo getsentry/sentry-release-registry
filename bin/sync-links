@@ -56,7 +56,11 @@ def sync_links(path):
 
 def main():
     for path in sys.argv[1:]:
-        sync_links(path)
+        try:
+            sync_links(path)
+        except Exception:
+            print("Error while handling %s" % path)
+            raise
 
 
 if __name__ == '__main__':
