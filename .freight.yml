@@ -1,0 +1,4 @@
+deploy:
+  services:
+    - name: release_registry
+      healthcheck: sleep 3 && curl -fsi curl 127.0.0.1:5030/packages
