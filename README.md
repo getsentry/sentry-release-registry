@@ -13,4 +13,47 @@ the new SDK docs as well as sentry's loader itself.
 * `marketing-slugs`: short names for sdks the docs would use
 
 Some of the information here is maintained as symlinks so this repo only works on
-unix platforms.  Use the `bin/sync-links` script to help you update the links.
+unix platforms.
+
+## Adding a new SDK
+
+### Make a new package
+
+1. Create `packages/<registry>/<package_name>/<exact_version>.json` for every version you want to register.
+
+  * `<registry>`: The package index used. Just create a new directory if you are missing one. Stick to alphanumeric characters and you should be fine.
+  * `<package_name>`: Can be multiple folders, e.g. `@sentry/node`.
+  * `<exact_version>`: `0.3.0`, not `0.3` or `0`. Preview versions such as `0.3.0-preview2` or `0.3.0-rc2` also work.
+
+2. Add the following content to it:
+
+   ```json
+   {
+     "name": "Name of your platform",
+     "canonical": "<registry>:<package_name>",
+     "version": "<exact_version>",
+     "package_url": "Link to PyPI, RubyGems, npmjs.com",
+     "repo_url": "Link to GitHub repo",
+     "main_docs_url": "Link to platform page"
+   }
+   ```
+
+3. `cd sdks/ && ln -s ./packages/<registry>/<package_name> ./<sdk_name>`
+
+   * `<sdk_name>`: The same identifier used in the `sdk_info.name` field of the event.
+
+     E.g. the Python SDK sends events like this:
+
+     ```json
+     {
+       "message": "Hello world!",
+       ...,
+       "sdk_info": {"name": "sentry.python", ...}
+     }
+     ```
+
+4. Run `make sync-all-links` to fix up symlinks.
+
+### Make a new package release
+
+Basically add a new JSON file like above, and run `make sync-all-links` again. You might want to use [Craft](https://github.com/getsentry/craft) which can do this for you as part of your release process.
