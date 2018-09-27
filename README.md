@@ -1,31 +1,33 @@
-# sentry-release-registry
+# Sentry Release Registry
 
-This is a meta repository holding all release information.  This replaces the mess
-we had before where release infos where in different locations.  This is used by
-the new SDK docs as well as sentry's loader itself.
+This is a meta repository holding all release information. This replaces the
+mess we had before where release infos where in different locations. This is
+used by the new SDK docs as well as sentry's loader itself.
 
 ## Layout
 
-* `api-server`: A small web service that services up the contents of this repo
-* `bin`: some utility scripts to maintain the files here
-* `packages`: a registry of all packages we publish that we want to collect releases of
-* `sdks`: canonical representations of packages that together form an sdk
-* `marketing-slugs`: short names for sdks the docs would use
+- `api-server`: A small web service that services up the contents of this repo
+- `bin`: some utility scripts to maintain the files here
+- `packages`: a registry of all packages we publish that we want to collect
+  releases of
+- `sdks`: canonical representations of packages that together form an sdk
+- `marketing-slugs`: short names for sdks the docs would use
 
-Some of the information here is maintained as symlinks so this repo only works on
-unix platforms.
+Some of the information here is maintained as symlinks so this repo only works
+on unix platforms.
 
-## Adding a new SDK
+## Adding New SDKs
 
-### Make a new package
+1. Create `packages/<registry>/<package_name>/<exact_version>.json` for each
+   version you want to register.
 
-1. Create `packages/<registry>/<package_name>/<exact_version>.json` for every version you want to register.
+   - `<registry>`: The package index used. Just create a new directory if you
+     are missing one. Stick to alphanumeric characters and you should be fine.
+   - `<package_name>`: Can be multiple folders, e.g. `@sentry/node`.
+   - `<exact_version>`: `0.3.0`, not `0.3` or `0`. Preview versions such as
+     `0.3.0-preview2` or `0.3.0-rc2` also work.
 
-  * `<registry>`: The package index used. Just create a new directory if you are missing one. Stick to alphanumeric characters and you should be fine.
-  * `<package_name>`: Can be multiple folders, e.g. `@sentry/node`.
-  * `<exact_version>`: `0.3.0`, not `0.3` or `0`. Preview versions such as `0.3.0-preview2` or `0.3.0-rc2` also work.
-
-2. Add the following content to it:
+2. Add the following contents:
 
    ```json
    {
@@ -40,7 +42,8 @@ unix platforms.
 
 3. `cd sdks/ && ln -s ./packages/<registry>/<package_name> ./<sdk_name>`
 
-   * `<sdk_name>`: The same identifier used in the `sdk_info.name` field of the event.
+   - `<sdk_name>`: The same identifier used in the `sdk_info.name` field of the
+     event.
 
      E.g. the Python SDK sends events like this:
 
@@ -54,6 +57,34 @@ unix platforms.
 
 4. Run `make sync-all-links` to fix up symlinks.
 
-### Make a new package release
+## Adding New Apps
 
-Basically add a new JSON file like above, and run `make sync-all-links` again. You might want to use [Craft](https://github.com/getsentry/craft) which can do this for you as part of your release process.
+1. Create `apps/<app_name>/<exact_version>.json` for each version you want to
+   register.
+
+   - `<package_name>`: Can be multiple folders, e.g. `@sentry/node`.
+   - `<exact_version>`: `0.3.0`, not `0.3` or `0`. Preview versions such as
+     `0.3.0-preview2` or `0.3.0-rc2` also work.
+
+2. Add the following contents:
+
+   ```json
+   {
+     "name": "Human readable application name",
+     "canonical": "app:<app_name>",
+     "version": "<exact_version>",
+     "repo_url": "Link to GitHub repo",
+     "main_docs_url": "Link to docs page",
+     "file_urls": {
+       "<filename_with_ext>": "https://downloads.sentry-cdn.com/<app_name>/<exact_version>/<filename_with_ext>"
+     }
+   }
+   ```
+
+3. Run `make sync-all-links` to fix up symlinks.
+
+## Releasing
+
+Basically add a new JSON file like above, and run `make sync-all-links` again.
+You might want to use [Craft](https://github.com/getsentry/craft) which can do
+this for you as part of your release process.
