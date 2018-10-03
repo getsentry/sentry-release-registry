@@ -9,7 +9,8 @@ setup(
     py_modules=['apiserver'],
     zip_safe=False,
     install_requires=[
-        'flask',
-        'semver',
+        'flask==1.0.2',
+        'semver==2.8.1',
+        'sentry-sdk[flask]==0.3.8',
     ]
 )
