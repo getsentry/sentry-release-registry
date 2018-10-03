@@ -1,8 +1,14 @@
 import os
-from flask import Flask, json, abort, jsonify, redirect, url_for
-import flask
-from semver import VersionInfo
 import subprocess
+
+import sentry_sdk
+from flask import Flask, json, abort, jsonify
+from semver import VersionInfo
+from sentry_sdk.integrations.flask import FlaskIntegration
+
+
+# SENTRY_DSN will be taken from env
+sentry_sdk.init(integrations=[FlaskIntegration()])
 
 
 class RegistryJsonEncoder(json.JSONEncoder):
