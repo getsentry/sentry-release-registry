@@ -170,6 +170,24 @@ class Registry(object):
         except (IOError, OSError):
             pass
 
+    def get_apps(self):
+        rv = {}
+        for link in os.listdir(self._path('apps')):
+            try:
+                app = self.get_app(link)
+                if app is not None:
+                    rv[link] = app
+            except (IOError, OSError):
+                continue
+        return rv
+
+    def get_app(self, app_id, version='latest'):
+        try:
+            with open(self._path('apps', app_id, '%s.json' % version)) as f:
+                return json.load(f)
+        except (IOError, OSError):
+            pass
+
     def get_marketing_slugs(self):
         with open(self._path('misc', 'marketing-slugs.json')) as f:
             return json.load(f)
@@ -261,6 +279,19 @@ def get_sdk_versions(sdk_id):
 @app.route('/packages')
 def get_package_summary():
     return ApiResponse(registry.get_packages())
+
+
+@app.route('/apps')
+def get_app_summary():
+    return ApiResponse(registry.get_apps())
+
+
+@app.route('/apps/<app_id>/<version>')
+def get_app_version(app_id, version):
+    app_info = registry.get_app(app_id, version)
+    if app_info is None:
+        abort(404)
+    return ApiResponse(app_info)
 
 
 @app.cli.command('update-repo')
