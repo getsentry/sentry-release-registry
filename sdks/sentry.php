@@ -1,1 +1,1 @@
-../packages/composer/sentry/sentry
+../packages/composer/@sentry/sentry
