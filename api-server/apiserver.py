@@ -135,7 +135,8 @@ class Registry(object):
     def iter_packages(self):
         for package_registry in os.listdir(self._path('packages')):
             for item in os.listdir(self._path('packages', package_registry)):
-                if item.startswith('@'):
+                if os.path.exists(os.path.join(
+                    self._path('packages', package_registry, item, '__NAMESPACE__'))):
                     for subitem in os.listdir(self._path('packages', package_registry, item)):
                         yield '%s:%s/%s' % (package_registry, item, subitem)
                 else:
