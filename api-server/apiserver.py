@@ -1,5 +1,4 @@
 import os
-import subprocess
 
 import sentry_sdk
 from flask import Flask, json, abort, jsonify

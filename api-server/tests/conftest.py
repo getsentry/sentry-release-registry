@@ -1,6 +1,3 @@
-import os
-import tempfile
-
 import pytest
 
 from apiserver import app
