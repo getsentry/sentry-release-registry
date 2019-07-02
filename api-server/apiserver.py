@@ -29,8 +29,6 @@ class RegistryFlask(Flask):
 
 
 app = RegistryFlask(__name__)
-app.config['REGISTRY_CHECKOUT_PATH'] = '.registry'
-app.config['REGISTRY_GIT_URL'] = 'https://github.com/getsentry/sentry-release-registry'
 app.config.from_envvar('APISERVER_CONFIG', silent=True)
 
 
@@ -50,29 +48,6 @@ class ApiResponse(object):
 
     def __init__(self, data):
         self.data = data
-
-
-class Git(object):
-
-    def __init__(self, path, remote):
-        self.path = path
-        self.remote = remote
-
-    def _git(self, args, cwd=None):
-        p = subprocess.Popen(['git'] + list(args), cwd=cwd)
-        p.wait()
-
-    def init(self):
-        if not os.path.exists(self.path) or not os.listdir(self.path):
-            self._git(['clone', self.remote, self.path], cwd=None)
-
-    def pull(self):
-        self('pull')
-
-    def __call__(self, *args):
-        if not os.path.exists(self.path):
-            raise RuntimeError('Repo not initialized')
-        self._git(args, cwd=self.path)
 
 
 class PackageInfo(object):
@@ -100,8 +75,7 @@ class PackageInfo(object):
 class Registry(object):
 
     def __init__(self):
-        self.path = os.path.abspath(app.config['REGISTRY_CHECKOUT_PATH'])
-        self.git = Git(self.path, app.config['REGISTRY_GIT_URL'])
+        self.path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     def _path(self, *args):
         for arg in args:
@@ -293,13 +267,6 @@ def get_app_version(app_id, version):
     if app_info is None:
         abort(404)
     return ApiResponse(app_info)
-
-
-@app.cli.command('update-repo')
-def update_repo():
-    """Updates the registry checkout."""
-    registry.git.init()
-    registry.git.pull()
 
 
 registry = Registry()
