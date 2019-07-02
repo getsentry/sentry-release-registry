@@ -21,9 +21,7 @@ WORKDIR /usr/src/app
 
 COPY ./api-server/*.py ./
 
-RUN pip install uwsgi==2.0.17.1 && pip install .
-
-RUN flask update-repo
+RUN pip install .
 
 RUN chown -R registry:registry ./
 
