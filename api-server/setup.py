@@ -12,5 +12,6 @@ setup(
         'flask==1.0.2',
         'semver==2.8.1',
         'sentry-sdk[flask]==0.3.8',
+        'uwsgi==2.0.17.1',
     ]
 )

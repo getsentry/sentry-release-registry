@@ -13,17 +13,8 @@ elif [ "$1" == 'run' ]; then
     echo "Running with default arguments: ${DEFAULT_ARGS}"
     set -- ${BASE_CMD} ${DEFAULT_ARGS}
   fi
-
-  # Init the registry if the data directory does not exist or empty
-  REGISTRY_DIR=".registry"
-  if [ ! -d "${REGISTRY_DIR}" ] || [ -z "$(ls -A ${REGISTRY_DIR})" ]; then
-    echo 'Fetching the data for the first time...'
-    gosu registry flask update-repo
-  fi
-elif [ "$1" == 'update-repo' ]; then
-  set -- flask update-repo
 else
-  echo 'Commands: run | update-repo'
+  echo 'Commands: run'
   exit 1
 fi
 
