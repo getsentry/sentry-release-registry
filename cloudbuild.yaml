@@ -1,12 +1,19 @@
 steps:
-- name: 'gcr.io/cloud-builders/docker'
-  args: [
-    'build',
-    '-t', 'us.gcr.io/$PROJECT_ID/$REPO_NAME:latest',
-    '-t', 'us.gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA',
-    '.'
-]
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build',
+      '-t', 'us.gcr.io/$PROJECT_ID/sentry-release-registry:latest',
+      '-t', 'us.gcr.io/$PROJECT_ID/sentry-release-registry:$COMMIT_SHA',
+      '.'
+  ]
+
+  # Only tag "latest" when on master
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args:
+    - '-c'
+    - '[[ "$BRANCH_NAME" == "master" ]] && docker push us.gcr.io/$PROJECT_ID/sentry-release-registry:latest || true'
+
 images: [
-  'us.gcr.io/$PROJECT_ID/$REPO_NAME:latest',
-  'us.gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA'
+  'us.gcr.io/$PROJECT_ID/sentry-release-registry:$COMMIT_SHA'
 ]

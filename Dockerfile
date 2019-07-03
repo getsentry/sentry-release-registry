@@ -6,7 +6,7 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 ENV \
-  FLASK_APP=./apiserver.py\
+  FLASK_APP=./apiserver.py \
   FLASK_ENV=production
 
 ENV \
@@ -19,13 +19,16 @@ RUN groupadd --system registry --gid $REGISTRY_GID \
 
 WORKDIR /usr/src/app
 
-COPY ./api-server/*.py ./
+COPY ./api-server/*.py ./api-server/requirements-*.txt ./
 
 RUN pip install .
 
 RUN chown -R registry:registry ./
 
 COPY ./docker-entrypoint.sh /docker-entrypoint.sh
+
+# Smoke test
+RUN flask --version && flask routes
 
 EXPOSE 5030
 
