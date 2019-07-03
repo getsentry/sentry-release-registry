@@ -1,7 +1,7 @@
 FROM python:3.7.0-slim
 
 RUN apt-get update \
-  && apt-get install -y build-essential git gosu \
+  && apt-get install -y --no-install-recommends build-essential gosu \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
