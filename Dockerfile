@@ -5,6 +5,8 @@ RUN apt-get update \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
+RUN pip install pip==19.1.1
+
 ENV \
   FLASK_APP=./apiserver.py \
   FLASK_ENV=production
@@ -17,11 +19,14 @@ ENV \
 RUN groupadd --system registry --gid $REGISTRY_GID \
   && useradd --system --gid registry --uid $REGISTRY_UID registry
 
-WORKDIR /usr/src/app
+WORKDIR /work
 
-COPY ./api-server/*.py ./api-server/requirements-*.txt ./
+# Copy and install the server first
+COPY api-server api-server
 
-RUN pip install .
+RUN cd api-server && pip install -e .
+
+COPY . .
 
 RUN chown -R registry:registry ./
 
