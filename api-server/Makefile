@@ -9,3 +9,6 @@ test:
 
 lint:
 	flake8
+
+clean:
+	find . -name \*.pyc -delete

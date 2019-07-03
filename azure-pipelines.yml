@@ -9,19 +9,15 @@ jobs:
     pool:
       vmImage: "Ubuntu-16.04"
 
-    container: "python:3.7"
-
     strategy:
       matrix:
         Tests:
-          target: test
+          TARGET: test
         Linting:
-          target: lint
+          TARGET: lint
 
     steps:
       - script: |
           set -eux
 
-          cd api-server
-          sudo make develop
-          make ${target}
+          ./api-server/bin/test-utils/docker-run-tests
