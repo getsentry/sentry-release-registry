@@ -304,4 +304,9 @@ def get_app_version(app_id, version):
     return ApiResponse(app_info)
 
 
+@app.route('/healthz')
+def healthcheck():
+    return 'ok', 200
+
+
 registry = Registry()

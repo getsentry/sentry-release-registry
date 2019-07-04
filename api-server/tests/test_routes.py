@@ -44,3 +44,10 @@ def test_route_marketing_slugs(client):
     assert response.status_code == 200
     data = response.get_json()
     assert 'browser' in data['slugs']
+
+
+def test_healthcheck(client):
+    response = client.get('/healthz')
+
+    assert response.status_code == 200
+    assert response.data == b'ok'
