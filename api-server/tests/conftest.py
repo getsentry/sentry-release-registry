@@ -1,10 +1,14 @@
-import pytest
+import os
 
-from apiserver import app
+import pytest
 
 
 @pytest.fixture
 def client():
+    os.environ['FLASK_ENV'] = 'testing'
+
+    from apiserver import app
+
     app.config['TESTING'] = True
     client = app.test_client()
     yield client

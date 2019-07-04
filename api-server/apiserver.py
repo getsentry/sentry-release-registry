@@ -10,6 +10,9 @@ from werkzeug.contrib.cache import SimpleCache
 # SENTRY_DSN will be taken from env
 sentry_sdk.init(integrations=[FlaskIntegration()])
 
+CACHE_TIMEOUT = 3600
+cache = SimpleCache(threshold=200, default_timeout=CACHE_TIMEOUT)
+
 
 class RegistryJsonEncoder(json.JSONEncoder):
 
@@ -30,7 +33,6 @@ class RegistryFlask(Flask):
 
 app = RegistryFlask(__name__)
 app.config.from_envvar('APISERVER_CONFIG', silent=True)
-cache = SimpleCache()
 
 
 class InvalidPathComponent(ValueError):
@@ -206,7 +208,6 @@ def is_caching_enabled():
 
 
 def return_cached():
-    # if GET and POST not empty
     if not request.values:
         response = cache.get(request.path)
         if response:
@@ -215,12 +216,12 @@ def return_cached():
 
 def cache_response(response):
     if not request.values:
-        cache.set(request.path, response, CACHE_TIMEOUT)
+        cache.set(request.path, response)
     return response
 
 
-CACHE_TIMEOUT = 3600
 CACHE_ENABLED = is_caching_enabled()
+
 
 if CACHE_ENABLED:
     app.before_request(return_cached)
@@ -306,7 +307,7 @@ def get_app_version(app_id, version):
 
 @app.route('/healthz')
 def healthcheck():
-    return 'ok', 200
+    return "ok\n", 200
 
 
 registry = Registry()

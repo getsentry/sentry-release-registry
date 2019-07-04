@@ -50,4 +50,4 @@ def test_healthcheck(client):
     response = client.get('/healthz')
 
     assert response.status_code == 200
-    assert response.data == b'ok'
+    assert response.data == b'ok\n'
