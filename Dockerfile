@@ -22,7 +22,7 @@ RUN groupadd --system registry --gid $REGISTRY_GID \
 WORKDIR /work
 
 # Copy and install the server first
-COPY api-server api-server
+COPY api-server/requirements*.txt api-server/setup.py api-server/
 
 RUN cd api-server && pip install -e .
 

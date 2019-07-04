@@ -1,9 +1,10 @@
 import os
 
 import sentry_sdk
-from flask import Flask, json, abort, jsonify
+from flask import Flask, json, abort, jsonify, request
 from semver import VersionInfo
 from sentry_sdk.integrations.flask import FlaskIntegration
+from werkzeug.contrib.cache import SimpleCache
 
 
 # SENTRY_DSN will be taken from env
@@ -29,6 +30,7 @@ class RegistryFlask(Flask):
 
 app = RegistryFlask(__name__)
 app.config.from_envvar('APISERVER_CONFIG', silent=True)
+cache = SimpleCache()
 
 
 class InvalidPathComponent(ValueError):
@@ -192,6 +194,40 @@ class Registry(object):
             'definition': data,
             'target': target,
         }
+
+
+def is_caching_enabled():
+    cache_env = os.getenv("REGISTRY_ENABLE_CACHE", "").strip()
+    if cache_env == "1":
+        return True
+    elif cache_env == "0":
+        return False
+    return app.config['ENV'] == "production"
+
+
+def return_cached():
+    # if GET and POST not empty
+    if not request.values:
+        response = cache.get(request.path)
+        if response:
+            return response
+
+
+def cache_response(response):
+    if not request.values:
+        cache.set(request.path, response, CACHE_TIMEOUT)
+    return response
+
+
+CACHE_TIMEOUT = 3600
+CACHE_ENABLED = is_caching_enabled()
+
+if CACHE_ENABLED:
+    app.before_request(return_cached)
+    app.after_request(cache_response)
+    print(">>> Caching enabled!")
+else:
+    print(">>> Caching disabled")
 
 
 @app.route('/packages/<path:package>/<version>')
