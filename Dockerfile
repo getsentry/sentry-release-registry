@@ -1,12 +1,14 @@
 FROM python:3.7.0-slim
 
 RUN apt-get update \
-  && apt-get install -y build-essential git gosu \
+  && apt-get install -y --no-install-recommends build-essential gosu \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
+RUN pip install pip==19.1.1
+
 ENV \
-  FLASK_APP=./apiserver.py\
+  FLASK_APP=./apiserver.py \
   FLASK_ENV=production
 
 ENV \
@@ -17,17 +19,21 @@ ENV \
 RUN groupadd --system registry --gid $REGISTRY_GID \
   && useradd --system --gid registry --uid $REGISTRY_UID registry
 
-WORKDIR /usr/src/app
+WORKDIR /work
 
-COPY ./api-server/*.py ./
+# Copy and install the server first
+COPY api-server/requirements*.txt api-server/setup.py api-server/
 
-RUN pip install uwsgi==2.0.17.1 && pip install .
+RUN cd api-server && pip install -e .
 
-RUN flask update-repo
+COPY . .
 
 RUN chown -R registry:registry ./
 
 COPY ./docker-entrypoint.sh /docker-entrypoint.sh
+
+# Smoke test
+RUN flask --version && flask routes
 
 EXPOSE 5030
 

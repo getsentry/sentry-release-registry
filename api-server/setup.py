@@ -1,4 +1,13 @@
-from setuptools import find_packages, setup
+from setuptools import setup
+
+
+def get_requirements(env):
+    with open(u'requirements-{}.txt'.format(env)) as fp:
+        return [x.strip() for x in fp.read().split('\n') if not x.startswith('#')]
+
+
+install_requires = get_requirements('base')
+tests_require = get_requirements('test')
 
 setup(
     name='sentry-release-registry-apiserver',
@@ -8,9 +17,8 @@ setup(
     description='API server for the release registry',
     py_modules=['apiserver'],
     zip_safe=False,
-    install_requires=[
-        'flask==1.0.2',
-        'semver==2.8.1',
-        'sentry-sdk[flask]==0.3.8',
-    ]
+    install_requires=install_requires,
+    extras_require={
+        'tests': tests_require,
+    },
 )

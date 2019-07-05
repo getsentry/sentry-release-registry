@@ -1,14 +1,17 @@
 import os
-import subprocess
 
 import sentry_sdk
-from flask import Flask, json, abort, jsonify
+from flask import Flask, json, abort, jsonify, request
 from semver import VersionInfo
 from sentry_sdk.integrations.flask import FlaskIntegration
+from werkzeug.contrib.cache import SimpleCache
 
 
 # SENTRY_DSN will be taken from env
 sentry_sdk.init(integrations=[FlaskIntegration()])
+
+CACHE_TIMEOUT = 3600
+cache = SimpleCache(threshold=200, default_timeout=CACHE_TIMEOUT)
 
 
 class RegistryJsonEncoder(json.JSONEncoder):
@@ -29,8 +32,6 @@ class RegistryFlask(Flask):
 
 
 app = RegistryFlask(__name__)
-app.config['REGISTRY_CHECKOUT_PATH'] = '.registry'
-app.config['REGISTRY_GIT_URL'] = 'https://github.com/getsentry/sentry-release-registry'
 app.config.from_envvar('APISERVER_CONFIG', silent=True)
 
 
@@ -50,29 +51,6 @@ class ApiResponse(object):
 
     def __init__(self, data):
         self.data = data
-
-
-class Git(object):
-
-    def __init__(self, path, remote):
-        self.path = path
-        self.remote = remote
-
-    def _git(self, args, cwd=None):
-        p = subprocess.Popen(['git'] + list(args), cwd=cwd)
-        p.wait()
-
-    def init(self):
-        if not os.path.exists(self.path) or not os.listdir(self.path):
-            self._git(['clone', self.remote, self.path], cwd=None)
-
-    def pull(self):
-        self('pull')
-
-    def __call__(self, *args):
-        if not os.path.exists(self.path):
-            raise RuntimeError('Repo not initialized')
-        self._git(args, cwd=self.path)
 
 
 class PackageInfo(object):
@@ -100,8 +78,7 @@ class PackageInfo(object):
 class Registry(object):
 
     def __init__(self):
-        self.path = os.path.abspath(app.config['REGISTRY_CHECKOUT_PATH'])
-        self.git = Git(self.path, app.config['REGISTRY_GIT_URL'])
+        self.path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     def _path(self, *args):
         for arg in args:
@@ -136,7 +113,7 @@ class Registry(object):
         for package_registry in os.listdir(self._path('packages')):
             for item in os.listdir(self._path('packages', package_registry)):
                 if os.path.exists(os.path.join(
-                    self._path('packages', package_registry, item, '__NAMESPACE__'))):
+                        self._path('packages', package_registry, item, '__NAMESPACE__'))):
                     for subitem in os.listdir(self._path('packages', package_registry, item)):
                         yield '%s:%s/%s' % (package_registry, item, subitem)
                 else:
@@ -221,6 +198,39 @@ class Registry(object):
         }
 
 
+def is_caching_enabled():
+    cache_env = os.getenv("REGISTRY_ENABLE_CACHE", "").strip()
+    if cache_env == "1":
+        return True
+    elif cache_env == "0":
+        return False
+    return app.config['ENV'] == "production"
+
+
+def return_cached():
+    if not request.values:
+        response = cache.get(request.path)
+        if response:
+            return response
+
+
+def cache_response(response):
+    if not request.values:
+        cache.set(request.path, response)
+    return response
+
+
+CACHE_ENABLED = is_caching_enabled()
+
+
+if CACHE_ENABLED:
+    app.before_request(return_cached)
+    app.after_request(cache_response)
+    print(">>> Caching enabled!")
+else:
+    print(">>> Caching disabled")
+
+
 @app.route('/packages/<path:package>/<version>')
 def get_package_version(package, version):
     pkg_info = registry.get_package(package, version)
@@ -295,11 +305,9 @@ def get_app_version(app_id, version):
     return ApiResponse(app_info)
 
 
-@app.cli.command('update-repo')
-def update_repo():
-    """Updates the registry checkout."""
-    registry.git.init()
-    registry.git.pull()
+@app.route('/healthz')
+def healthcheck():
+    return "ok\n", 200
 
 
 registry = Registry()
