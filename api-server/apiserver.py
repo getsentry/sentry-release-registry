@@ -227,11 +227,9 @@ def set_cache_enabled(app, enable: bool):
     if enable:
         app.before_request(return_cached)
         app.after_request(cache_response)
-        print(">>> Caching enabled!")
     else:
         app.before_request_funcs = {}
         app.after_request_funcs = {}
-        print(">>> Caching disabled")
 
 
 app = RegistryFlask(__name__)
