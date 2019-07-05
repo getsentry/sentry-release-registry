@@ -1,5 +1,9 @@
 
 
+def test_caching_disabled(client):
+    assert client.application.config['CACHE_ENABLED'] is False
+
+
 def test_route_root_not_found(client):
     response = client.get('/')
 

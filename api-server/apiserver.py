@@ -1,4 +1,5 @@
 import os
+from functools import partial
 
 import sentry_sdk
 from flask import Flask, json, abort, jsonify, request
@@ -12,6 +13,10 @@ sentry_sdk.init(integrations=[FlaskIntegration()])
 
 CACHE_TIMEOUT = 3600
 cache = SimpleCache(threshold=200, default_timeout=CACHE_TIMEOUT)
+
+
+class InvalidPathComponent(ValueError):
+    pass
 
 
 class RegistryJsonEncoder(json.JSONEncoder):
@@ -29,14 +34,6 @@ class RegistryFlask(Flask):
         if isinstance(result, ApiResponse):
             return jsonify(result.data)
         return Flask.make_response(self, result)
-
-
-app = RegistryFlask(__name__)
-app.config.from_envvar('APISERVER_CONFIG', silent=True)
-
-
-class InvalidPathComponent(ValueError):
-    pass
 
 
 def validate_path_component(path):
@@ -204,13 +201,14 @@ def is_caching_enabled():
         return True
     elif cache_env == "0":
         return False
-    return app.config['ENV'] == "production"
+    return os.getenv('FLASK_ENV') == "production"
 
 
 def return_cached():
     if not request.values:
         response = cache.get(request.path)
         if response:
+            response.headers['X-From-Cache'] = '1'
             return response
 
 
@@ -222,15 +220,24 @@ def cache_response(response):
     return response
 
 
-CACHE_ENABLED = is_caching_enabled()
+def set_cache_enabled(app, enable: bool):
+    app.config['CACHE_ENABLED'] = enable
+
+    assert type(enable) == bool
+    if enable:
+        app.before_request(return_cached)
+        app.after_request(cache_response)
+        print(">>> Caching enabled!")
+    else:
+        app.before_request_funcs = {}
+        app.after_request_funcs = {}
+        print(">>> Caching disabled")
 
 
-if CACHE_ENABLED:
-    app.before_request(return_cached)
-    app.after_request(cache_response)
-    print(">>> Caching enabled!")
-else:
-    print(">>> Caching disabled")
+app = RegistryFlask(__name__)
+app.config.from_envvar('APISERVER_CONFIG', silent=True)
+app.enable_cache = partial(set_cache_enabled, app)
+app.enable_cache(is_caching_enabled())
 
 
 @app.route('/packages/<path:package>/<version>')
