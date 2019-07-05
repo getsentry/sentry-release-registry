@@ -216,6 +216,8 @@ def return_cached():
 
 def cache_response(response):
     if not request.values:
+        # Make the response picklable
+        response.freeze()
         cache.set(request.path, response)
     return response
 
