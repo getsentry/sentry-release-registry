@@ -32,11 +32,13 @@ def test_caching_all_sdks(client_with_caching):
 
         response2 = client_with_caching.get(sdk_endpoint)
 
-        assert mock_get_sdk_summary.call_count == 1
+        # Check that the endpoint function was not called again
         assert response2.status_code == 200
         assert response2.headers.get('X-From-Cache') == '1'
+        assert mock_get_sdk_summary.call_count == 1
 
     data1 = response1.get_json()
     data2 = response2.get_json()
+
     assert data1 == data2
     assert data1['sentry.python']['canonical'] == 'pypi:sentry-sdk'
