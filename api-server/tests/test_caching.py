@@ -23,16 +23,18 @@ def test_caching_all_sdks(client_with_caching):
 
     with mock.patch('apiserver.Registry.get_sdks', wraps=registry.get_sdks) as mock_get_sdk_summary:
         assert mock_get_sdk_summary.call_count == 0
+
         response1 = client_with_caching.get(sdk_endpoint)
+
+        assert response1.status_code == 200
+        assert response1.headers.get('X-From-Cache') is None
         assert mock_get_sdk_summary.call_count == 1
+
         response2 = client_with_caching.get(sdk_endpoint)
+
         assert mock_get_sdk_summary.call_count == 1
-
-    assert response1.status_code == 200
-    assert response1.headers.get('X-From-Cache') is None
-
-    assert response2.status_code == 200
-    assert response2.headers.get('X-From-Cache') == '1'
+        assert response2.status_code == 200
+        assert response2.headers.get('X-From-Cache') == '1'
 
     data1 = response1.get_json()
     data2 = response2.get_json()
