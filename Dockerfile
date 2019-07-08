@@ -1,11 +1,12 @@
-FROM python:3.7.0-slim
+FROM python:3.7-slim
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends build-essential gosu \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
-RUN pip install pip==19.1.1
+ENV PIP_NO_CACHE_DIR off
+ENV PIP_DISABLE_PIP_VERSION_CHECK on
 
 ENV \
   FLASK_APP=./apiserver.py \
@@ -38,3 +39,5 @@ RUN flask --version && flask routes
 EXPOSE 5030
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
+
+CMD [ "mywsgi", "apiserver:app", "0.0.0.0:5030" ]
