@@ -14,7 +14,7 @@ by the new SDK docs as well as Sentry's loader itself.
 - `sdks`: Canonical representations of packages that together form an sdk
 - `marketing-slugs`: Short names for sdks the docs would use
 
-Some of the information here is maintained as symlinks so this repo only works
+Some of the information here is maintained as symlinks, so this repo only works
 on unix platforms.
 
 ## Adding New SDKs
