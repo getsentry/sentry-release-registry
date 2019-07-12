@@ -2,7 +2,7 @@
 
 This is a meta repository holding all release information. This replaces the
 mess we had before where release infos were in different locations. This is used
-by the new SDK docs as well as sentry's loader itself.
+by the new SDK docs as well as Sentry's loader itself.
 
 ## Layout
 
