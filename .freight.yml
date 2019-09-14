@@ -1,11 +1,3 @@
----
-kubernetes:
-  credentials:
-    kind: gcloud
-    project: internal-sentry
-    cluster: primary
-    zone: us-central1-b
-
 steps:
   - kind: KubernetesDeployment
     selector:
