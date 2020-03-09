@@ -2,11 +2,16 @@
 
 This is a meta repository holding release information for Sentry repositories.
 
-It centralizes information that used to be in different locations. It is used by
-the [SDK docs][sdk-docs] and the [Sentry Loader for JavaScript][js-loader].
+It centralizes information that used to be in different locations. It is known
+to be used by at least:
+
+- The [SDK docs][sdk-docs]
+- The [Sentry Loader for JavaScript][js-loader]
+- The [SDK update prompt][sdk-update-prompt] in Sentry event pages
 
 [sdk-docs]: https://github.com/getsentry/sentry-docs/
 [js-loader]: https://docs.sentry.io/platforms/javascript/#lazy-loading-sentry
+[sdk-update-prompt]: https://github.com/getsentry/sentry/blob/ea791cb482d6f77481beed41e64ccc52ce10bc65/src/sentry/sdk_updates.py
 
 ## Layout
 
