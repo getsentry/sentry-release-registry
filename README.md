@@ -1,8 +1,12 @@
 # Sentry Release Registry
 
-This is a meta repository holding all release information. This replaces the
-mess we had before where release infos were in different locations. This is used
-by the new SDK docs as well as Sentry's loader itself.
+This is a meta repository holding release information for Sentry repositories.
+
+It centralizes information that used to be in different locations. It is used by
+the [SDK docs][sdk-docs] and the [Sentry Loader for JavaScript][js-loader].
+
+[sdk-docs]: https://github.com/getsentry/sentry-docs/
+[js-loader]: https://docs.sentry.io/platforms/javascript/#lazy-loading-sentry
 
 ## Layout
 
