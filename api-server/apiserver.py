@@ -65,8 +65,12 @@ class RegistryFlask(Flask):
 
     def make_response(self, result):
         if isinstance(result, ApiResponse):
-            return jsonify(result.data)
-        return Flask.make_response(self, result)
+            response = jsonify(result.data)
+        else:
+            response = Flask.make_response(self, result)
+
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
 
 
 def validate_path_component(path):
