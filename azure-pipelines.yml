@@ -17,7 +17,14 @@ jobs:
           TARGET: lint
 
     steps:
-      - script: |
+      - bash: |
           set -eux
+
+          # Ensure symlinks are synced
+          make sync-all-links
+          if [ "$(git status --porcelain)" ]; then
+            echo 'Symlinks out-of-sync. Please run "make sync-all-links" and update your commit.'
+            exit 1
+          fi
 
           ./api-server/bin/test-utils/docker-run-tests
