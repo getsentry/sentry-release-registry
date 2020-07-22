@@ -27,7 +27,6 @@ def sync_links(path):
     target_files = [
         '%s.json' % version_info.major,
         '%s.%s.json' % (version_info.major, version_info.minor),
-        '%s.%s.%s.json' % (version_info.major, version_info.minor, version_info.patch),
         'latest.json',
     ]
 
