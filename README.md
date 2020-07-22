@@ -50,7 +50,7 @@ on unix platforms.
    }
    ```
 
-3. `cd sdks/ && ln -s ./packages/<registry>/<package_name> ./<sdk_name>`
+3. `cd sdks && ln -s ../packages/<registry>/<package_name> <sdk_name>`
 
    - `<sdk_name>`: The same identifier used in the `sdk_info.name` field of the
      event.
