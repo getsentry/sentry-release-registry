@@ -182,6 +182,17 @@ class Registry(object):
         except (IOError, OSError):
             pass
 
+    def get_aws_lambda_layers(self):
+        rv = {}
+        for link in os.listdir(self._path('aws-lambda-layers')):
+            try:
+                with open(self._path('aws-lambda-layers', link, 'latest.json')) as f:
+                    data = json.load(f)
+                    rv[data["canonical"]] = data
+            except (IOError, OSError):
+                continue
+        return rv
+
     def get_apps(self):
         rv = {}
         for link in os.listdir(self._path('apps')):
@@ -357,6 +368,11 @@ def get_app_version(app_id, version):
 @app.route('/healthz')
 def healthcheck():
     return "ok\n", 200
+
+
+@app.route('/aws-lambda-layers')
+def aws_layers():
+    return ApiResponse(registry.get_aws_lambda_layers())
 
 
 registry = Registry()
