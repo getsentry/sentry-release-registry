@@ -193,7 +193,6 @@ class Registry(object):
                 continue
         return rv
 
-
     def get_apps(self):
         rv = {}
         for link in os.listdir(self._path('apps')):
@@ -374,5 +373,6 @@ def healthcheck():
 @app.route('/aws-lambda-layers')
 def aws_layers():
     return ApiResponse(registry.get_aws_lambda_layers())
+
 
 registry = Registry()
