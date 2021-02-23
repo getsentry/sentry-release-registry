@@ -1,1 +1,1 @@
-../packages/maven/sentry
+../packages/maven/io.sentry/sentry

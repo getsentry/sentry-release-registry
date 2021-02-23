@@ -1,4 +1,6 @@
 
+import pytest
+
 
 def test_caching_disabled(client):
     assert client.application.config['CACHE_ENABLED'] is False
@@ -10,8 +12,16 @@ def test_route_root_not_found(client):
     assert response.status_code == 404
 
 
-def test_route_sdks(client):
-    response = client.get('/sdks')
+@pytest.mark.parametrize(
+    "sdks_url",
+    [
+        '/sdks',
+        '/sdks?strict=1',
+    ],
+    ids=["non_strict", "strict"]
+)
+def test_route_sdks(client, sdks_url):
+    response = client.get(sdks_url)
 
     assert response.status_code == 200
     data = response.get_json()
@@ -26,8 +36,16 @@ def test_routes_sdk_single_latest(client):
     assert data['canonical'] == 'pypi:sentry-sdk'
 
 
-def test_route_packages(client):
-    response = client.get('/packages')
+@pytest.mark.parametrize(
+    "packages_url",
+    [
+        '/packages',
+        '/packages?strict=1',
+    ],
+    ids=["non_strict", "strict"]
+)
+def test_route_packages(client, packages_url):
+    response = client.get(packages_url)
 
     assert response.status_code == 200
     data = response.get_json()

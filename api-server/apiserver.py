@@ -9,6 +9,11 @@ from semver import VersionInfo
 from sentry_sdk.integrations.flask import FlaskIntegration
 from werkzeug.contrib.cache import SimpleCache
 
+TRUTHY_VALUES = {'1', 'true', 'yes'}
+
+# If this file is present in a subfolder in "packages", that subfolder is a namespace.
+NAMESPACE_FILE_MARKER = '__NAMESPACE__'
+
 
 class Metrics:
 
@@ -147,28 +152,39 @@ class Registry(object):
         for package_registry in os.listdir(self._path('packages')):
             for item in os.listdir(self._path('packages', package_registry)):
                 if os.path.exists(os.path.join(
-                        self._path('packages', package_registry, item, '__NAMESPACE__'))):
+                        self._path('packages', package_registry, item, NAMESPACE_FILE_MARKER))):
                     for subitem in os.listdir(self._path('packages', package_registry, item)):
-                        yield '%s:%s/%s' % (package_registry, item, subitem)
+                        if subitem != NAMESPACE_FILE_MARKER:
+                            yield '%s:%s/%s' % (package_registry, item, subitem)
                 else:
                     yield '%s:%s' % (package_registry, item)
 
-    def get_packages(self):
+    def get_packages(self, strict=False):
         rv = {}
         for package_name in self.iter_packages():
             pkg = self.get_package(package_name)
-            if pkg is not None:
+            if pkg is None:
+                if strict:
+                    raise ValueError("Package does not exist or invalid canonical: {}".format(package_name))
+            else:
                 rv[pkg.canonical] = pkg
         return rv
 
-    def get_sdks(self):
+    def get_sdks(self, strict=False):
         rv = {}
         for link in os.listdir(self._path('sdks')):
             try:
                 with open(self._path('sdks', link, 'latest.json')) as f:
                     canonical = json.load(f)['canonical']
                     pkg = self.get_package(canonical)
-                    if pkg is not None:
+                    if pkg is None:
+                        if strict:
+                            raise ValueError(
+                                "Package {}, canonical cannot be resolved: {}".format(
+                                    link, canonical
+                                )
+                            )
+                    else:
                         rv[link] = pkg
             except (IOError, OSError):
                 continue
@@ -325,7 +341,8 @@ def resolve_marketing_slugs(slug):
 
 @app.route('/sdks')
 def get_sdk_summary():
-    return ApiResponse(registry.get_sdks())
+    strict = request.args.get('strict', '').lower() in TRUTHY_VALUES
+    return ApiResponse(registry.get_sdks(strict=strict))
 
 
 @app.route('/sdks/<sdk_id>/<version>')
@@ -349,7 +366,8 @@ def get_sdk_versions(sdk_id):
 
 @app.route('/packages')
 def get_package_summary():
-    return ApiResponse(registry.get_packages())
+    strict = request.args.get('strict', '').lower() in TRUTHY_VALUES
+    return ApiResponse(registry.get_packages(strict=strict))
 
 
 @app.route('/apps')
