@@ -26,6 +26,8 @@ def test_route_sdks(client, sdks_url):
     assert response.status_code == 200
     data = response.get_json()
     assert data['sentry.python']['canonical'] == 'pypi:sentry-sdk'
+    # ":" should work properly as a separator
+    assert data['sentry.java']['canonical'] == 'maven:io.sentry:sentry'
 
 
 def test_routes_sdk_single_latest(client):
@@ -50,6 +52,8 @@ def test_route_packages(client, packages_url):
     assert response.status_code == 200
     data = response.get_json()
     assert data['pypi:sentry-sdk']['canonical'] == 'pypi:sentry-sdk'
+    # ":" should work properly as a separator
+    assert data['maven:io.sentry:sentry']['canonical'] == 'maven:io.sentry:sentry'
 
 
 def test_route_apps(client):
