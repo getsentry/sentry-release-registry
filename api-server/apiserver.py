@@ -125,10 +125,12 @@ class Registry(object):
         return os.path.join(self.path, *args)
 
     def get_package(self, canonical, version='latest'):
-        """Looks up a package by canonical version"""
+        """Looks up a package by its canonical name and version"""
         if ':' not in canonical:
             return
         registry, package = canonical.split(':', 1)
+        # Allow ":" to be used as a path separator
+        package = package.replace(":", "/")
         try:
             path = self._path('packages', registry, package, '%s.json' % version)
             with open(path) as f:
