@@ -65,7 +65,7 @@ def test_route_apps(client):
 
 def test_download_app(client):
     response = client.get(
-        "/apps/sentry-cli/2.0.0?response=download_url&platform=windows&arch=x86-64&package=sentry-cli"
+        "/apps/sentry-cli/2.0.0?response=download&platform=windows&arch=x86-64&package=sentry-cli"
     )
 
     assert response.status_code == 302

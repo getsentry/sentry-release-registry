@@ -434,7 +434,7 @@ def get_app_version(app_id, version):
     app_info = registry.get_app(app_id, version)
     if app_info is None:
         abort(404)
-    if request.args.get("response") == "download_url":
+    if request.args.get("response") == "download":
         arch = request.args["arch"]
         platform = request.args["platform"]
         package = request.args["package"]
