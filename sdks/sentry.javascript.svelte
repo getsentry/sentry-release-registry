@@ -1,1 +1,0 @@
-../packages/npm/@sentry/svelte
