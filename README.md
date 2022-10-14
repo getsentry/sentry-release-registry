@@ -28,6 +28,11 @@ on unix platforms.
 
 ## Adding New SDKs
 
+If you plan to perform a pre-release (e.g. `alpha`, `beta`, `rc` or similar)
+you do not need the entries explained below. So the usual order is to first
+release the `alpha` or similar, then merge the PR here to add the SDK / module
+and then perform the GA release.
+
 1. Create `packages/<registry>/<package_name>/<exact_version>.json` for each
    version you want to register.
 
