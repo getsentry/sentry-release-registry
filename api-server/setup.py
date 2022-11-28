@@ -13,7 +13,7 @@ setup(
     name='sentry-release-registry-apiserver',
     version='1.0.0',
     url='https://github.com/getsentry/sentry-release-registry',
-    license='Apache2',
+    license='MIT',
     description='API server for the release registry',
     py_modules=['apiserver'],
     zip_safe=False,
