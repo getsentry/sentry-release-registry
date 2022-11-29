@@ -30,16 +30,15 @@ on unix platforms.
 
 ### Order of actions
 
-1. Create a PR against this repository and have it merged. See steps below.
-2. Perform the release of the SDK (see section below for pre-releases).
-3. Add the new package(s) to the `.craft.yml` in the SDK repository.
+1. update `.craft.yml` config to publish new package to your registry and GH
+2. cut the release
+3. update craft config to publish to release registry
+4. PR to this repository to manually add published new package. See steps below.
 
 ### Pre-releases
 
 If you plan to perform a pre-release (e.g. `alpha`, `beta`, `rc` or similar)
-you do not need the entries explained below. So the usual order is to first
-release the `alpha` or similar, then merge the PR here to add the SDK / module
-and then perform the GA release.
+you do not need the entries explained below.
 
 ### Steps
 
