@@ -38,7 +38,7 @@ on unix platforms.
 ### Pre-releases
 
 If you plan to perform a pre-release (e.g. `alpha`, `beta`, `rc` or similar)
-you do not need the entries explained below.
+you do not need to add it to this repository.
 
 ### Steps
 
