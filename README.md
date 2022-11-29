@@ -28,10 +28,20 @@ on unix platforms.
 
 ## Adding New SDKs
 
+### Order of actions
+
+1. Create a PR against this repository and have it merged. See steps below.
+2. Perform the release of the SDK (see section below for pre-releases).
+3. Add the new package(s) to the `.craft.yml` in the SDK repository.
+
+### Pre-releases
+
 If you plan to perform a pre-release (e.g. `alpha`, `beta`, `rc` or similar)
 you do not need the entries explained below. So the usual order is to first
 release the `alpha` or similar, then merge the PR here to add the SDK / module
 and then perform the GA release.
+
+### Steps
 
 1. Create `packages/<registry>/<package_name>/<exact_version>.json` for each
    version you want to register.
