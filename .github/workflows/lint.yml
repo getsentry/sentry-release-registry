@@ -1,0 +1,29 @@
+name: lint then test
+on: [push, pull_request]
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.7"
+    - name: sync symlinks
+      run: |
+          # Ensure symlinks are synced
+          make sync-all-links
+          if [ "$(git status --porcelain)" ]; then
+            echo 'Symlinks out-of-sync. Please run "make sync-all-links" and update your commit.'
+            exit 1
+          fi
+    - name: lint
+      env:
+        TARGET: lint
+      run: |
+          ./api-server/bin/test-utils/run-tests
+    - name: test
+      env:
+        TARGET: test
+      run: |
+          ./api-server/bin/test-utils/run-tests
