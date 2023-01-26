@@ -1,7 +1,5 @@
 FROM python:3.7-slim
 
-RUN exit 1
-
 RUN apt-get update \
   && apt-get install -y --no-install-recommends build-essential gosu \
   && apt-get clean \
