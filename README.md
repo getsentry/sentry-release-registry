@@ -50,6 +50,20 @@ on unix platforms.
    }
    ```
 
+    If your SDK provides API docs, add the `api_docs_url` config as well:
+
+   ```json
+   {
+     "name": "Name of your platform",
+     "canonical": "<registry>:<package_name>",
+     "version": "<exact_version>",
+     "package_url": "Link to PyPI, RubyGems, npmjs.com",
+     "repo_url": "Link to GitHub repo",
+     "main_docs_url": "Link to platform page",
+     "api_docs_url": "Link to API docs"
+   }
+   ```
+
 3. `cd sdks && ln -s ../packages/<registry>/<package_name> <sdk_name>`
 
    - `<sdk_name>`: The same identifier used in the `sdk_info.name` field of the
