@@ -1,0 +1,1210 @@
+{
+  "name": "Browser JavaScript",
+  "canonical": "npm:@sentry/browser",
+  "version": "7.107.0",
+  "package_url": "https://npmjs.com/package/@sentry/browser",
+  "repo_url": "https://github.com/getsentry/sentry-javascript",
+  "main_docs_url": "https://docs.sentry.io/platforms/javascript",
+  "files": {
+    "sentry-angular-ivy-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "t6tJO5CWTslM7JWWq4zCd3awFWTlSsL6NDmC3U/V8qCLI4uiLmRIMIeJtzHlgIyU"
+      }
+    },
+    "sentry-astro-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "+yl5g5fy6W54woncWx284lELeumu97SCVavN3OB4pI0o5lbBevancNeyO762JU3r"
+      }
+    },
+    "sentry-angular-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "0cyfSFrKW+mumUrKhJsiOEtZIB26IbI4TRuftE5XvJ0xJDDwLnryqOh1GYRCCxhX"
+      }
+    },
+    "bundle.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "Sdb5fn/y4tgFhUCHN5WN/QR6W5q+3JOYvKNDV74Ss+pHTLn27flxSIofHELamt8r"
+      }
+    },
+    "bundle.es5.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "Rd4Go9NjpyiBwlgpaIRquTbW+nang9rA4nNlkJPlRuO/4Qyb9OeztWpyvFWM1/u2"
+      }
+    },
+    "bundle.es5.min.js": {
+      "checksums": {
+        "sha384-base64": "RD3gODUW2KRYLJMeE+lNfFOpb9KkF3SUtbWxP3bSYeWbsM5jCQwO9yJpc+NCL0oP"
+      }
+    },
+    "bundle.es5.js": {
+      "checksums": {
+        "sha384-base64": "lZCyf6b/wybwENmqtEwm7WObtSeTLWgzlp5Qi9CGqjJIs/q4W7ID8eTNNAUjJ5MI"
+      }
+    },
+    "bundle.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "czHe5o/5r8kSITQCUYy1akKpmdS6d1p9NA23d1S9bRhfGRxQi3rZxWJ/1gChGRaS"
+      }
+    },
+    "bundle.feedback.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "SwhdwsntCJIRfKKfLEyFeRTc/JBWLDQ1GGa7d1rvXUDQoxHN6HLC1ufKx5dVjSul"
+      }
+    },
+    "bundle.es5.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "j8HSw7sdn5HfNjvIL580mvCyG9EzOY6LYoWjoBIh5nZK0pxZM4j2om64u5GPs5Tc"
+      }
+    },
+    "bundle.feedback.js": {
+      "checksums": {
+        "sha384-base64": "w1fXj0ejQiWgqZ4hjf7clCUf+kMU4vwLq1rIDObGpXh634qGzM71YXW3liddI7il"
+      }
+    },
+    "bundle.es5.min.js.map": {
+      "checksums": {
+        "sha384-base64": "jNGDHzpQX80qYiZ63qOGkAXCHDbEN99LUyhX+I0hoHF3E4mYQKLnV94MOgLARQ82"
+      }
+    },
+    "bundle.feedback.min.js": {
+      "checksums": {
+        "sha384-base64": "pc6EB5m3XdjiOeAT4vEXpoC7zBsbwZnoMpA+SOF0mahRTQzHAmD3Q6rpWM9ZTQrs"
+      }
+    },
+    "bundle.es5.js.map": {
+      "checksums": {
+        "sha384-base64": "FgebZ4Dbk1OZ5e0cidJ67AlHgepz5yWc19xjcJYG13hVif8EITetAw5M8oJrbQnf"
+      }
+    },
+    "bundle.feedback.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "xa5XY0G6Qq9lHJwnGvA0Ppic9egUR5VD5z66IfJPT+NGX7sGA8tBEWDNIVZYAPgU"
+      }
+    },
+    "bundle.js": {
+      "checksums": {
+        "sha384-base64": "7S2jD+oU4kCL4GLyY7XiN+5BnLH/saN4km6Fi+FHX9hL99lS02WOhRgcREMK7/N1"
+      }
+    },
+    "bundle.min.js": {
+      "checksums": {
+        "sha384-base64": "5fRjnmIzZZSOe+YOwI0+zJu2UduHirEk+d+KAsS6TQbWXOGaNDGaOCKBCr34yCrB"
+      }
+    },
+    "bundle.replay.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "NBi1LY9K6KLHd7ybkhdi8E272wDGFnrO13uern62Xzhqiknjf+07vthNTUNyg3t/"
+      }
+    },
+    "bundle.feedback.min.js.map": {
+      "checksums": {
+        "sha384-base64": "PN+fNSYKhRQ3C6TrMPc+GqkCfgoeIVDUxikl4u53im18cgmbZD3tx5DwZCIHoYCO"
+      }
+    },
+    "bundle.min.js.map": {
+      "checksums": {
+        "sha384-base64": "U2YAkEXCCNQ8e8uz5sfOvIvaJC4i+nSnPUbko5H+HzTDAx67/VXAEIGGYZi2Nj0y"
+      }
+    },
+    "bundle.feedback.js.map": {
+      "checksums": {
+        "sha384-base64": "0pnml+S6OOUCyru9dpafvdbcw2XNWuDELx8uqzHYFruDK8XVwCicZz3rYV6OCh1O"
+      }
+    },
+    "bundle.replay.js": {
+      "checksums": {
+        "sha384-base64": "n4BrdBhSVmjBAgTM12cqdMWAbxfquReCo+lse5fmYdkYGWESP8CunO4vLXL+UjFh"
+      }
+    },
+    "bundle.replay.min.js": {
+      "checksums": {
+        "sha384-base64": "bOQunAjIpCgWbdqP2VE36drl/SKjt1DBVogWzQlNzuM0Lt/nvFfuIbD9Zr6o57vx"
+      }
+    },
+    "bundle.js.map": {
+      "checksums": {
+        "sha384-base64": "RuD8F2DdeVWi12lqNBWfUaq0UZkrbZwEQNt5ogK6Svf0VwzEBMX5/CBze0UvOBgp"
+      }
+    },
+    "bundle.tracing.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "gf5dNHzfQ0ylkBcJdWyeDjzybzFUSwCPE5Yd7xndDaFA+N0Qe4dJQwoRn7jKEUxL"
+      }
+    },
+    "bundle.tracing.es5.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "NUsneKiNCJ2ff/agxCa7E4ykbAKDmAOyYYUkQ3SYpEgYDO55gEAEFSwuaZtemsa0"
+      }
+    },
+    "bundle.replay.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "KIPUiW0QtDLH/XzcRxGC/09Jjrvt/o6AvztimTr2ZaXf6Nfnu5InJH175AOHsFrC"
+      }
+    },
+    "bundle.tracing.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "5zdSbd4NDPnMI5Hsjv6QrLLjWEWAu0bWKCLGp/Uq3uLszB4A6ghTPHQgVEwu2Qq7"
+      }
+    },
+    "bundle.tracing.es5.js": {
+      "checksums": {
+        "sha384-base64": "E4GX+PU0yV9rP+CnhZiMcsKapxVZ42TeGzQSqIXtsRQcoleBnERegcR+DtKDAhQE"
+      }
+    },
+    "bundle.replay.min.js.map": {
+      "checksums": {
+        "sha384-base64": "55XId4wTJHc77e1ptcg11sd81JROwXWUBJNRJk1E/3Dy+zekHB0P3iw5RtDZ2wTz"
+      }
+    },
+    "bundle.tracing.es5.min.js": {
+      "checksums": {
+        "sha384-base64": "czpnDEIhdeV6Saqkr7CeO7okatn5Dipc4gDYr2Mhjtzy6SYZPFtCfG6ZFO5vd6pv"
+      }
+    },
+    "bundle.tracing.es5.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "LR03BRG7xxCFOM6Hb5PtK8mLM5wDBjNApZB5Wndar+qUs5lMQuYjpoc/kbHtG6gM"
+      }
+    },
+    "bundle.tracing.js": {
+      "checksums": {
+        "sha384-base64": "Fn+WOnk1w1y51jft0nS9J0+QBDbdG1Eu5VR+n8Mc20f60CEsxyFVfGo2TKvP2nPK"
+      }
+    },
+    "bundle.tracing.min.js": {
+      "checksums": {
+        "sha384-base64": "2j4R0HGSkskmYjoRkEoO7jxRjvOWIDeXR1shsKjzV5k9crIR2BgbUCHnPGrs0SNp"
+      }
+    },
+    "bundle.tracing.es5.min.js.map": {
+      "checksums": {
+        "sha384-base64": "rVuajOyODszOYe2f+nxZ4WAyDomzbvv8inV0r8ipuO0JU7ChzCXwpOH8y+uMq+DH"
+      }
+    },
+    "bundle.replay.js.map": {
+      "checksums": {
+        "sha384-base64": "Wzv8hBupC9ZjwPc9Yf5VTIhnXu/35+Xodg0Vqu1O6HMOKOkJHRYk8IcXFlXs7lOx"
+      }
+    },
+    "bundle.tracing.replay.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "oCVLRFolaEUvIdQjTBZhHxNzW27d9jJut0F2I7jNHvl/yL9d2Vrz5t1HjpIDxIDg"
+      }
+    },
+    "bundle.tracing.es5.js.map": {
+      "checksums": {
+        "sha384-base64": "myUAbEDcqJf4BK836mIPWHLXgiQ0gr0tPMC1Dc6jRC+mpCIFrzk98Vrpn0JVvNPM"
+      }
+    },
+    "bundle.tracing.replay.feedback.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "M4OSGV3lj8WIc35aRO5TUvR7nq+6Q/eXuST/yU2g1OQ4K3rUjXtYwRQ5H8oWmrM0"
+      }
+    },
+    "bundle.tracing.min.js.map": {
+      "checksums": {
+        "sha384-base64": "/F+w6Q7bcTxQdCzTn2NqiyTYt3mPVgdV8F9TNUykuc50e3fU03CM3Y6O3qDx20nm"
+      }
+    },
+    "bundle.tracing.replay.feedback.js": {
+      "checksums": {
+        "sha384-base64": "Cj3wTQSc4GANlpEkCmOGoaVCY3sD8+aZCZCUhEmx/li1Sers/8COY1z0G4kiQ72p"
+      }
+    },
+    "bundle.tracing.js.map": {
+      "checksums": {
+        "sha384-base64": "lNZDNywFmFyd69unhrq9RfDVsEhpKKDOm3kPSuPC86rHkNoR4AUNiuOq+TGYQkuJ"
+      }
+    },
+    "bundle.tracing.replay.feedback.min.js": {
+      "checksums": {
+        "sha384-base64": "H6FbnZIOcKmFV89f6mKXLz25b6iQTJI7TYp0HiXgt0BKFQKpFMyu96eKNzTJDbYL"
+      }
+    },
+    "bundle.tracing.replay.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "GRS1xcgMYAWl1bBcFGdnMsXn9noj6ywfK8B4PazrlO8R3hejO0TYLs6Bwch5ZLKX"
+      }
+    },
+    "bundle.tracing.replay.feedback.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "/XJn5+1fc+jORkk7Dl1HxaqcJu1B6LBiL2yfnMGg+2lGVeT97lsSYrP7hduw+A7U"
+      }
+    },
+    "bundle.tracing.replay.js": {
+      "checksums": {
+        "sha384-base64": "H/gr9CvHAd+2zdIYY5hYYwwgwxoIbdoT4MLwIeYeLejP5k/BNAbVqdBT/8c1PsSm"
+      }
+    },
+    "bundle.tracing.replay.min.js": {
+      "checksums": {
+        "sha384-base64": "gDZBaTe25tDfJANz3dMa5g2GwiSxs8mDw+J75zW777u8Chz28eR0NOQ8e7YQNNDC"
+      }
+    },
+    "sentry-browser-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "nyzOF3v0cZn6BL5lsiWpmHbJ18RnyB4gM0vcOaYMb6zHkO0U73R7w8zOPTZStqww"
+      }
+    },
+    "sentry-bun-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "aHn0Lc1fMfuWVCr4sk47FuUIQ8X3OKjLJrA3/v3EqHhM+CrSIkX9kEWcmdg+Ki4o"
+      }
+    },
+    "sentry-core-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "zDpNdPjhz+Q1w7lkzyne3N77CN2zOu2rebRIaEpbunpv42D768rV2IxaUYhw227h"
+      }
+    },
+    "bundle.tracing.replay.feedback.min.js.map": {
+      "checksums": {
+        "sha384-base64": "em5oTFmAywujgnjKPTWGkCmI6lKMAZwo75/m82PD8oH0Y+o+lac4WjHHKa8z5VCH"
+      }
+    },
+    "sentry-ember-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "qMUwco812olyb+m5xWPS7T+4qQ9wYGBQ/OM7AaIMyXThUj9E5OHmGK+DEDezxE+A"
+      }
+    },
+    "sentry-internal-eslint-config-sdk-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "ZakQeHsfApq4Xovu7/I9qBbTzPPdnXhFzZGcfkcegAugFejwI0QdlMsIGFpF0CN3"
+      }
+    },
+    "sentry-deno-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "XWKwrZFV0QrPNMfeQ4X41olr2YIAWYGDJJidCFDaJea6QHQD6v2If/tzsJjWluMz"
+      }
+    },
+    "sentry-internal-eslint-plugin-sdk-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "qJli5R0Thz9MUaWPKAHjL19eqVPDwo/i3o5KZhr/BDkrkcwobYIfBVTkgbfVMEMd"
+      }
+    },
+    "sentry-internal-feedback-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "GaOp2WpLXJOb8JfgziJKPkqVjZWhMwZuh0y2HYA1ZNhg8oZ8/itZfp5xWpMeYrIM"
+      }
+    },
+    "sentry-gatsby-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "nF5FzimjJpaTdjdMvdb489d7fx9DD7mpktKbEEcJA8wYeqTyUrK6HQ24fhEdnnEe"
+      }
+    },
+    "sentry-hub-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "HN9nCbxkbi8G/0haZnraN6yhVGSZX0Nc/DgrUdEVnIKyT7rqW+cAwWj/0uxDyWmy"
+      }
+    },
+    "captureconsole.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "e1ymQJ7X57nG8p62C7r9OPxoAHIX8uxlSx94LTYXxaReMxOX8ixEYeRryad5IZpT"
+      }
+    },
+    "bundle.tracing.replay.min.js.map": {
+      "checksums": {
+        "sha384-base64": "080Z+6tpVRClUO1MAjCRU6WB3rG5iHwMstEc7HRcGqPf/6W7+Uw29m3fLszpDD5l"
+      }
+    },
+    "captureconsole.es5.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "fYThSnoDhxJmsGbPL69TsC4+v8obYxm/6DW3Ui9XVJhGg+21ECkwd8oPkDDgX8BE"
+      }
+    },
+    "captureconsole.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "RdAJdt/p3vJxK1obiaFwdT0CqDoxVZF5IGtSpOGRxOHpSJ8/aF37Yb556486ngin"
+      }
+    },
+    "captureconsole.es5.js": {
+      "checksums": {
+        "sha384-base64": "lLuzFKof+Z/+JTIbflBqSTxUd+hj6+ubNC9EUq52Me0y1ykrFAyhhz7N3gPxmOxX"
+      }
+    },
+    "captureconsole.es5.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "uXrc2tBDSTWnMXX+l4FaF3rUWG0vtxUkO14rWGyCQLuh5+izGjqYoBjhHTUUiWKp"
+      }
+    },
+    "captureconsole.es5.min.js": {
+      "checksums": {
+        "sha384-base64": "3LFcFHtSK5E82NSlAMVgCR9AsY4tHkLGEZy1kCCMyQX5T+F6T0/qJd0PHVDsyFX4"
+      }
+    },
+    "bundle.tracing.replay.feedback.js.map": {
+      "checksums": {
+        "sha384-base64": "G1didCOVL0N2jii/2pH65JPqkx2zjgnG7BaITXJwrdeJTqIzAhfgk1PGb1EoO086"
+      }
+    },
+    "captureconsole.es5.js.map": {
+      "checksums": {
+        "sha384-base64": "taW8LJygeTkQ7ycH/L3PbgHH7gct7qHEvn/Ea0Oc25PTcQGxjG9RK2glaqLMVjaL"
+      }
+    },
+    "captureconsole.js": {
+      "checksums": {
+        "sha384-base64": "bNXxUu0cajTISeg2mEOfF56sEP78kqoidz+NhilRace2ahLDFR0NVqOpZ7EfpUx/"
+      }
+    },
+    "captureconsole.min.js": {
+      "checksums": {
+        "sha384-base64": "wxC2YIrkmg/HB2jUTGg4F08ZhkWStBgVgAkAOdYM+Q4WBwr4mE+DnIRiDZmwdZJ1"
+      }
+    },
+    "captureconsole.es5.min.js.map": {
+      "checksums": {
+        "sha384-base64": "wUcyRdWDU0v2MxhgUTGQjsj+2uecYcTj/JDzxKyNDSrlWDmGNNdo3i+EWRgd+Rjh"
+      }
+    },
+    "contextlines.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "RangwF4M9BsYK2pt+/DAvofNf2ih43vDCCGHRMAa1e/JX82zG2AigOCc8RquOC23"
+      }
+    },
+    "contextlines.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "ulOq2ZgD++j8fegt1VkfogmOYpzIBWHvF1I8oC3uztjaSnU7i/Tg6sVfu1oAUN71"
+      }
+    },
+    "captureconsole.min.js.map": {
+      "checksums": {
+        "sha384-base64": "sVPSQ5LS5gr+y6FS3+CklmrbTh70+mXpp0GlmxhuHzYzfO3DWmdB+pexnP9kkmcF"
+      }
+    },
+    "contextlines.es5.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "IpM1qKF7plnawEFvxO7/rMH0TEIT6bYsT3KdrBcRoGNTnHT0YfTaCp2lO0nRkISN"
+      }
+    },
+    "contextlines.es5.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "NOjJ22JMZFZmF5u7PvstmFk6cXVJFgMCWNL3qy6KoJAK0b1mBHSedM4Bj6qrDp8+"
+      }
+    },
+    "contextlines.es5.js": {
+      "checksums": {
+        "sha384-base64": "hecvI4Q36tK3yt8qF2vd/EGocIOofvIzytVUIZibeT1jExjP2yGPbcGKWL0SNRfa"
+      }
+    },
+    "captureconsole.js.map": {
+      "checksums": {
+        "sha384-base64": "RB1KzlOZ0GfvYRbDptvhexcDc7/HJN9bmyikfLXCVnHPAYAknBIuCOMNnykEHpLq"
+      }
+    },
+    "contextlines.es5.min.js": {
+      "checksums": {
+        "sha384-base64": "aLb7+nJP8P5AzFTBisEXYr3Hefg7LpMO2dNCLi353rowXdPkDQwzf1ubgBXsIHEF"
+      }
+    },
+    "contextlines.es5.min.js.map": {
+      "checksums": {
+        "sha384-base64": "35YjWGRA7RQpq8AKkeS5R8SXpSL3FiUPKlHvQCURjaIf8yD+9xdzQcP6UHipubCE"
+      }
+    },
+    "contextlines.es5.js.map": {
+      "checksums": {
+        "sha384-base64": "4zvNEbLNdssoF60dihHD+pTtDkYboWtRtOr/4lCATrqAbIl6sDGdG7A1ixGHIClT"
+      }
+    },
+    "contextlines.js": {
+      "checksums": {
+        "sha384-base64": "Y/rNyLNJxa9Wf4Xnhpg/ML9Pes6kPCI2rNHeQyxaLJQhfcEJJs1MGQ+5C07WR4QK"
+      }
+    },
+    "contextlines.js.map": {
+      "checksums": {
+        "sha384-base64": "A1KZpl5VN37KLTy4yBWDydRo72ubskdhOEvj+u036ifzcCCVxUSgFNiYyxjYvvYp"
+      }
+    },
+    "contextlines.min.js": {
+      "checksums": {
+        "sha384-base64": "rcHf/ozw/7tPzR8OQb1/j7MIRWwb7onLyAvSdTt2LZ1rKYhBMpxWtO/dP0wlKXxI"
+      }
+    },
+    "contextlines.min.js.map": {
+      "checksums": {
+        "sha384-base64": "iAPQGJGHxxO5ofcgLnXy6tErMIi6IbufWhbbCRET8cDkUfZbBmGdgdB3FZ2rH66k"
+      }
+    },
+    "debug-build.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "jWaIHlOg6ZNi9It2MpUt02Nu9FwKSR3iQlbCn7ZHdbsUb5KsBe3fWQ85NI+XE1wg"
+      }
+    },
+    "bundle.tracing.replay.js.map": {
+      "checksums": {
+        "sha384-base64": "ADQbrYVVXGT78NmoPGVgBUBa0Rw2RZqk41ulCyHXO53kgv6K8ysAPQH68EVzNlZ1"
+      }
+    },
+    "debug-build.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "C9ypDrSceTCW7g/eSLhbhhtbUtTkDtMxFvcvoL6Hx46eC63+PUh2W2eIUKgRXCzp"
+      }
+    },
+    "debug-build.es5.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "rlMU9Ap0rl4hoBZFpaH1EX+sPPGlR8oxj3FrAxfPFEdzfjSGz5ynYKcJQCf4zvGO"
+      }
+    },
+    "debug-build.es5.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "0Aq24k1NUQEJGnHf43BWR6+YAqSajmeaX6UB9s8HC71nee5w4uuBxDYYCuL6LHiM"
+      }
+    },
+    "debug-build.es5.js": {
+      "checksums": {
+        "sha384-base64": "/MJ7MJlyexrTZuIKHqDrqsGltaGehpOMjsoyRuAQzof9v6zsGCgTs8t3GuBhnrSW"
+      }
+    },
+    "debug-build.es5.js.map": {
+      "checksums": {
+        "sha384-base64": "f5GGctxDu0eVzVy95sf9L0A28TKrOcHh5tZ9U8RviM0ypZl0sz9mJ3DHpbAMUscA"
+      }
+    },
+    "debug-build.es5.min.js": {
+      "checksums": {
+        "sha384-base64": "Ls0Rk30tGTutfo99iRcglYmljZYqgHKVMaUeAYcMxPaoFfS4wZuiutDBRsETEH2R"
+      }
+    },
+    "debug-build.es5.min.js.map": {
+      "checksums": {
+        "sha384-base64": "yEsJXJHf36FKd3eMozWeDTesnYgauQYi1db8hLGQhCP4gEfkQU0WeBqbNx4iplfU"
+      }
+    },
+    "debug-build.js": {
+      "checksums": {
+        "sha384-base64": "K5bzxqb+HmqQhKJqHphh1aWZBEuQzOqV4w/SY+tlpG4KqPvVEPqZYM59B3ZaBvha"
+      }
+    },
+    "debug-build.js.map": {
+      "checksums": {
+        "sha384-base64": "vW5OexVwp4Y/+AQa/FeT4xpAcsiGzvkeyVoJ7d/gr8tT9H34ZjiK1nkLOPJ01NP0"
+      }
+    },
+    "debug-build.min.js": {
+      "checksums": {
+        "sha384-base64": "THvkoxybBETuHrFUY1+M4IkB1dyEkKHX+E1Xp+LPZSYHLigY95iiRjNmg9f3lM1q"
+      }
+    },
+    "debug-build.min.js.map": {
+      "checksums": {
+        "sha384-base64": "Emur0hM0aVGoUmL+68/WjRhL2i3nuD+lXq6FKXDbXD6jKSdmd/181bvyqSh5m+Zo"
+      }
+    },
+    "debug.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "X/NIbnY8ITeprz6UzMkmRZplpb307j+uQymTwTsjpnmNfl8a6li5ZOR72EdvhdI5"
+      }
+    },
+    "debug.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "Y+jy9X9roV/5DNMPICzAAs7oh3z3yorD0zARgi8+o8QIAXpBNk/Wn4lh8XXpwFXX"
+      }
+    },
+    "debug.es5.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "n5V+VG2QSXPq6xhT/QVIK3pD2FafPBnkf1qCp2z+weoreTFHHwa4jdvdJlLJsuy/"
+      }
+    },
+    "debug.es5.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "YKYKlezyXHssIHQYS/PuwK2C+5wUBGXZqytSArMyxonj6dLsnF81IOc/k2+gAS5v"
+      }
+    },
+    "debug.es5.js": {
+      "checksums": {
+        "sha384-base64": "qAxajdJW2zfGYSAGOMY2gcw2xiY1/L1DxPEkRdFFVk8DAToolRePvkjQyo/AnbPv"
+      }
+    },
+    "debug.es5.js.map": {
+      "checksums": {
+        "sha384-base64": "k6kO/fXY4bKD0BNT9/XwRC/VwWhdGeLkfzZic76Fcn8KPwCvwm7MSY8Rs9lefmmi"
+      }
+    },
+    "debug.es5.min.js": {
+      "checksums": {
+        "sha384-base64": "STG7fGZ2ZmGLD3qvTM28kUitDv0FgBBzlZkJd5G3TTZy9CWHQroHBVS36iFxxh2b"
+      }
+    },
+    "debug.es5.min.js.map": {
+      "checksums": {
+        "sha384-base64": "J880cAUss1WKILj8CdBoO1GQRusNnmJKT7lWEvxiZMDJ0AvOElZTHPqvjwn9T+Px"
+      }
+    },
+    "debug.js": {
+      "checksums": {
+        "sha384-base64": "dNUIdSWe5wt0Fxzshre0Qv7ebxOzdfVimWzrkO/E2K69O9Y0/zxMwCgJ89bbx2ly"
+      }
+    },
+    "debug.js.map": {
+      "checksums": {
+        "sha384-base64": "vL91/Jq9O7aMiS3vHb3ki+NMLpiNq1KnkifzhV/4gPvE8awntdCfIZ59YEX0sG2G"
+      }
+    },
+    "debug.min.js": {
+      "checksums": {
+        "sha384-base64": "adlKx3/1zQx7K70NlIjkq0iKOYw6QqHebX4N/dTtLuUmFigOvVM4ezGwWAFuwh8m"
+      }
+    },
+    "debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "rGJ5cHft28IXwtgypxgtFKX0uNugBJI+/40OrMOdQPI4uelju+LXxxEorOXHqW2F"
+      }
+    },
+    "dedupe.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "b2AYnKlM2m/BJKMpuMDqBDbQ/PzUO05YRoW84xH3br9q7V2N3fJHpyH1gbvDKGb0"
+      }
+    },
+    "dedupe.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "oRltDNrxrC4dnHu3t66gE3+7dxY/6dwCdKkFfW3aqwPRi6W0pQZeVvk4+cBeJzp6"
+      }
+    },
+    "dedupe.es5.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "/ztTPYMhbaoizv094seJ1BdvAI1DN2OFPhSeWvaHhqHpQMlBG27HAwLBbjx1haJj"
+      }
+    },
+    "dedupe.es5.js": {
+      "checksums": {
+        "sha384-base64": "sF4UvVNSCZ41h++jxgpfpXqyA1yoXsrrrm+N7BKJw/yGguvvfvsTAo7y0x0Sgaw5"
+      }
+    },
+    "dedupe.es5.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "TczzlMX3mCWrylgNtg2Nko9qWFhHrBiu2yc2m3k85Ct/jd2eyq++CZ5db5cH5EMU"
+      }
+    },
+    "dedupe.es5.js.map": {
+      "checksums": {
+        "sha384-base64": "tcnuUrZk84d9vseKxWgeVklKImRBgp9LgO3yHla9xr5MfxhngSfzYaFdEzBsUxDU"
+      }
+    },
+    "dedupe.es5.min.js": {
+      "checksums": {
+        "sha384-base64": "5z21CXhiz9rLSCtkOZaW/QT4xSDyL5XpGX1WnssV08pptzDPyoNU6Y0akiEAgvEF"
+      }
+    },
+    "dedupe.es5.min.js.map": {
+      "checksums": {
+        "sha384-base64": "T+cPy99QrbvY8FRg7cTsC+DwUEyP1b0nWdU9WJ9J8zGTz1tGbDtTfumHYj/FLPUT"
+      }
+    },
+    "dedupe.js": {
+      "checksums": {
+        "sha384-base64": "ZfvMD+bzBBFG9X6b7yfwW29Cx8DiSfRbGGbgKCUAylgvH/uUb0Fz/IMrZeoGOwEI"
+      }
+    },
+    "dedupe.js.map": {
+      "checksums": {
+        "sha384-base64": "cPqhSrFoZaG5VTk7gpz2NKtobhDb1vGqE/eBi5wGHN5gpscbdPobziW2XvW5ZZl2"
+      }
+    },
+    "dedupe.min.js": {
+      "checksums": {
+        "sha384-base64": "TGUYbe7+C8nQSgIIlPC9M3X11fpaIPzJQ7kVm4Fo2Y94n14npctjX53wLpKW9yoW"
+      }
+    },
+    "dedupe.min.js.map": {
+      "checksums": {
+        "sha384-base64": "3lZkHURaKGfmDIFwxnRUV+FyZqwNqVCf/96H5u74LkjyPTGrdoneX8AB4ypHnE5W"
+      }
+    },
+    "extraerrordata.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "/YWzYVzFKRYTDGESyYF0FXrhDOz7KARsVzKQAaE2W/B2/Ecb7IwKbJ6b8ce7poJF"
+      }
+    },
+    "extraerrordata.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "JVd5uiqw/lEjlJ3yO9HARO+N+db0is2ghmz187NrEfdWfChmQEgF4GLk6NB4vOoV"
+      }
+    },
+    "extraerrordata.es5.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "XtnQugHf1Edx+jtT7ApElxX1gzGLtCPM6VtPDW+pZa6kJ2uLhE+QYN0gQu+z0bCb"
+      }
+    },
+    "extraerrordata.es5.js": {
+      "checksums": {
+        "sha384-base64": "R1uMTXsj/+Y9kJi1xdsXosTl5fh30IwNWxqgdsJoDIPFgBCQwy/kD+GO2o60TH8x"
+      }
+    },
+    "extraerrordata.es5.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "IZ2qf1WdfUThQDOjUZDJMM93G5q1qyEu8NJPQIgyd5109axl/eUfFNerwEFK643L"
+      }
+    },
+    "extraerrordata.es5.min.js": {
+      "checksums": {
+        "sha384-base64": "FubqdJXfI4MiD+px/02HDp4EEyH5Qo54RVS2HB2e6WRTViodFXkvoBH7ZhrFV+eO"
+      }
+    },
+    "extraerrordata.js": {
+      "checksums": {
+        "sha384-base64": "ldXn5t9cELfKNaV7fXwauO+HQFaHIoN3kIoF3jY5oYI33kKJ6Z4MMIHsNc7HMYXe"
+      }
+    },
+    "extraerrordata.es5.js.map": {
+      "checksums": {
+        "sha384-base64": "+ClLjY/Q375Myoo12+FMsmmzYrAXDiJ5iFSUNQaFRbn7khg2fWza+GZh3AGB0fwf"
+      }
+    },
+    "extraerrordata.es5.min.js.map": {
+      "checksums": {
+        "sha384-base64": "FInrOrqDWsKZhWeQMWIei6I0zZOjeCoOdNKwreBuGxuaaMOIZp9Xg4KH0UBQB+0O"
+      }
+    },
+    "extraerrordata.min.js": {
+      "checksums": {
+        "sha384-base64": "ZoW/+boS2JTIt2MU0RLSYLqUkIzxQk4MiOQN2RXnk0kkfay7R3BzpR0+fEaP5v6q"
+      }
+    },
+    "extraerrordata.js.map": {
+      "checksums": {
+        "sha384-base64": "pTNqMcPOurscIHCG7UNvAVlZOKH/3Br6rGqQWn2O2ilAzZHSAn3HjsOez2hmF0fE"
+      }
+    },
+    "httpclient.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "R8cq6DWCtiQ7sPRFM5ZcfA56o9IfChLBbJ6gY7Jv7mrzMthe+LXecHIeWI5JPFhG"
+      }
+    },
+    "extraerrordata.min.js.map": {
+      "checksums": {
+        "sha384-base64": "n0rIOwVGoS9BMwhE1UyeiIbDJGy2yZzqJ8Fj7raYnysWlEbUPu8dKKSUYOUvNAiT"
+      }
+    },
+    "httpclient.es5.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "r+4IAEylUd8rKIHZFIgWBRB0CHHUkYIWi12uB/JtPzeAUxP7XmYeMqzNJPxhx9Is"
+      }
+    },
+    "httpclient.es5.js": {
+      "checksums": {
+        "sha384-base64": "sFy4jTH85PElwLuk3caWzPjpzi7nB0qh6hfY3ltNUCAg0As4kRHRV6s9vt+Or2Un"
+      }
+    },
+    "httpclient.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "aoVKC6oFt6rr9TxllBYi6eOQLzf7xkXzKNVnjHit/dwi7amUkvK0RMF06aWayhfb"
+      }
+    },
+    "httpclient.es5.min.js": {
+      "checksums": {
+        "sha384-base64": "9ivww3AjV0yJudoFV4ymtS0X/XTeHXEeKA39VopKSPCcFfK//3vpyvTPc5ylQ4M4"
+      }
+    },
+    "httpclient.es5.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "/QXEZwUASKtXrog8AhPARupTguQVxW+4jEgxdQkQ3qOBWZ0Yy2jaurjvcnxPXis4"
+      }
+    },
+    "httpclient.js": {
+      "checksums": {
+        "sha384-base64": "YanqaeG1F9GmQeSkNmC9Jdsjzsg4p+FONsBQjhauqfXAAqYxS5stN+iu//eVmp1z"
+      }
+    },
+    "httpclient.min.js": {
+      "checksums": {
+        "sha384-base64": "azIQEnwL2WJyH+6m0uBi7ioBDeUBFCnO7GLWG8pwxXbUtiZsa2EyWwYrcfBZcifF"
+      }
+    },
+    "httpclient.es5.js.map": {
+      "checksums": {
+        "sha384-base64": "4gchH0QR8Vm8XsvIP0HUm2ujJiD2JLVaaJxGqSmQ1FuAfe2WJY0Q00nu+V+gIwG0"
+      }
+    },
+    "httpclient.es5.min.js.map": {
+      "checksums": {
+        "sha384-base64": "QTtnAHFytHxYl1BB3tX9pnVm86ZMMlh7m1AxBJi3+sM6YL4UyQ6jhXIuNgBskZqj"
+      }
+    },
+    "offline.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "ghpv6qg2FzFe0wHrCq0CqkfK8AWrN5IFdm0dhaWlpm85ZRbGeF/52RBCWMUv2vT+"
+      }
+    },
+    "offline.es5.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "q83ccHFJ51Umd4tPU+pS+veopvrptdGr/3flXH4o4PnLCDl+gVhUk5WcLxmKrWky"
+      }
+    },
+    "httpclient.min.js.map": {
+      "checksums": {
+        "sha384-base64": "dYeI0ACzhsAM4XT14GYqCMCK3MobhHzoZm121qFbF8V3NHjaNDdK7CodNEiW2NNk"
+      }
+    },
+    "httpclient.js.map": {
+      "checksums": {
+        "sha384-base64": "DXtUsPJYrdQZBGZOwmKDfN6eM0QTXkRO87xC9yHYLJ0mDMdFwtadmkABck6qXLpo"
+      }
+    },
+    "offline.es5.js": {
+      "checksums": {
+        "sha384-base64": "LKWVMmHdlJ6G58f+OZF4qEASPNCX4AuXuVy/JIMVx1SSfbcMGgLBi8TDiDhSXYeJ"
+      }
+    },
+    "offline.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "k8S59xi+Z1E+VaXwYT4TPTgFcmt95n90eATJoI2apjDF/r3ACL5mSamEJZ5p/Ci4"
+      }
+    },
+    "offline.es5.min.js": {
+      "checksums": {
+        "sha384-base64": "EgDRhx47GtPghQGuk/06otWxfciTxqJvj3bcm4tXCLQ9J5OM6Q71w83GYszJ3qTR"
+      }
+    },
+    "offline.es5.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "Aky6bfnUKXH8irUzdeRgsKVLzTyAhISXi+ekZiigssw1DkoiqfeitCEzixfXJLHn"
+      }
+    },
+    "offline.js": {
+      "checksums": {
+        "sha384-base64": "9Zr+XKf1AmvcIiKcnZ9mhiHSECS2SjlJEOD+u/mJXmv7mkslqxGbt2S/s2RAXMTl"
+      }
+    },
+    "offline.min.js": {
+      "checksums": {
+        "sha384-base64": "K0JAgkE6pqqv/tUNA4L5OiRZiE6MHfoFtePa/VkrwKheqp/TvAt9J2CDaadVcxH+"
+      }
+    },
+    "offline.es5.min.js.map": {
+      "checksums": {
+        "sha384-base64": "s5s4w1dODnKbJcnyL0uwl2/JMHpp9JctV0VAEOkoKjMuXskGnKMAExfaVshJuyoa"
+      }
+    },
+    "reportingobserver.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "9cD1BCDWeyG8MRQ3dslpTCew6CIATPYbIYv1eSBpegc2E/WjBI84F799k3KI93vr"
+      }
+    },
+    "offline.es5.js.map": {
+      "checksums": {
+        "sha384-base64": "QVA3c8wd7+nEqMXHBc/26HilztwUF+Oys9DKE5BqkywMK22WW8iOK06jw0js6tRe"
+      }
+    },
+    "reportingobserver.es5.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "vWfzpqR5zhdjiA8ooy+KtlT3c/271RrfzyCjV/8hFcyyCnRi2f5nRjHPUXsAYoHm"
+      }
+    },
+    "offline.min.js.map": {
+      "checksums": {
+        "sha384-base64": "8aDUDqRpKyLErhqEioDXwJN6hI7w62gXfCCb94qUyiL5NGEj9nLriuCJCO7NvMcF"
+      }
+    },
+    "reportingobserver.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "D+Ve0eyYsgVAZmVIO10aQfL8Ld6LOaGnU2LfNFTqcKFch9dUJT4T7KdKUDxsq6Nb"
+      }
+    },
+    "offline.js.map": {
+      "checksums": {
+        "sha384-base64": "H2Z3EB61yiFk0qasXA9YH3l0f1AYaLY1CVGxinFbVZtxgdgAXVI0nTVMtPf7tYxb"
+      }
+    },
+    "reportingobserver.es5.js": {
+      "checksums": {
+        "sha384-base64": "amHjMMauWygi0HdUmTsSHDnlROpy3ZDMl+BcCePF+Q8CmLjwfCTE9NT77Hs2lz04"
+      }
+    },
+    "reportingobserver.es5.min.js": {
+      "checksums": {
+        "sha384-base64": "vIMCHwus8rNJwpC0eQFCd105QB/m+QFctTPjMpyIDZBzjAYgJl74Px/z67EcmH2K"
+      }
+    },
+    "reportingobserver.es5.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "8l+KBlhLnYiPb/knsKlHfRsAvR4+qG1whWXgRpfkO97uuPTMwecLo+6mTDm9NXLd"
+      }
+    },
+    "reportingobserver.js": {
+      "checksums": {
+        "sha384-base64": "h7f5M8L7Of8KQy242JDrwgrIXCszdG4bBoRunUajqScdWL6oVT+OCeyQRI15RLir"
+      }
+    },
+    "reportingobserver.min.js": {
+      "checksums": {
+        "sha384-base64": "BV4zarLnSo2UwtPToLA268fExJD1vlbahsQdVOP5bLk/5x34/pnG5v0ZykBrmMv9"
+      }
+    },
+    "reportingobserver.es5.js.map": {
+      "checksums": {
+        "sha384-base64": "rJj/w7PILwCqQ3LKf94iVakS0f/74kyLSgtcumXFQa+u+CcxDvJSuw9rqVSEBo0k"
+      }
+    },
+    "reportingobserver.es5.min.js.map": {
+      "checksums": {
+        "sha384-base64": "pfGqgmCUnY90hA+MLiB8IIfrH97K/QLNi+rc/um++tOLm1Ue20xFtc8VITlIpOFm"
+      }
+    },
+    "rewriteframes.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "/WEp5d5GIMjlNv0ItoEsPJx2umgN4qtMUeGZ0+qj20H8axZGulwejWknwcQ0rZi0"
+      }
+    },
+    "rewriteframes.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "A2aPPkMwGjAM2bm7ci/uCvId8sNNrFjiszSiyKgIutzUDwlcqvnmDDTkHKmVOzo6"
+      }
+    },
+    "rewriteframes.es5.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "itIz/M2tSZv6gWTL9ngBSToPQRvyvfiqwpdQYSnyOrpsIB2ld9Sbjp/as2NF3ZAh"
+      }
+    },
+    "reportingobserver.min.js.map": {
+      "checksums": {
+        "sha384-base64": "Rlz49PCGFK+Of5FbKR1ANaBC5Y8sfpJc2v/aLjoZS/mIaatfyMS8axHik7VjUuTQ"
+      }
+    },
+    "rewriteframes.es5.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "hWeKWku1x6uDoBU6XI+smQtdY1VGupI5sdoOBiQxT2j8/bEbGDsWHy7RBO+0VI30"
+      }
+    },
+    "reportingobserver.js.map": {
+      "checksums": {
+        "sha384-base64": "4wJ6qb/+8TMrj6o7JVn8RkVI8fbRcht14rp9hkWf2Tsx9HvqyJFd/jSQi2z5X221"
+      }
+    },
+    "rewriteframes.es5.js": {
+      "checksums": {
+        "sha384-base64": "uKjrNgBYxKqnAGsIPkhDrnH7eEUoNudd/oMY2oaHq4okSAAE4zwHz93HYp4uY7MN"
+      }
+    },
+    "rewriteframes.es5.min.js": {
+      "checksums": {
+        "sha384-base64": "d/h2N8pTfLc/Y9qrRt3ZIYkETO8GAFRoIRZT36b4cHAlaY8PUi+gTJXADmThyLm8"
+      }
+    },
+    "rewriteframes.es5.js.map": {
+      "checksums": {
+        "sha384-base64": "nSDan4nCP+v7I4qZb1Vaejmuel90A9l+ExMp+DWPeT4wgFtz260nJpTTlYFJnSH4"
+      }
+    },
+    "rewriteframes.es5.min.js.map": {
+      "checksums": {
+        "sha384-base64": "Izt2WKiUY8qSfH8cWM4OhZ2bU0lSnT7xrTzEccQr+3BieHGK4rFZrsxrJkYaqkUS"
+      }
+    },
+    "rewriteframes.js": {
+      "checksums": {
+        "sha384-base64": "15I3+LaTMB4a94U5KAMn0dykp+hvihLcAY1wQFOk6Eq2LDe0+GapAH1SZZ0fA4sM"
+      }
+    },
+    "rewriteframes.js.map": {
+      "checksums": {
+        "sha384-base64": "SCmVjWZqTeNJVWrxcANBpUdMThHAG5J+ZPqRITXvOY9TM8VLk8mApP1BmGse81XL"
+      }
+    },
+    "rewriteframes.min.js": {
+      "checksums": {
+        "sha384-base64": "cn00eSo0ArFVeKZyqMTKPSzNBYEGZjKHhnNgqTXipptm74p7bIp5SNtv+SvpXqSy"
+      }
+    },
+    "rewriteframes.min.js.map": {
+      "checksums": {
+        "sha384-base64": "2qJwBR3805Oztpi7PdcKTu2FoR3S6w/RHMLw8RRqIzORIBIvUqwK+SgnkpWUPvLt"
+      }
+    },
+    "sessiontiming.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "DVtULz6fpfE3CREjhzg0TGJVxXXSjtLocaE18XHmHRofWgIUcAbcMDtCp3FPIJPQ"
+      }
+    },
+    "sessiontiming.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "BDsXArUpBl5gTfSaZz3M4t6HOyx+V41Spa29s/Nth2jIUUdNXqm/KEtcCWsR6qw0"
+      }
+    },
+    "sessiontiming.es5.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "sHpw77WxOMDEecQIUUwi/pRzWu+6p4TeO/7zSfNAyLAFF0kV5n5f621+6ByRsmKw"
+      }
+    },
+    "sessiontiming.es5.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "BZOKJqHfFwuulUe4ExIDR/6eKrGtwwkCYT3oyn3rpwa9cMecDh6HrjSt4tYWDHGt"
+      }
+    },
+    "sessiontiming.es5.js": {
+      "checksums": {
+        "sha384-base64": "TBT8bGr2quG63ZzN+PnqFWnAgz9jYbdm0D+9R12otEfUGX+BTE+hjvUPkHsGogC9"
+      }
+    },
+    "sessiontiming.es5.js.map": {
+      "checksums": {
+        "sha384-base64": "wuWOV1i2d1mVHIp2UBMmL2XT5tOqguVD/2g8UJIWHGUV1l/3R1q76QF0//PiG3h8"
+      }
+    },
+    "sessiontiming.es5.min.js": {
+      "checksums": {
+        "sha384-base64": "WV9cWGaigGJTyWIk3mutHsK+ypnIns77sswMfXMmcoJlOcVLqkD6KHuafcDWovlT"
+      }
+    },
+    "sessiontiming.es5.min.js.map": {
+      "checksums": {
+        "sha384-base64": "FyqeB0CTpAIHDIUZodSDpBlGNVaBIito81Citpt5yBDmNok0SALqizDXoC5k1Q8I"
+      }
+    },
+    "sessiontiming.js": {
+      "checksums": {
+        "sha384-base64": "XSku67NKj5TKN57quYDrL1mJshl1q3OKhIWVgO1Bmsz19egj4y1LLPfLoJoXo/cU"
+      }
+    },
+    "sessiontiming.js.map": {
+      "checksums": {
+        "sha384-base64": "qkGppOHqEXsvgivo/vAigqDyKaTK24+UO78NrVG1SYZ/E1whxgSyps0Bxcr1D1TE"
+      }
+    },
+    "sessiontiming.min.js": {
+      "checksums": {
+        "sha384-base64": "ki0DUVUfQ5L6d7J/dNTO6yEKla3eZ8blrPyJtRN/mfuuP6k3itKmYUKuo2Lmd0O5"
+      }
+    },
+    "sessiontiming.min.js.map": {
+      "checksums": {
+        "sha384-base64": "McsJfLtyI/06M/MipkP68iMBZliqYQBKY5npfiRzBX197I0ScrI4B7Jhn/GRnnkA"
+      }
+    },
+    "transaction.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "HdHJZh6kN94dvtVdACraA9BBVCjHwmFrfn2oLQ+6r5Ds9XewW8YhTIv1H9mcb7nl"
+      }
+    },
+    "transaction.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "K6UmnOCOGntngT1g2+DGobEQ014y/fM+bx6MWL39sTw6NldbVuOXyDvPs4kzb2X1"
+      }
+    },
+    "transaction.es5.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "hOPCGfysj6QN7mOHgkHolv4enB7Cj3bawZS8NYgi605nQXdLGTptaTZYI1v+50+S"
+      }
+    },
+    "transaction.es5.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "1sljoMag6T9bAQx8Lh9/xz3LwsfVgaLrPONe3uMLT5EVk30TuEQh1+St8IooFUEN"
+      }
+    },
+    "transaction.es5.js": {
+      "checksums": {
+        "sha384-base64": "Q4KdozXR70yigQm2W3Go80H7IJ4+mKYkorazj3iPSyG5uYcfc8eIz6bUsL/m9Cn0"
+      }
+    },
+    "transaction.es5.js.map": {
+      "checksums": {
+        "sha384-base64": "o2po0uN76jlyTVC8LTi7tUuJl5fbzproX6id9JmQ5YFtdEQx7Tb3MAWGssGZZs7G"
+      }
+    },
+    "transaction.es5.min.js": {
+      "checksums": {
+        "sha384-base64": "kDkwIUmG/uix9lLqP7mzCgJcIg92s7RUMECLbcYXl7Cml4pvTl7wnvw5o5gBCnR7"
+      }
+    },
+    "transaction.es5.min.js.map": {
+      "checksums": {
+        "sha384-base64": "ViFKElrOWfMNqlSm/6n1X7VBAL1EK72/Qcaq+GROF3pkstS42F7566zjD5TWkEaj"
+      }
+    },
+    "transaction.js": {
+      "checksums": {
+        "sha384-base64": "PX0bw6iFiISdOXaabOIfnLagFtcgVIq3kXQWyKH85jWYSQjFLb0zF0PG3wC/Zswg"
+      }
+    },
+    "transaction.js.map": {
+      "checksums": {
+        "sha384-base64": "/QvdXbN84f3pOUMc2/gZUiEUT68+m4da0Ueeu0jCi4doJsbOXqObdm4bRjDySr2F"
+      }
+    },
+    "transaction.min.js": {
+      "checksums": {
+        "sha384-base64": "4rFARbcmnqtN5NtScUza4Xf2hcb/Arh0CHC09rmFmSu9ck/qirb0kU44tYg1IKxu"
+      }
+    },
+    "transaction.min.js.map": {
+      "checksums": {
+        "sha384-base64": "UleEDsK2Pb1RQBYGIZmaDGSI6VOAfWVjIOqkMTQebceLrekEwG8Jd4ju8Ogx3Zm5"
+      }
+    },
+    "sentry-integrations-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "76Hb4Gukr0tW4/UIXRRQiLvB0cvVz8FCf3OXqnrmZenhS2HgUcuWELkRKoVfdRJn"
+      }
+    },
+    "sentry-node-experimental-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "ov/ebde5Lh1JlkfZNgjWpkDpn7dsAoajoaf424SMvo75rhFDZGLH6KFqbWMeG6V9"
+      }
+    },
+    "sentry-opentelemetry-node-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "Mx5u4BsIc/KzVT8IbGIJ1Yxmbx4VQscOakOweKsKLG02cIP/xioe1deaxsddE/jB"
+      }
+    },
+    "sentry-nextjs-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "0APHD+e+qjYsWbyO8Y3s9ZXnO20CjTlsvsXFuY88owS2Si5RTv4YWMH+yNcdc0zt"
+      }
+    },
+    "sentry-opentelemetry-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "+nqrpJ3RDmT3gF5g5lxnbqF8F4wbzEIKUtrAwMbtXUyPhH7EBkDysC/Zivx+bHjX"
+      }
+    },
+    "sentry-node-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "A8jgelTSCVTEx1VuCufPQ8dCt4YDLMO05Jnfs6ETG595vleLusD8Lc7Lxew4/0Su"
+      }
+    },
+    "sentry-react-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "bcHadLmzXtiw3uqDvUU0Sit6XUaj76Wi8GH8Ooz4dYusLQDSBiDwTzaPqE4PR5vg"
+      }
+    },
+    "sentry-remix-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "uY9hHKCh9X219YWe3IP493VQ9bvCxyHXHHHfTthI/nnr9amJtEaxswvY3BgtYmqw"
+      }
+    },
+    "replay.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "j6IBRQkfF/uUVT0rwwgv5tED7GRCL/VKmRFTikABaCEHL04HXzXyUldMhXE8y6nZ"
+      }
+    },
+    "replay.min.js": {
+      "checksums": {
+        "sha384-base64": "zAi2DYiALqEBU00oJ3OhDQM5mtgVUO54r17MjZwX2H2AyMUUjod70eecE9CUrsFx"
+      }
+    },
+    "replay.js": {
+      "checksums": {
+        "sha384-base64": "AamYr3YsRpK1ZeaN6iju3H5/2JDrGjDFDlaz0gVqJ9jsGBGQiw74S9qVSAS9pcx+"
+      }
+    },
+    "sentry-profiling-node-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "1OceLRkEcp0JXfYEUdxfmBkqXDP4EkgRqWuYZjUTTidRFZO8l2k+oCytLxuVFt1Z"
+      }
+    },
+    "replay-canvas.debug.min.js": {
+      "checksums": {
+        "sha384-base64": "e4rXDxv2sTCZ9AZwPiRTFjqGTxG4llAnVwEg+x7w+Qf9ZJ+l4XNyxG2z/1IdWiTZ"
+      }
+    },
+    "replay-canvas.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "7XXW/ubrtFtpdT6RNxm0EefHb/sSFF0AYTOWsV8YbI5/o+dUWay//PqNGybfxRXD"
+      }
+    },
+    "sentry-replay-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "1lxDWH5K94rE1qtO91/RVTG+EQRfC59z0mo9DJ7v5Btj+mr7uRZwgc/k27RqbpKF"
+      }
+    },
+    "replay-canvas.js": {
+      "checksums": {
+        "sha384-base64": "nM5OvBHl4B+caeeTR/HQGevHuvfcc0vQBZhMNGNHieFRrrmyjAlBS7jt0SVQQmVr"
+      }
+    },
+    "replay.debug.min.js.map": {
+      "checksums": {
+        "sha384-base64": "SJ5d5QxUzVmIw9wWuTS/pAf8E8JxEnfeUP6IJXOMX1DPRwKT8AqVUa41OL0PnwzE"
+      }
+    },
+    "replay-canvas.min.js": {
+      "checksums": {
+        "sha384-base64": "A/VYlRE3XoGBqlXlhDlBhOKnQ7YWwvs6nyxEt2Z6FFqtnnTS35V5KoA6u1QnREv4"
+      }
+    },
+    "replay-canvas.js.map": {
+      "checksums": {
+        "sha384-base64": "yoI1Ege+h98/MrT8wtcwX8YWq4IADrKzFupHnx1eIPlXNTtcxtnNmm197Hacs7NM"
+      }
+    },
+    "replay-canvas.min.js.map": {
+      "checksums": {
+        "sha384-base64": "Bm4thd9sU1ND1OHPAV+cwJxu8BRVIYznZME3pe6XgWH3b0EiShPEovh3u2i4kN4m"
+      }
+    },
+    "replay.min.js.map": {
+      "checksums": {
+        "sha384-base64": "rTJ6e54TS4LkRr6kfkt1uky4gSTFtiONv01DRef3+Ux9W5UgX64uLjgbwirnt6jk"
+      }
+    },
+    "sentry-internal-replay-canvas-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "SCRqnj/spzfBTLPNiYkGy6M4kG/vPUw25F/tPVzEs7/Pj/d8UN7UhcaK16x5NkSX"
+      }
+    },
+    "sentry-node-serverless-7.107.0.zip": {
+      "checksums": {
+        "sha384-base64": "mDibvOGH91sd1gzoGtkGbChVHu4Cz+oRmJ/KMv4SVZxnc+kFZaLZlKaw++5m2JQ8"
+      }
+    },
+    "sentry-serverless-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "RkVVTXmnqi0km/Jsj+4baQmFLDW810uxxHaB2eMdzwH/hik6tJpoQDlBjYNxeNgZ"
+      }
+    },
+    "sentry-svelte-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "9DzdsYmxANO91ZVHIHARPVKg+LB0sfyTJHt+BpaDDk/0xBjdL3IMHHVxUQLyHKmO"
+      }
+    },
+    "sentry-sveltekit-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "XsbCX1ZBTr39IKgFksnq9DwdUBoK6QVMRn13sqg2ydLV6O2yuZU8cdUbgA+894vS"
+      }
+    },
+    "sentry-tracing-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "gykOwkGqt20Nd/71AJz/WfWHq6PIJd6sXJFfVR7UVDjvJNoC0wgsCiF1KVqKiOzD"
+      }
+    },
+    "sentry-types-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "iVoQaNisLYPleYrZmCZQEg9j72+LlxGz3Ci+dW3bSoQ1X5qnkkBGRth1iZUuYd6V"
+      }
+    },
+    "sentry-internal-typescript-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "lDiIJXf/XMxAKJ75eDoECe5ODwwpbs4jBpRtvk+5pF6gzHagzHmFXGx0m5xdcKpa"
+      }
+    },
+    "sentry-internal-tracing-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "qSOd5L+ZfnMq5ndqFDTQj0sHqn43NoU8Q8i4YpZR+y6zD/q9SiT6ZNaQMhG//4kx"
+      }
+    },
+    "sentry-vercel-edge-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "oNBtr9rs6q6dSC2Sm1XSBG9rX6PKeprOycf+EJhr3wm8Un56VHiybJEscgW8lEdT"
+      }
+    },
+    "sentry-vue-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "Vp8n3mBo4yNZFodYZsEJL5NuEk1Jc3CAY9kMnn6mD+qAyyKDK1Yon060d1ODQu7J"
+      }
+    },
+    "sentry-utils-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "wRiJa/QwPzKQuTzKnL7g6he60Q20D313aSJDyLJLUQ8EJTUowTTTOOAr6ws+EDy2"
+      }
+    },
+    "sentry-wasm-7.107.0.tgz": {
+      "checksums": {
+        "sha384-base64": "B3LOUTRUKz67xy9FbktimGMalM4voFc007+KEgUt8g4/zuDrnWBzV/2lQVDc8bmG"
+      }
+    },
+    "replay.js.map": {
+      "checksums": {
+        "sha384-base64": "DGOUb+4HyU9joE1m+ohXpR/9Qd7jMirrM8589LHaQRLaShshF7OqmH3Ccs6km3NI"
+      }
+    }
+  }
+}
