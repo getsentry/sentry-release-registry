@@ -1,8 +1,34 @@
 {
-    "name": "Sentry.AzureFunctions.Worker",
-    "canonical": "nuget:Sentry.AzureFunctions.Worker",
-    "version": "3.33.0-beta.1",
-    "package_url": "https://www.nuget.org/packages/Sentry.AzureFunctions.Worker",
-    "repo_url": "https://github.com/getsentry/sentry-dotnet",
-    "main_docs_url": "https://docs.sentry.io/platforms/dotnet/guides/azure-functions-worker"
+  "name": "Sentry.AzureFunctions.Worker",
+  "canonical": "nuget:Sentry.AzureFunctions.Worker",
+  "version": "3.33.0-beta.1",
+  "package_url": "https://www.nuget.org/packages/Sentry.AzureFunctions.Worker",
+  "repo_url": "https://github.com/getsentry/sentry-dotnet",
+  "main_docs_url": "https://docs.sentry.io/platforms/dotnet/guides/azure-functions-worker",
+  "categories": [
+    "desktop",
+    "server"
+  ],
+  "features": {
+    "crons": {
+      "availability": "GA",
+      "available-with-version": "4.2.0"
+    },
+    "errors": {
+      "availability": "GA",
+      "available-with-version": "1.0.0"
+    },
+    "performance": {
+      "availability": "GA",
+      "available-with-version": "3.0.0"
+    },
+    "profiling": {
+      "availability": "GA",
+      "available-with-version": "3.31.0"
+    },
+    "session-replay": {
+      "availability": null,
+      "available-with-version": null
+    }
   }
+}
