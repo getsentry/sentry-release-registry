@@ -4,5 +4,31 @@
   "version": "4.2.1",
   "package_url": "https://www.nuget.org/packages/Sentry.NLog",
   "repo_url": "https://github.com/getsentry/sentry-dotnet",
-  "main_docs_url": "https://docs.sentry.io/platforms/dotnet"
+  "main_docs_url": "https://docs.sentry.io/platforms/dotnet",
+  "categories": [
+    "desktop",
+    "server"
+  ],
+  "features": {
+    "crons": {
+      "availability": "GA",
+      "available-with-version": "4.2.0"
+    },
+    "errors": {
+      "availability": "GA",
+      "available-with-version": "1.0.0"
+    },
+    "performance": {
+      "availability": "GA",
+      "available-with-version": "3.0.0"
+    },
+    "profiling": {
+      "availability": "GA",
+      "available-with-version": "3.31.0"
+    },
+    "session-replay": {
+      "availability": null,
+      "available-with-version": null
+    }
+  }
 }
