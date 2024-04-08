@@ -69,9 +69,9 @@ class RegistryService
         foreach ($packageRegistries as $packageRegistry) {
             $items = File::directories($packageRegistry);
             foreach ($items as $item) {
-                $namespaceFilePath = $this->_path($item, self::NAMESPACE_FILE_MARKER);
+                $namespaceFilePath = implode(DIRECTORY_SEPARATOR, [realpath($item), self::NAMESPACE_FILE_MARKER]);
                 if (File::exists($namespaceFilePath)) {
-                    $subitems = File::directories($item);
+                    $subitems = File::directories(realpath($item));
                     foreach ($subitems as $subitem) {
                         if (basename($subitem) !== self::NAMESPACE_FILE_MARKER) {
                             yield basename($packageRegistry) . ':' . basename($item) . '/' . basename($subitem);
@@ -142,7 +142,7 @@ class RegistryService
         $links = File::directories($this->_path('aws-lambda-layers'));
         foreach ($links as $link) {
             try {
-                $content = File::get($this->_path($link, 'latest.json'));
+                $content = File::get(implode(DIRECTORY_SEPARATOR, [realpath($link), 'latest.json']));
                 $data = json_decode($content, true);
                 $layers[$data['canonical']] = $data;
             } catch (\Exception $e) {
