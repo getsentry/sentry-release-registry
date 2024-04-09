@@ -7,32 +7,34 @@ use App\Services\RegistryService;
 
 class RegistryController extends Controller
 {
+    public function __construct(
+        protected RegistryService $registryService,
+    ) {
+    }
+
     public function sdks()
     {
-        $registryService = new RegistryService();
         $strict = filter_var(request()->input('strict'), FILTER_VALIDATE_BOOLEAN);
 
-        return response()->json($registryService->getSdks($strict));
+        return response()->json($this->registryService->getSdks($strict));
     }
 
     public function sdkVersions($sdk_id)
     {
-        $registryService = new RegistryService();
-        $latestPackage = $registryService->getSdk($sdk_id);
+        $latestPackage = $this->registryService->getSdk($sdk_id);
         if ($latestPackage === null) {
             return response()->json(['error' => 'SDK not found'], 404);
         }
 
         return response()->json([
             'latest' => $latestPackage,
-            'versions' => array_values(array_unique($registryService->getPackageVersions($latestPackage->getCanonical()))),
+            'versions' => array_values(array_unique($this->registryService->getPackageVersions($latestPackage->getCanonical()))),
         ]);
     }
 
     public function sdkVersion($sdk_id, $version)
     {
-        $registryService = new RegistryService();
-        $package = $registryService->getSdk($sdk_id, $version);
+        $package = $this->registryService->getSdk($sdk_id, $version);
         if ($package === null) {
             return response()->json(['error' => 'SDK not found'], 404);
         }
@@ -42,9 +44,8 @@ class RegistryController extends Controller
 
     public function packages()
     {
-        $registryService = new RegistryService();
         $strict = filter_var(request()->input('strict'), FILTER_VALIDATE_BOOLEAN);
-        $package = $registryService->getPackages($strict);
+        $package = $this->registryService->getPackages($strict);
         if ($package === null) {
             return response()->json(['error' => 'Package not found'], 404);
         }
@@ -54,22 +55,20 @@ class RegistryController extends Controller
 
     public function packagesVersions($canonical)
     {
-        $registryService = new RegistryService();
-        $latestPackage = $registryService->getPackage($canonical);
+        $latestPackage = $this->registryService->getPackage($canonical);
         if ($latestPackage === null) {
             return response()->json(['error' => 'Package not found'], 404);
         }
 
         return response()->json([
             'latest' => $latestPackage,
-            'versions' => array_values(array_unique($registryService->getPackageVersions($latestPackage->getCanonical()))),
+            'versions' => array_values(array_unique($this->registryService->getPackageVersions($latestPackage->getCanonical()))),
         ]);
     }
 
     public function package($canonical, $version = 'latest')
     {
-        $registryService = new RegistryService();
-        $package = $registryService->getPackage($canonical, $version);
+        $package = $this->registryService->getPackage($canonical, $version);
         if ($package === null) {
             return response()->json(['error' => 'Package not found'], 404);
         }
@@ -79,15 +78,12 @@ class RegistryController extends Controller
 
     public function marketingSlugs()
     {
-        $registryService = new RegistryService();
-
-        return response()->json(['slugs' => array_keys($registryService->getMarketingSlugs())]);
+        return response()->json(['slugs' => array_keys($this->registryService->getMarketingSlugs())]);
     }
 
     public function marketingSlug($slug)
     {
-        $registryService = new RegistryService();
-        $slug = $registryService->resolveMarketingSlug($slug);
+        $slug = $this->registryService->resolveMarketingSlug($slug);
         if ($slug === null) {
             return response()->json(['error' => 'Slug not found'], 404);
         }
@@ -97,9 +93,7 @@ class RegistryController extends Controller
 
     public function awsLambdaLayers()
     {
-        $registryService = new RegistryService();
-
-        return response()->json($registryService->getAwsLambdaLayers());
+        return response()->json($this->registryService->getAwsLambdaLayers());
     }
 
     public function healthcheck()
@@ -109,15 +103,12 @@ class RegistryController extends Controller
 
     public function apps()
     {
-        $registryService = new RegistryService();
-
-        return response()->json($registryService->getApps());
+        return response()->json($this->registryService->getApps());
     }
 
     public function appVersion($app_id, $version)
     {
-        $registryService = new RegistryService();
-        $app = $registryService->getApp($app_id, $version);
+        $app = $this->registryService->getApp($app_id, $version);
         if ($app === null) {
             return response()->json(['error' => 'App not found'], 404);
         }

@@ -34,6 +34,7 @@ class FeatureMatrix extends Component
     public function render()
     {
         $sdks = $this->registryService->getSdks();
+
         return view('livewire.feature-matrix', compact('sdks'));
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Livewire\FeatureMatrix;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', FeatureMatrix::class);
 
