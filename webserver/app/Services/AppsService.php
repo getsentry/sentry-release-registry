@@ -24,6 +24,7 @@ class AppsService
                 return $url;
             }
         }
+
         return null;
     }
 
@@ -41,6 +42,7 @@ class AppsService
                 $rv[] = sprintf('%s=%s', substr($algo, 0, -7), $value);
             }
         }
+
         return implode(',', $rv);
     }
 
@@ -51,6 +53,7 @@ class AppsService
                 return $fileInfo['checksums'] ?? null;
             }
         }
+
         return null;
     }
 }

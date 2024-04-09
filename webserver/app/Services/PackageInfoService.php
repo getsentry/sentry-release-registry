@@ -26,7 +26,7 @@ class PackageInfoService implements \JsonSerializable
         return $this->data['version'];
     }
 
-    public function jsonSerialize(): mixed 
+    public function jsonSerialize(): mixed
     {
         return $this->data;
     }

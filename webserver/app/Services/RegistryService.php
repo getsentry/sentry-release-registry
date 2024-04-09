@@ -3,9 +3,6 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
-
-use App\Services\PackageInfoService;
 
 class RegistryService
 {
@@ -25,7 +22,7 @@ class RegistryService
 
     protected function validateCanonical($canonical)
     {
-        if (!str_contains($canonical, ':')) {
+        if (! str_contains($canonical, ':')) {
             return throw new \ValueError("Invalid canonical: {$canonical}");
         }
 
@@ -42,7 +39,8 @@ class RegistryService
 
         $path = $this->_path('packages', $registry, $package, "{$version}.json");
         $content = File::get($path);
-        return new PackageInfoService(json_decode($content, true));    
+
+        return new PackageInfoService(json_decode($content, true));
     }
 
     public function getPackageVersions($canonical)
@@ -74,11 +72,11 @@ class RegistryService
                     $subitems = File::directories(realpath($item));
                     foreach ($subitems as $subitem) {
                         if (basename($subitem) !== self::NAMESPACE_FILE_MARKER) {
-                            yield basename($packageRegistry) . ':' . basename($item) . '/' . basename($subitem);
+                            yield basename($packageRegistry).':'.basename($item).'/'.basename($subitem);
                         }
                     }
                 } else {
-                    yield basename($packageRegistry) . ':' . basename($item);
+                    yield basename($packageRegistry).':'.basename($item);
                 }
             }
         }
@@ -97,6 +95,7 @@ class RegistryService
                 $packages[$pkg->getCanonical()] = $pkg;
             }
         }
+
         return $packages;
     }
 
@@ -109,10 +108,10 @@ class RegistryService
                 $content = File::get(implode(DIRECTORY_SEPARATOR, [realpath($link), 'latest.json']));
                 $canonical = json_decode($content, true)['canonical'];
                 $pkg = $this->getPackage($canonical);
-                
+
                 if ($pkg === null) {
                     if ($strict) {
-                        throw new \ValueError("Package " . basename($link) . ", canonical cannot be resolved: {$canonical}");
+                        throw new \ValueError('Package '.basename($link).", canonical cannot be resolved: {$canonical}");
                     }
                 } else {
                     $sdks[basename($link)] = $pkg;
@@ -122,6 +121,7 @@ class RegistryService
                 continue;
             }
         }
+
         return $sdks;
     }
 
@@ -130,6 +130,7 @@ class RegistryService
         try {
             $content = File::get($this->_path('sdks', $sdkId, 'latest.json'));
             $canonical = json_decode($content, true)['canonical'];
+
             return $this->getPackage($canonical, $version);
         } catch (\Exception $e) {
             return null;
@@ -149,6 +150,7 @@ class RegistryService
                 continue;
             }
         }
+
         return $layers;
     }
 
@@ -166,6 +168,7 @@ class RegistryService
                 continue;
             }
         }
+
         return $apps;
     }
 
@@ -173,6 +176,7 @@ class RegistryService
     {
         try {
             $content = File::get($this->_path('apps', $appId, "{$version}.json"));
+
             return json_decode($content, true);
         } catch (\Exception $e) {
             return null;
@@ -182,6 +186,7 @@ class RegistryService
     public function getMarketingSlugs()
     {
         $content = File::get($this->_path('misc', 'marketing-slugs.json'));
+
         return json_decode($content, true);
     }
 

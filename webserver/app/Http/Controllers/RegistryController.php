@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Services\RegistryService;
 use App\Services\AppsService;
+use App\Services\RegistryService;
 
 class RegistryController extends Controller
 {
@@ -12,6 +11,7 @@ class RegistryController extends Controller
     {
         $registryService = new RegistryService();
         $strict = filter_var(request()->input('strict'), FILTER_VALIDATE_BOOLEAN);
+
         return response()->json($registryService->getSdks($strict));
     }
 
@@ -22,9 +22,10 @@ class RegistryController extends Controller
         if ($latestPackage === null) {
             return response()->json(['error' => 'SDK not found'], 404);
         }
+
         return response()->json([
             'latest' => $latestPackage,
-            'versions' => array_values(array_unique($registryService->getPackageVersions($latestPackage->getCanonical())))
+            'versions' => array_values(array_unique($registryService->getPackageVersions($latestPackage->getCanonical()))),
         ]);
     }
 
@@ -35,6 +36,7 @@ class RegistryController extends Controller
         if ($package === null) {
             return response()->json(['error' => 'SDK not found'], 404);
         }
+
         return response()->json($package);
     }
 
@@ -46,6 +48,7 @@ class RegistryController extends Controller
         if ($package === null) {
             return response()->json(['error' => 'Package not found'], 404);
         }
+
         return response()->json($package);
     }
 
@@ -56,9 +59,10 @@ class RegistryController extends Controller
         if ($latestPackage === null) {
             return response()->json(['error' => 'Package not found'], 404);
         }
+
         return response()->json([
             'latest' => $latestPackage,
-            'versions' => array_values(array_unique($registryService->getPackageVersions($latestPackage->getCanonical())))
+            'versions' => array_values(array_unique($registryService->getPackageVersions($latestPackage->getCanonical()))),
         ]);
     }
 
@@ -69,12 +73,14 @@ class RegistryController extends Controller
         if ($package === null) {
             return response()->json(['error' => 'Package not found'], 404);
         }
+
         return response()->json($package);
     }
 
     public function marketingSlugs()
     {
         $registryService = new RegistryService();
+
         return response()->json(['slugs' => array_keys($registryService->getMarketingSlugs())]);
     }
 
@@ -85,12 +91,14 @@ class RegistryController extends Controller
         if ($slug === null) {
             return response()->json(['error' => 'Slug not found'], 404);
         }
+
         return response()->json($slug);
     }
 
     public function awsLambdaLayers()
     {
         $registryService = new RegistryService();
+
         return response()->json($registryService->getAwsLambdaLayers());
     }
 
@@ -102,6 +110,7 @@ class RegistryController extends Controller
     public function apps()
     {
         $registryService = new RegistryService();
+
         return response()->json($registryService->getApps());
     }
 
@@ -112,7 +121,7 @@ class RegistryController extends Controller
         if ($app === null) {
             return response()->json(['error' => 'App not found'], 404);
         }
-        
+
         $appsService = new AppsService();
         $responseType = request()->input('response');
         if ($responseType === 'download') {
@@ -129,10 +138,10 @@ class RegistryController extends Controller
             if ($digest) {
                 $response->header('Digest', $digest);
             }
+
             return $response;
         }
 
         return response()->json($app);
-    }    
-
+    }
 }
