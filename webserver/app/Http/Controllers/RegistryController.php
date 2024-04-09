@@ -97,11 +97,6 @@ class RegistryController extends Controller
         return response()->json($this->registryService->getAwsLambdaLayers());
     }
 
-    public function healthcheck()
-    {
-        return response('ok', 200);
-    }
-
     public function apps()
     {
         return response()->json($this->registryService->getApps());

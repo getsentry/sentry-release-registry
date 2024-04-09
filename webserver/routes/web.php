@@ -16,8 +16,6 @@ Route::get('/packages/{canonical}/{version}', 'App\Http\Controllers\RegistryCont
 Route::get('/marketing-slugs', 'App\Http\Controllers\RegistryController@marketingSlugs');
 Route::get('/marketing-slugs/{slug}', 'App\Http\Controllers\RegistryController@marketingSlug');
 
-Route::get('/healthz', 'App\Http\Controllers\RegistryController@healthcheck');
-
 Route::get('/aws-lambda-layer', 'App\Http\Controllers\RegistryController@awsLambdaLayers');
 
 Route::get('/apps', 'App\Http\Controllers\RegistryController@apps');
