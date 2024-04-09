@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\AppsService;
 use App\Services\RegistryService;
+use Illuminate\Http\JsonResponse;
 
 class RegistryController extends Controller
 {
@@ -12,16 +13,16 @@ class RegistryController extends Controller
     ) {
     }
 
-    public function sdks()
+    public function sdks(): JsonResponse
     {
         $strict = filter_var(request()->input('strict'), FILTER_VALIDATE_BOOLEAN);
 
         return response()->json($this->registryService->getSdks($strict));
     }
 
-    public function sdkVersions($sdk_id)
+    public function sdkVersions($sdkId): JsonResponse
     {
-        $latestPackage = $this->registryService->getSdk($sdk_id);
+        $latestPackage = $this->registryService->getSdk($sdkId);
         if ($latestPackage === null) {
             return response()->json(['error' => 'SDK not found'], 404);
         }
@@ -32,9 +33,9 @@ class RegistryController extends Controller
         ]);
     }
 
-    public function sdkVersion($sdk_id, $version)
+    public function sdkVersion($sdkId, $version)
     {
-        $package = $this->registryService->getSdk($sdk_id, $version);
+        $package = $this->registryService->getSdk($sdkId, $version);
         if ($package === null) {
             return response()->json(['error' => 'SDK not found'], 404);
         }
@@ -106,9 +107,9 @@ class RegistryController extends Controller
         return response()->json($this->registryService->getApps());
     }
 
-    public function appVersion($app_id, $version)
+    public function appVersion($appId, $version)
     {
-        $app = $this->registryService->getApp($app_id, $version);
+        $app = $this->registryService->getApp($appId, $version);
         if ($app === null) {
             return response()->json(['error' => 'App not found'], 404);
         }
