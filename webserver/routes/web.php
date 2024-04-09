@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Livewire\Counter;
+use App\Livewire\FeatureMatrix;
 
-Route::get('/', Counter::class);
+Route::get('/', FeatureMatrix::class);
 
 Route::get('/sdks', 'App\Http\Controllers\RegistryController@sdks');
 Route::get('/sdks/{sdk_id}/versions', 'App\Http\Controllers\RegistryController@sdkVersions');

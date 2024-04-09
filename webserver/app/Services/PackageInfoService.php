@@ -26,8 +26,33 @@ class PackageInfoService implements \JsonSerializable
         return $this->data['version'];
     }
 
+    public function getName()
+    {
+        return $this->data['name'];
+    }
+
     public function jsonSerialize(): mixed
     {
         return $this->data;
+    }
+
+    public function getRepoUrl(): string
+    {
+        return $this->data['repo_url'];
+    }
+
+    public function getDocsUrl(): string
+    {
+        return $this->data['main_docs_url'];
+    }
+
+    public function getCategories(): array
+    {
+        return $this->data['categories'];
+    }
+
+    public function getFeatures(): array
+    {
+        return $this->data['features'];
     }
 }
