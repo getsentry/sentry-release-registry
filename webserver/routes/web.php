@@ -1,10 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Livewire\Counter;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', Counter::class);
 
 Route::get('/sdks', 'App\Http\Controllers\RegistryController@sdks');
 Route::get('/sdks/{sdk_id}/versions', 'App\Http\Controllers\RegistryController@sdkVersions');
