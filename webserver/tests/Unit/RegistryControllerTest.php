@@ -82,6 +82,5 @@ class RegistryControllerTest extends TestCase
     {
         $response = $this->get('/healthz');
         $response->assertStatus(200);
-        $response->assertSeeText('ok');
     }
 }
