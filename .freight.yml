@@ -1,8 +1,0 @@
-steps:
-  - kind: KubernetesDeployment
-    selector:
-      label_selector: service=release-registry
-      namespace: default
-    containers:
-      - image: us.gcr.io/sentryio/sentry-release-registry:{sha}
-        name: release-registry
