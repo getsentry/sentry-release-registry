@@ -1,5 +1,8 @@
 name: lint then test
-on: [push, pull_request]
+on:
+  push:
+    branches: [master, test-me-*]
+  pull_request:
 jobs:
   main:
     runs-on: ubuntu-latest
