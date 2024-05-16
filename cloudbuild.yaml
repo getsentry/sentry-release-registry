@@ -2,11 +2,9 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: [
         'build',
-        '-t', 'us.gcr.io/$PROJECT_ID/sentry-release-registry:latest',
-        '-t', 'us.gcr.io/$PROJECT_ID/sentry-release-registry:$COMMIT_SHA',
         '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/sentry-release-registry/image:latest',
         '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/sentry-release-registry/image:$COMMIT_SHA',
-        "--cache-from", "us.gcr.io/$PROJECT_ID/sentry-release-registry:latest",
+        "--cache-from", 'us-central1-docker.pkg.dev/$PROJECT_ID/sentry-release-registry/image:latest',
         '--build-arg',
         'BUILDKIT_INLINE_CACHE=1',
         '.'
@@ -21,10 +19,8 @@ steps:
       - |
         # Only push "latest" tag when building on "master"
         [ "$BRANCH_NAME" != "master" ] && exit 0
-        docker push us.gcr.io/$PROJECT_ID/sentry-release-registry:latest
         docker push us-central1-docker.pkg.dev/$PROJECT_ID/sentry-release-registry/image:latest
 
 images: [
-  'us.gcr.io/$PROJECT_ID/sentry-release-registry:$COMMIT_SHA',
   'us-central1-docker.pkg.dev/$PROJECT_ID/sentry-release-registry/image:$COMMIT_SHA',
 ]
