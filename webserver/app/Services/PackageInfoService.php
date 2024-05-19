@@ -58,7 +58,7 @@ class PackageInfoService implements \JsonSerializable
 
     public function getCreatedAt(): string
     {
-        $date = new \DateTime($this->data['createdAt']);
+        $date = new \DateTime($this->data['created_at']);
         return $date->format('Y-m-d');
     }
 }
