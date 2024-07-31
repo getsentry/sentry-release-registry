@@ -6,7 +6,7 @@ contained in this repository.
 ## Installation
 
 ```sh
-virtualenv -ppython3 .venv
+virtualenv -ppython3.6.15 .venv
 . .venv/bin/activate
 pip install --editable .
 ```
