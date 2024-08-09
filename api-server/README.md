@@ -6,8 +6,9 @@ contained in this repository.
 ## Installation
 
 ```sh
-virtualenv -ppython3 .venv
-. .venv/bin/activate
+python -m venv .venv
+source .venv/bin/activate
+
 pip install --editable .
 ```
 
