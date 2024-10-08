@@ -3,8 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 
-const PYTHON_API_PORT = 5031;
-const PYTHON_API_URL = `http://localhost:${PYTHON_API_PORT}`;
+import { PYTHON_API_URL } from './utils';
 
 describe('PackagesController (e2e)', () => {
   let app: INestApplication;
