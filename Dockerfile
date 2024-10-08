@@ -41,3 +41,13 @@ EXPOSE 5030
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 CMD [ "mywsgi", "apiserver:app", "0.0.0.0:5030" ]
+# To start this Docker container, use the following commands:
+
+# Build the Docker image:
+# docker build -t registry-api-server .
+
+# Run the Docker container:
+# docker run -p 5030:5030 registry-api-server
+
+# These commands should be run from the directory containing this Dockerfile.
+# The -p 5030:5030 flag maps the container's port 5030 to the host's port 5030.
