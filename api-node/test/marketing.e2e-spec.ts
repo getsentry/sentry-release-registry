@@ -4,7 +4,7 @@ import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { PYTHON_API_URL } from './utils';
 
-describe('HealthCheckController (e2e)', () => {
+describe('MarketingController (e2e)', () => {
   let app: INestApplication;
 
   beforeEach(async () => {
@@ -16,13 +16,15 @@ describe('HealthCheckController (e2e)', () => {
     await app.init();
   });
 
-  it('/healthz (GET)', async () => {
-    const pythonApiResponse = await fetch(`${PYTHON_API_URL}/healthz`);
-    const pythonApiData = await pythonApiResponse.text();
+  it('/marketing-slugs (GET)', async () => {
+    const pythonApiResponse = await fetch(`${PYTHON_API_URL}/marketing-slugs`);
+    const pythonApiData = await pythonApiResponse.json();
 
     return request(app.getHttpServer())
-      .get('/healthz')
-      .expect(200)
-      .expect(pythonApiData);
+      .get('/marketing-slugs')
+      .expect((res) => {
+        expect(res.status).toBe(200);
+        expect(res.body.slugs.sort()).toEqual(pythonApiData.slugs.sort());
+      });
   });
 });
