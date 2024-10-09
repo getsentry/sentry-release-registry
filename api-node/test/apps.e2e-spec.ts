@@ -89,6 +89,15 @@ describe('AppsController (e2e)', () => {
           expect(r.header.digest).toEqual(
             pythonApiResponse.headers.get('digest'),
           );
+          expect(r.header.location).toEqual(
+            pythonApiResponse.headers.get('location'),
+          );
+          expect(r.header.location).toEqual(
+            'https://downloads.sentry-cdn.com/sentry-cli/2.36.3/sentry-cli-Linux-x86_64',
+          );
+          expect(r.header.digest).toEqual(
+            'sha256=8cs/OTYjDCCuSrIIAmFPoggGPWI599KeBquwkXqTQRg=',
+          );
         });
     });
 
