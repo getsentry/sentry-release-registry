@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
 
+const PACKAGES_PATH = path.join('..', 'packages');
+
 @Injectable()
 export class PackagesService {
   #packages: string[];
@@ -74,16 +76,14 @@ const NAMESPACE_FILE_MARKER = '__NAMESPACE__';
 function getPackageDir(canonicalPackageName: string) {
   const [registry, name] = canonicalPackageName.split(':', 2);
   const pkgPath = name.replace(':', path.sep).split(path.sep);
-  return path.resolve(path.join('..', 'packages', registry, ...pkgPath));
+  return path.resolve(path.join(PACKAGES_PATH, registry, ...pkgPath));
 }
 
 function* iterPackages() {
-  const packagesPath = '../packages';
-
   // Loop through each package registry
-  const packageRegistries = fs.readdirSync(packagesPath);
+  const packageRegistries = fs.readdirSync(PACKAGES_PATH);
   for (const packageRegistry of packageRegistries) {
-    const registryPath = path.join(packagesPath, packageRegistry);
+    const registryPath = path.join(PACKAGES_PATH, packageRegistry);
 
     // bail if registry path is not a dir
     if (!fs.lstatSync(registryPath).isDirectory()) {
@@ -94,7 +94,7 @@ function* iterPackages() {
     const items = fs.readdirSync(registryPath);
     for (const item of items) {
       const namespaceFilePath = path.join(
-        packagesPath,
+        PACKAGES_PATH,
         packageRegistry,
         item,
         NAMESPACE_FILE_MARKER,
@@ -103,7 +103,7 @@ function* iterPackages() {
       // Check if the NAMESPACE_FILE_MARKER exists
       if (fs.existsSync(namespaceFilePath)) {
         const subItems = fs.readdirSync(
-          path.join(packagesPath, packageRegistry, item),
+          path.join(PACKAGES_PATH, packageRegistry, item),
         );
 
         // Yield subitems, excluding NAMESPACE_FILE_MARKER
