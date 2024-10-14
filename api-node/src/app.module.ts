@@ -6,6 +6,8 @@ import { MarketingController } from './marketing/marketing.controller';
 import { MarketingService } from './marketing/marketing.service';
 import { AppsController } from './apps/apps.controller';
 import { AppsService } from './apps/apps.service';
+import { SdksController } from './sdks/sdks.controller';
+import { SdksService } from './sdks/sdks.service';
 
 @Module({
   imports: [],
@@ -14,7 +16,8 @@ import { AppsService } from './apps/apps.service';
     PackagesController,
     MarketingController,
     AppsController,
+    SdksController,
   ],
-  providers: [PackagesService, MarketingService, AppsService],
+  providers: [PackagesService, MarketingService, AppsService, SdksService],
 })
 export class AppModule {}

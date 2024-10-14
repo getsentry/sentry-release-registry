@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
-
-const PACKAGES_PATH = path.join('..', 'packages');
+import {
+  getPackage,
+  getPackageDirFromCanonical,
+  PACKAGES_PATH,
+} from '../common/packageUtils';
 
 @Injectable()
 export class PackagesService {
@@ -14,7 +17,7 @@ export class PackagesService {
 
   getPackages() {
     return this.#packages.reduce((acc, canonical) => {
-      const packageDir = getPackageDir(canonical);
+      const packageDir = getPackageDirFromCanonical(canonical);
       const latestFilePath = path.join(packageDir, 'latest.json');
 
       try {
@@ -33,7 +36,7 @@ export class PackagesService {
   }
 
   getPackageVersions(packageName: string): { latest: any; versions: string[] } {
-    const packageDir = getPackageDir(packageName);
+    const packageDir = getPackageDirFromCanonical(packageName);
     try {
       const versions = fs
         .readdirSync(packageDir)
@@ -59,11 +62,8 @@ export class PackagesService {
   }
 
   getPackageByVersion(packageName: string, version: string): string {
-    const packageDir = getPackageDir(packageName);
-    const versionFilePath = path.join(packageDir, `${version}.json`);
-
     try {
-      return JSON.parse(fs.readFileSync(versionFilePath).toString());
+      return getPackage(packageName, version);
     } catch (e) {
       console.error(`Failed to read package by version: ${packageName}`);
       console.error(e);
@@ -72,12 +72,6 @@ export class PackagesService {
 }
 
 const NAMESPACE_FILE_MARKER = '__NAMESPACE__';
-
-function getPackageDir(canonicalPackageName: string) {
-  const [registry, name] = canonicalPackageName.split(':', 2);
-  const pkgPath = name.replace(':', path.sep).split(path.sep);
-  return path.resolve(path.join(PACKAGES_PATH, registry, ...pkgPath));
-}
 
 function* iterPackages() {
   // Loop through each package registry
