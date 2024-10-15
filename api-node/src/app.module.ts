@@ -8,6 +8,8 @@ import { AppsController } from './apps/apps.controller';
 import { AppsService } from './apps/apps.service';
 import { SdksController } from './sdks/sdks.controller';
 import { SdksService } from './sdks/sdks.service';
+import { AwsLambdaLayersController } from './aws-lambda-layers/aws-lambda-layers.controller';
+import { RegistryService } from './registry/registry.service';
 
 @Module({
   imports: [],
@@ -17,7 +19,8 @@ import { SdksService } from './sdks/sdks.service';
     MarketingController,
     AppsController,
     SdksController,
+    AwsLambdaLayersController,
   ],
-  providers: [PackagesService, MarketingService, AppsService, SdksService],
+  providers: [PackagesService, MarketingService, AppsService, SdksService, RegistryService],
 })
 export class AppModule {}
