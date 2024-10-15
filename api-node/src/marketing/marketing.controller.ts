@@ -1,6 +1,6 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, NotFoundException } from '@nestjs/common';
 import { MarketingService } from './marketing.service';
-import { MarketingSlugResponse } from './types';
+import { MarketingSlugResponse, MarketingSlugResolveResponse } from './types';
 
 @Controller('marketing-slugs')
 export class MarketingController {
@@ -12,9 +12,13 @@ export class MarketingController {
   }
 
   @Get(':slug')
-  resolveMarketingSlug(@Param('slug') slug: string): string {
-    // TODO: This needs to be implemented but we need other functionality first
-    // return this.marketingService.resolveMarketingSlug(slug);
-    return 'ok';
+  resolveMarketingSlug(
+    @Param('slug') slug: string,
+  ): MarketingSlugResolveResponse {
+    const result = this.marketingService.resolveMarketingSlug(slug);
+    if (!result) {
+      throw new NotFoundException();
+    }
+    return result;
   }
 }

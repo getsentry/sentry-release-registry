@@ -27,4 +27,39 @@ describe('MarketingController (e2e)', () => {
         expect(res.body.slugs.sort()).toEqual(pythonApiData.slugs.sort());
       });
   });
+
+  describe('/marketing-slugs/:slug (GET)', () => {
+    it.each(['python', 'javascript', 'browser', 'flask', 'django', 'rust'])(
+      'valid slug %s',
+      async (slug) => {
+        const pythonApiResponse = await fetch(
+          `${PYTHON_API_URL}/marketing-slugs/${slug}`,
+        );
+        const pythonApiData = await pythonApiResponse.json();
+
+        console.log(pythonApiData);
+
+        return request(app.getHttpServer())
+          .get(`/marketing-slugs/${slug}`)
+          .expect((res) => {
+            expect(res.status).toBe(200);
+            expect(res.body).toEqual(pythonApiData);
+          });
+      },
+    );
+
+    it('invalid slug', async () => {
+      const slug = 'invalid-slug';
+      const pythonApiResponse = await fetch(
+        `${PYTHON_API_URL}/marketing-slugs/${slug}`,
+      );
+
+      return request(app.getHttpServer())
+        .get(`/marketing-slugs/${slug}`)
+        .expect((res) => {
+          expect(res.status).toBe(pythonApiResponse.status);
+          expect(res.status).toBe(404);
+        });
+    });
+  });
 });
