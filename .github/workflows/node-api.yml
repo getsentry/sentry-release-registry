@@ -111,8 +111,8 @@ jobs:
       - name: Install dependencies
         working-directory: ./api-node
         run: yarn install --frozen-lockfile
+      - name: Build Python API
+        run: yarn python-api:build
       - name: Run e2e tests
         working-directory: ./api-node
-        run: |
-          yarn start:python-api &
-          yarn test:e2e
+        run: yarn python-api:start && yarn test:e2e
