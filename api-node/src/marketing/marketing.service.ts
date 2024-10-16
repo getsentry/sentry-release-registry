@@ -6,17 +6,13 @@ import {
   MarketingSlugResolveResponse,
   MarketingSlugResponse,
 } from './types';
-import { SdksService } from '../sdks/sdks.service';
-import { PackagesService } from '../packages/packages.service';
+import { RegistryService } from '../registry/registry.service';
 
 @Injectable()
 export class MarketingService {
   #slugs: Record<string, MarketingSlugEntry>;
 
-  constructor(
-    private readonly sdksService: SdksService,
-    private readonly packagesService: PackagesService,
-  ) {
+  constructor(private readonly registryService: RegistryService) {
     this.#slugs = JSON.parse(
       fs.readFileSync(path.join('..', 'misc', 'marketing-slugs.json'), 'utf8'),
     );
@@ -34,15 +30,15 @@ export class MarketingService {
 
     let target = null;
     if (data.type === 'sdk') {
-      target = this.sdksService.getSdk(data.target);
+      target = this.registryService.getSdk(data.target);
     } else if (data.type === 'package') {
-      target = this.packagesService.getPackageByVersion(data.target, 'latest');
+      target = this.registryService.getPackageByVersion(data.target, 'latest');
     } else if (data.type === 'integration') {
       let pkg = null;
       if (data.sdk) {
-        pkg = this.sdksService.getSdk(data.sdk);
+        pkg = this.registryService.getSdk(data.sdk);
       } else if (data.package) {
-        pkg = this.packagesService.getPackageByVersion(data.package, 'latest');
+        pkg = this.registryService.getPackageByVersion(data.package, 'latest');
       }
       if (pkg) {
         target = {

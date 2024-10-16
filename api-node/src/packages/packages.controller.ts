@@ -1,18 +1,18 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { PackagesService } from './packages.service';
+import { RegistryService } from '../registry/registry.service';
 
 @Controller('packages')
 export class PackagesController {
-  constructor(private packagesService: PackagesService) {}
+  constructor(private registryService: RegistryService) {}
 
   @Get()
   getPackages() {
-    return this.packagesService.getPackages();
+    return this.registryService.getPackages();
   }
 
   @Get('/:package(*)/versions')
   getPackageVersions(@Param('package') pgkName: string) {
-    return this.packagesService.getPackageVersions(pgkName);
+    return this.registryService.getPackageVersions(pgkName);
   }
 
   @Get('/:package(*)/:version')
@@ -20,6 +20,6 @@ export class PackagesController {
     @Param('package') pkgName: string,
     @Param('version') version: string,
   ) {
-    return this.packagesService.getPackageByVersion(pkgName, version);
+    return this.registryService.getPackageByVersion(pkgName, version);
   }
 }

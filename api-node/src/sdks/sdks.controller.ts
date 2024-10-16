@@ -1,21 +1,21 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { SdksService } from './sdks.service';
 import { SdkEntry, SdksResponse, SdkVersionsResponse } from './types';
+import { RegistryService } from '../registry/registry.service';
 
 @Controller('sdks')
 export class SdksController {
-  constructor(private sdksService: SdksService) {}
+  constructor(private registryService: RegistryService) {}
 
   @Get()
   getSdks(@Query('strict') strict?: string): SdksResponse {
     const isStrict =
       strict?.toLowerCase() === 'true' || strict === '1' || strict === 'yes';
-    return this.sdksService.getSdks(isStrict);
+    return this.registryService.getSdks(isStrict);
   }
 
   @Get('/:sdkId/versions')
   getSdkVersions(@Param('sdkId') sdkId: string): SdkVersionsResponse {
-    return this.sdksService.getSdkVersions(sdkId);
+    return this.registryService.getSdkVersions(sdkId);
   }
 
   @Get('/:sdkId/:version')
@@ -23,6 +23,6 @@ export class SdksController {
     @Param('sdkId') sdkId: string,
     @Param('version') version?: string,
   ): SdkEntry {
-    return this.sdksService.getSdk(sdkId, version);
+    return this.registryService.getSdk(sdkId, version);
   }
 }
