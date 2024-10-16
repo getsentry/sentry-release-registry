@@ -20,6 +20,6 @@ export class PackagesController {
     @Param('package') pkgName: string,
     @Param('version') version: string,
   ) {
-    return this.registryService.getPackageByVersion(pkgName, version);
+    return this.registryService.getPackage(pkgName, version);
   }
 }

@@ -4,6 +4,7 @@ import { AppsResponse } from './types';
 
 import type { Response } from 'express';
 import { RegistryService } from '../common/registry.service';
+import { findDownloadUrl, getUrlChecksums, makeDigest } from './utils';
 
 @Controller('apps')
 export class AppsController {
@@ -37,19 +38,14 @@ export class AppsController {
         return;
       }
 
-      const url = this.registryService.findDownloadUrl(
-        appInfo,
-        pkgName,
-        arch,
-        platform,
-      );
+      const url = findDownloadUrl(appInfo, pkgName, arch, platform);
       if (!url) {
         res.status(404).send('Download URL not found');
         return;
       }
 
-      const checksums = this.registryService.getUrlChecksums(appInfo, url);
-      const digest = this.registryService.makeDigest(checksums);
+      const checksums = getUrlChecksums(appInfo, url);
+      const digest = makeDigest(checksums);
 
       res.setHeader('Location', url);
       if (digest) {

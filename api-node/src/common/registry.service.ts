@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import * as path from 'path';
 import * as fs from 'fs';
 import type { SdkEntry, SdksResponse } from '../sdks/types';
-import { getPackage, getPackageDirFromCanonical } from '../common/packageUtils';
 import {
   MarketingSlugEntry,
   MarketingSlugResolveResponse,
@@ -14,6 +13,9 @@ const SDKS_PATH = path.join('..', 'sdks');
 const APPS_PATH = path.join('..', 'apps');
 const PACKAGES_PATH = path.join('..', 'packages');
 const AWS_LAMBDA_LAYERS_PATH = path.join('..', 'aws-lambda-layers');
+
+// Some packages have a __NAMESPACE__ file that contains the package name
+const NAMESPACE_FILE_MARKER = '__NAMESPACE__';
 
 @Injectable()
 export class RegistryService {
@@ -38,7 +40,7 @@ export class RegistryService {
           const latestJsonPath = path.join(SDKS_PATH, link, 'latest.json');
           const latestJsonContent = fs.readFileSync(latestJsonPath, 'utf8');
           const { canonical } = JSON.parse(latestJsonContent);
-          const pkg = getPackage(canonical);
+          const pkg = this.getPackage(canonical);
           if (pkg) {
             sdks[link] = pkg;
           } else if (strict) {
@@ -63,7 +65,7 @@ export class RegistryService {
     const sdkFilePath = path.join(SDKS_PATH, sdkId, `${version}.json`);
     try {
       const { canonical } = JSON.parse(fs.readFileSync(sdkFilePath, 'utf8'));
-      return getPackage(canonical, version);
+      return this.getPackage(canonical, version);
     } catch (error) {
       console.error('Error reading SDK file:', error);
     }
@@ -124,9 +126,11 @@ export class RegistryService {
   }
 
   // TODO: rename to getPackage
-  getPackageByVersion(packageName: string, version: string): string {
+  getPackage(packageName: string, version: string = 'latest') {
     try {
-      return getPackage(packageName, version);
+      const packageDir = getPackageDirFromCanonical(packageName);
+      const versionFilePath = path.join(packageDir, `${version}.json`);
+      return JSON.parse(fs.readFileSync(versionFilePath).toString());
     } catch (e) {
       console.error(`Failed to read package by version: ${packageName}`);
       console.error(e);
@@ -165,61 +169,6 @@ export class RegistryService {
     }
   }
 
-  findDownloadUrl(
-    appInfo: AppEntry,
-    pkgName: string,
-    arch: string,
-    platform: string,
-  ): string | null {
-    const normalizedPackage = pkgName
-      .replace(/_/g, '-')
-      .toLowerCase()
-      .split('-');
-    for (const [_, url] of Object.entries(appInfo.file_urls)) {
-      let normalizedUrl = url.toLowerCase();
-      if (normalizedUrl.endsWith('.exe')) {
-        normalizedUrl = normalizedUrl.slice(0, -4);
-      }
-      const parts = normalizedUrl.split('/').pop()!.split('-');
-      if (
-        parts.length > 2 &&
-        parts.slice(0, -2).join('-') === normalizedPackage.join('-') &&
-        parts[parts.length - 1].replace(/_/g, '-') ===
-          arch.toLowerCase().replace(/_/g, '-') &&
-        parts[parts.length - 2] === platform.toLowerCase()
-      ) {
-        return url;
-      }
-    }
-    return null;
-  }
-
-  getUrlChecksums(
-    appInfo: AppEntry,
-    url: string,
-  ): Record<string, string> | null {
-    for (const fileInfo of Object.values(appInfo.files)) {
-      if (fileInfo.url === url) {
-        return (fileInfo as any).checksums || null;
-      }
-    }
-    return null;
-  }
-
-  makeDigest(checksums: Record<string, string> | null): string {
-    if (!checksums) return '';
-    const digestParts: string[] = [];
-    for (const [algo, value] of Object.entries(checksums)) {
-      if (algo.endsWith('-hex')) {
-        const base64Value = Buffer.from(value, 'hex').toString('base64');
-        digestParts.push(`${algo.slice(0, -4)}=${base64Value}`);
-      } else if (algo.endsWith('-base64')) {
-        digestParts.push(`${algo.slice(0, -7)}=${value}`);
-      }
-    }
-    return digestParts.join(',');
-  }
-
   // Marketing
 
   getMarketingSlugs(): MarketingSlugResponse {
@@ -236,13 +185,13 @@ export class RegistryService {
     if (data.type === 'sdk') {
       target = this.getSdk(data.target);
     } else if (data.type === 'package') {
-      target = this.getPackageByVersion(data.target, 'latest');
+      target = this.getPackage(data.target, 'latest');
     } else if (data.type === 'integration') {
       let pkg = null;
       if (data.sdk) {
         pkg = this.getSdk(data.sdk);
       } else if (data.package) {
-        pkg = this.getPackageByVersion(data.package, 'latest');
+        pkg = this.getPackage(data.package, 'latest');
       }
       if (pkg) {
         target = {
@@ -286,8 +235,6 @@ export class RegistryService {
   }
 }
 
-const NAMESPACE_FILE_MARKER = '__NAMESPACE__';
-
 function* iterPackages() {
   // Loop through each package registry
   const packageRegistries = fs.readdirSync(PACKAGES_PATH);
@@ -327,4 +274,11 @@ function* iterPackages() {
       }
     }
   }
+}
+
+function getPackageDirFromCanonical(canonicalPackageName: string) {
+  const pkgPath = canonicalPackageName
+    .replaceAll(':', path.sep)
+    .split(path.sep);
+  return path.resolve(path.join(PACKAGES_PATH, ...pkgPath));
 }
