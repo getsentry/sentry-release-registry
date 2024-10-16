@@ -8,6 +8,7 @@ on:
 
 jobs:
   setup:
+    name: Install Dependencies
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -27,6 +28,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
   build:
+    name: Build
     needs: setup
     runs-on: ubuntu-latest
     steps:
@@ -48,6 +50,7 @@ jobs:
         run: yarn build
 
   lint:
+    name: Lint
     needs: setup
     runs-on: ubuntu-latest
     steps:
@@ -69,6 +72,7 @@ jobs:
         run: yarn lint
 
   test:
+    name: Unit Tests
     needs: setup
     runs-on: ubuntu-latest
     steps:
@@ -90,6 +94,7 @@ jobs:
         run: yarn test
 
   e2e-test:
+    name: E2E Tests
     needs: setup
     runs-on: ubuntu-latest
     steps:
@@ -108,4 +113,6 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Run e2e tests
         working-directory: ./api-node
-        run: yarn test:e2e
+        run: |
+          yarn start:python-api &
+          yarn test:e2e
