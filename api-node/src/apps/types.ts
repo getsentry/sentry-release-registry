@@ -9,4 +9,4 @@ export interface AppEntry {
   files: Record<string, { url: string; checksums?: Record<string, string> }>;
 }
 
-export type AppsResponse = Record<string, AppEntry>;
+export type Apps = Record<string, AppEntry>;

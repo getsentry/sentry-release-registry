@@ -1,3 +1,6 @@
+import { PackageEntry } from 'src/packages/types';
+import { SdkEntry } from 'src/sdks/types';
+
 export interface MarketingSlugEntry {
   type: string;
   target?: string;
@@ -6,11 +9,11 @@ export interface MarketingSlugEntry {
   package?: string;
 }
 
-export interface MarketingSlugResponse {
+export interface MarketingSlugs {
   slugs: string[];
 }
 
-export interface MarketingSlugResolveResponse {
+export interface ResolvedMarketingSlug {
   definition: {
     type: string;
     target?: string;
@@ -18,5 +21,5 @@ export interface MarketingSlugResolveResponse {
     sdk?: string;
     package?: string;
   };
-  target: any;
+  target: SdkEntry | PackageEntry | null;
 }

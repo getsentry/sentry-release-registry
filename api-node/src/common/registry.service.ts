@@ -1,26 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import * as path from 'path';
 import * as fs from 'fs';
-import type { SdkEntry, SdksResponse } from '../sdks/types';
-import {
+import type { SdkEntry, Sdks, SdkVersions } from '../sdks/types';
+import type {
   MarketingSlugEntry,
-  MarketingSlugResolveResponse,
-  MarketingSlugResponse,
-} from 'src/marketing/types';
-import { AppEntry, AppsResponse } from 'src/apps/types';
+  ResolvedMarketingSlug,
+  MarketingSlugs,
+} from '../marketing/types';
+import type { AppEntry, Apps } from '../apps/types';
+import type {
+  PackageEntry,
+  Packages,
+  PackageVersions,
+} from '../packages/types';
+import type { AwsLambdaLayers } from '../aws-lambda-layers/types';
 
 const SDKS_PATH = path.join('..', 'sdks');
 const APPS_PATH = path.join('..', 'apps');
 const PACKAGES_PATH = path.join('..', 'packages');
 const AWS_LAMBDA_LAYERS_PATH = path.join('..', 'aws-lambda-layers');
 
-// Some packages have a __NAMESPACE__ file that contains the package name
+// Some /packages sub-directories have a __NAMESPACE__ file that designates
+// the directory path as a package namespace (e.g. @sentry of @sentry/browser)
 const NAMESPACE_FILE_MARKER = '__NAMESPACE__';
 
 @Injectable()
 export class RegistryService {
-  // TODO: package types
-  #packages;
+  #packages: string[];
   #slugs: Record<string, MarketingSlugEntry>;
 
   constructor() {
@@ -31,8 +37,8 @@ export class RegistryService {
   }
 
   // SDKs
-  getSdks(strict: boolean = false): SdksResponse {
-    const sdks: SdksResponse = {};
+  getSdks(strict: boolean = false): Sdks {
+    const sdks: Sdks = {};
     try {
       const sdkLinks = fs.readdirSync(SDKS_PATH);
       for (const link of sdkLinks) {
@@ -71,15 +77,15 @@ export class RegistryService {
     }
   }
 
-  getSdkVersions(sdkId: string): { latest: any; versions: string[] } {
+  getSdkVersions(sdkId: string): SdkVersions {
     const latest = this.getSdk(sdkId);
-    const { versions } = this.getPackageVersions(latest.canonical as string);
+    const { versions } = this.getPackageVersions(latest.canonical);
     return { latest, versions };
   }
 
   // Packages
 
-  getPackages() {
+  getPackages(): Packages {
     return this.#packages.reduce((acc, canonical) => {
       const packageDir = getPackageDirFromCanonical(canonical);
       const latestFilePath = path.join(packageDir, 'latest.json');
@@ -99,7 +105,7 @@ export class RegistryService {
     }, {});
   }
 
-  getPackageVersions(packageName: string): { latest: any; versions: string[] } {
+  getPackageVersions(packageName: string): PackageVersions {
     const packageDir = getPackageDirFromCanonical(packageName);
     try {
       const versions = fs
@@ -125,8 +131,7 @@ export class RegistryService {
     }
   }
 
-  // TODO: rename to getPackage
-  getPackage(packageName: string, version: string = 'latest') {
+  getPackage(packageName: string, version: string = 'latest'): PackageEntry {
     try {
       const packageDir = getPackageDirFromCanonical(packageName);
       const versionFilePath = path.join(packageDir, `${version}.json`);
@@ -139,7 +144,7 @@ export class RegistryService {
 
   // Apps
 
-  getApps(): AppsResponse {
+  getApps(): Apps {
     try {
       const apps = fs.readdirSync(APPS_PATH);
       return apps.reduce((acc, appName) => {
@@ -171,11 +176,11 @@ export class RegistryService {
 
   // Marketing
 
-  getMarketingSlugs(): MarketingSlugResponse {
+  getMarketingSlugs(): MarketingSlugs {
     return { slugs: Object.keys(this.#slugs) };
   }
 
-  resolveMarketingSlug(slug: string): MarketingSlugResolveResponse | null {
+  resolveMarketingSlug(slug: string): ResolvedMarketingSlug | null {
     const data = this.#slugs[slug];
     if (!data) {
       return null;
@@ -209,8 +214,8 @@ export class RegistryService {
 
   // AWS Lambda Layers
 
-  async getAwsLambdaLayers() {
-    const layers: Record<string, any> = {};
+  getAwsLambdaLayers(): AwsLambdaLayers {
+    const layers: AwsLambdaLayers = {};
     const lambdaLayersDir = path.resolve(AWS_LAMBDA_LAYERS_PATH);
     const runtimeDirs = fs.readdirSync(AWS_LAMBDA_LAYERS_PATH);
 
@@ -235,7 +240,7 @@ export class RegistryService {
   }
 }
 
-function* iterPackages() {
+function* iterPackages(): Generator<string> {
   // Loop through each package registry
   const packageRegistries = fs.readdirSync(PACKAGES_PATH);
   for (const packageRegistry of packageRegistries) {
@@ -276,7 +281,7 @@ function* iterPackages() {
   }
 }
 
-function getPackageDirFromCanonical(canonicalPackageName: string) {
+function getPackageDirFromCanonical(canonicalPackageName: string): string {
   const pkgPath = canonicalPackageName
     .replaceAll(':', path.sep)
     .split(path.sep);

@@ -5,13 +5,13 @@ export interface SdkEntry {
   // Add other fields as needed
 }
 
-export type SdksResponse = Record<string, SdkEntry>;
+export type Sdks = Record<string, SdkEntry>;
 
 export interface SdkEntry {
   canonical: string;
 }
 
-export interface SdkVersionsResponse {
+export interface SdkVersions {
   latest: SdkEntry;
   versions: string[];
 }

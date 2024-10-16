@@ -7,7 +7,7 @@ export function findDownloadUrl(
   platform: string,
 ): string | null {
   const normalizedPackage = pkgName.replace(/_/g, '-').toLowerCase().split('-');
-  for (const [_, url] of Object.entries(appInfo.file_urls)) {
+  for (const [, url] of Object.entries(appInfo.file_urls)) {
     let normalizedUrl = url.toLowerCase();
     if (normalizedUrl.endsWith('.exe')) {
       normalizedUrl = normalizedUrl.slice(0, -4);
@@ -32,7 +32,7 @@ export function getUrlChecksums(
 ): Record<string, string> | null {
   for (const fileInfo of Object.values(appInfo.files)) {
     if (fileInfo.url === url) {
-      return (fileInfo as any).checksums || null;
+      return fileInfo.checksums || null;
     }
   }
   return null;

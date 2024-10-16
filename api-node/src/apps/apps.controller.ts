@@ -1,17 +1,16 @@
 import { Controller, Get, Param, Query, Res } from '@nestjs/common';
 
-import { AppsResponse } from './types';
-
 import type { Response } from 'express';
 import { RegistryService } from '../common/registry.service';
 import { findDownloadUrl, getUrlChecksums, makeDigest } from './utils';
+import type { Apps } from './types';
 
 @Controller('apps')
 export class AppsController {
   constructor(private readonly registryService: RegistryService) {}
 
   @Get()
-  getApps(): AppsResponse {
+  getApps(): Apps {
     return this.registryService.getApps();
   }
 

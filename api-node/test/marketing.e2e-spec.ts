@@ -37,8 +37,6 @@ describe('MarketingController (e2e)', () => {
         );
         const pythonApiData = await pythonApiResponse.json();
 
-        console.log(pythonApiData);
-
         return request(app.getHttpServer())
           .get(`/marketing-slugs/${slug}`)
           .expect((res) => {

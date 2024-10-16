@@ -1,14 +1,13 @@
 import { Controller, Get } from '@nestjs/common';
 import { RegistryService } from '../common/registry.service';
+import { AwsLambdaLayers } from './types';
 
 @Controller('aws-lambda-layers')
 export class AwsLambdaLayersController {
-  // TODO: types
-
   constructor(private readonly registryService: RegistryService) {}
 
   @Get()
-  async getLayers() {
+  getLayers(): AwsLambdaLayers {
     return this.registryService.getAwsLambdaLayers();
   }
 }
