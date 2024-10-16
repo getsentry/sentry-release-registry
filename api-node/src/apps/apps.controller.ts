@@ -1,17 +1,17 @@
 import { Controller, Get, Param, Query, Res } from '@nestjs/common';
 
-import { AppsService } from './apps.service';
 import { AppsResponse } from './types';
 
 import type { Response } from 'express';
+import { RegistryService } from '../registry/registry.service';
 
 @Controller('apps')
 export class AppsController {
-  constructor(private appsService: AppsService) {}
+  constructor(private readonly registryService: RegistryService) {}
 
   @Get()
   getApps(): AppsResponse {
-    return this.appsService.getApps();
+    return this.registryService.getApps();
   }
 
   @Get(':appId/:version')
@@ -24,7 +24,7 @@ export class AppsController {
     @Query('platform') platform?: string,
     @Query('package') pkgName?: string,
   ): void {
-    const appInfo = this.appsService.getApp(appId, version);
+    const appInfo = this.registryService.getApp(appId, version);
 
     if (!appInfo) {
       res.status(404).send('App not found');
@@ -37,7 +37,7 @@ export class AppsController {
         return;
       }
 
-      const url = this.appsService.findDownloadUrl(
+      const url = this.registryService.findDownloadUrl(
         appInfo,
         pkgName,
         arch,
@@ -48,8 +48,8 @@ export class AppsController {
         return;
       }
 
-      const checksums = this.appsService.getUrlChecksums(appInfo, url);
-      const digest = this.appsService.makeDigest(checksums);
+      const checksums = this.registryService.getUrlChecksums(appInfo, url);
+      const digest = this.registryService.makeDigest(checksums);
 
       res.setHeader('Location', url);
       if (digest) {
