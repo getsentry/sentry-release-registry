@@ -3,6 +3,11 @@ import * as path from 'path';
 import * as fs from 'fs';
 import type { SdkEntry, SdksResponse } from '../sdks/types';
 import { getPackage, getPackageDirFromCanonical } from '../common/packageUtils';
+import {
+  MarketingSlugEntry,
+  MarketingSlugResolveResponse,
+  MarketingSlugResponse,
+} from 'src/marketing/types';
 
 const SDKS_PATH = path.join('..', 'sdks');
 const PACKAGES_PATH = path.join('..', 'packages');
@@ -12,9 +17,13 @@ const AWS_LAMBDA_LAYERS_PATH = path.join('..', 'aws-lambda-layers');
 export class RegistryService {
   // TODO: package types
   #packages;
+  #slugs: Record<string, MarketingSlugEntry>;
 
   constructor() {
     this.#packages = Array.from(iterPackages());
+    this.#slugs = JSON.parse(
+      fs.readFileSync(path.join('..', 'misc', 'marketing-slugs.json'), 'utf8'),
+    );
   }
 
   // SDKs
@@ -120,6 +129,44 @@ export class RegistryService {
       console.error(`Failed to read package by version: ${packageName}`);
       console.error(e);
     }
+  }
+
+  // Marketing
+
+  getMarketingSlugs(): MarketingSlugResponse {
+    return { slugs: Object.keys(this.#slugs) };
+  }
+
+  resolveMarketingSlug(slug: string): MarketingSlugResolveResponse | null {
+    const data = this.#slugs[slug];
+    if (!data) {
+      return null;
+    }
+
+    let target = null;
+    if (data.type === 'sdk') {
+      target = this.getSdk(data.target);
+    } else if (data.type === 'package') {
+      target = this.getPackageByVersion(data.target, 'latest');
+    } else if (data.type === 'integration') {
+      let pkg = null;
+      if (data.sdk) {
+        pkg = this.getSdk(data.sdk);
+      } else if (data.package) {
+        pkg = this.getPackageByVersion(data.package, 'latest');
+      }
+      if (pkg) {
+        target = {
+          package: pkg,
+          integration: data.integration,
+        };
+      }
+    }
+
+    return {
+      definition: data,
+      target,
+    };
   }
 
   // AWS Lambda Layers

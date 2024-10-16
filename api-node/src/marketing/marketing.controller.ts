@@ -1,21 +1,21 @@
 import { Controller, Get, Param, NotFoundException } from '@nestjs/common';
-import { MarketingService } from './marketing.service';
 import { MarketingSlugResponse, MarketingSlugResolveResponse } from './types';
+import { RegistryService } from '../registry/registry.service';
 
 @Controller('marketing-slugs')
 export class MarketingController {
-  constructor(private readonly marketingService: MarketingService) {}
+  constructor(private readonly registryService: RegistryService) {}
 
   @Get()
   getMarketingSlugs(): MarketingSlugResponse {
-    return this.marketingService.getMarketingSlugs();
+    return this.registryService.getMarketingSlugs();
   }
 
   @Get(':slug')
   resolveMarketingSlug(
     @Param('slug') slug: string,
   ): MarketingSlugResolveResponse {
-    const result = this.marketingService.resolveMarketingSlug(slug);
+    const result = this.registryService.resolveMarketingSlug(slug);
     if (!result) {
       throw new NotFoundException();
     }
