@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { RegistryService } from '../registry/registry.service';
+import { RegistryService } from '../common/registry.service';
 
 @Controller('aws-lambda-layers')
 export class AwsLambdaLayersController {

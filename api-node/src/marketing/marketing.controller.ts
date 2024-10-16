@@ -1,6 +1,6 @@
 import { Controller, Get, Param, NotFoundException } from '@nestjs/common';
 import { MarketingSlugResponse, MarketingSlugResolveResponse } from './types';
-import { RegistryService } from '../registry/registry.service';
+import { RegistryService } from '../common/registry.service';
 
 @Controller('marketing-slugs')
 export class MarketingController {

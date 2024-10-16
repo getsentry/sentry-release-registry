@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { SdkEntry, SdksResponse, SdkVersionsResponse } from './types';
-import { RegistryService } from '../registry/registry.service';
+import { RegistryService } from '../common/registry.service';
 
 @Controller('sdks')
 export class SdksController {

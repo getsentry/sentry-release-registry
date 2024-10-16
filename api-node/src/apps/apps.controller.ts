@@ -3,7 +3,7 @@ import { Controller, Get, Param, Query, Res } from '@nestjs/common';
 import { AppsResponse } from './types';
 
 import type { Response } from 'express';
-import { RegistryService } from '../registry/registry.service';
+import { RegistryService } from '../common/registry.service';
 
 @Controller('apps')
 export class AppsController {

@@ -5,7 +5,7 @@ import { MarketingController } from './marketing/marketing.controller';
 import { AppsController } from './apps/apps.controller';
 import { SdksController } from './sdks/sdks.controller';
 import { AwsLambdaLayersController } from './aws-lambda-layers/aws-lambda-layers.controller';
-import { RegistryService } from './registry/registry.service';
+import { RegistryService } from './common/registry.service';
 
 @Module({
   imports: [],

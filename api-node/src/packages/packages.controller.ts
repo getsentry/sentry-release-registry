@@ -1,5 +1,5 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { RegistryService } from '../registry/registry.service';
+import { RegistryService } from '../common/registry.service';
 
 @Controller('packages')
 export class PackagesController {
