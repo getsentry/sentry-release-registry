@@ -116,5 +116,23 @@ describe('SdksController (e2e)', () => {
           expect(latest).toEqual(pythonApiData.latest);
         });
     });
+
+    it('Javascript Browser', async () => {
+      const sdkId = 'sentry.javascript.browser';
+
+      const pythonApiResponse = await fetch(
+        `${PYTHON_API_URL}/sdks/${sdkId}/versions`,
+      );
+      const pythonApiData = await pythonApiResponse.json();
+
+      return request(app.getHttpServer())
+        .get(`/sdks/${sdkId}/versions`)
+        .expect((r) => {
+          expect(r.status).toEqual(200);
+          const { versions, latest } = r.body;
+          expect(versions.sort()).toEqual(pythonApiData.versions.sort());
+          expect(latest).toEqual(pythonApiData.latest);
+        });
+    });
   });
 });
