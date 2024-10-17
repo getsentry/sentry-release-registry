@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, Provider } from '@nestjs/common';
 import { PackagesController } from './packages/packages.controller';
 import { HealthCheckController } from './health/healthCheck.controller';
 import { MarketingController } from './marketing/marketing.controller';
@@ -9,6 +9,19 @@ import { RegistryService } from './common/registry.service';
 import { SentryGlobalFilter, SentryModule } from '@sentry/nestjs/setup';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
+
+const providers: Provider[] = [
+  RegistryService,
+  { provide: APP_FILTER, useClass: SentryGlobalFilter },
+];
+
+if (process.env.REGISTRY_ENABLE_CACHE === '1') {
+  providers.push({
+    provide: APP_INTERCEPTOR,
+    useClass: CacheInterceptor,
+  });
+}
+
 @Module({
   imports: [
     SentryModule.forRoot(),
@@ -24,13 +37,6 @@ import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
     SdksController,
     AwsLambdaLayersController,
   ],
-  providers: [
-    RegistryService,
-    { provide: APP_FILTER, useClass: SentryGlobalFilter },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: CacheInterceptor,
-    },
-  ],
+  providers,
 })
 export class AppModule {}
