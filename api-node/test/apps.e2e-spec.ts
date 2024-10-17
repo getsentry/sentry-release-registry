@@ -66,7 +66,7 @@ describe('AppsController (e2e)', () => {
 
     it('with response=download', async () => {
       const appId = 'sentry-cli';
-      const version = 'latest';
+      const version = '2.36.3';
       const arch = 'x86_64';
       const platform = 'linux';
       const pkgName = 'sentry-cli';
@@ -93,7 +93,7 @@ describe('AppsController (e2e)', () => {
             pythonApiResponse.headers.get('location'),
           );
           expect(r.header.location).toEqual(
-            'https://downloads.sentry-cdn.com/sentry-cli/2.36.3/sentry-cli-Linux-x86_64',
+            `https://downloads.sentry-cdn.com/sentry-cli/${version}/sentry-cli-Linux-x86_64`,
           );
           expect(r.header.digest).toEqual(
             'sha256=8cs/OTYjDCCuSrIIAmFPoggGPWI599KeBquwkXqTQRg=',

@@ -1,4 +1,4 @@
-name: Node API CI
+name: Node API
 
 on:
   push:
@@ -114,6 +114,12 @@ jobs:
       - name: Build Python API
         working-directory: ./api-node
         run: yarn python-api:build
+      - name: Start Python API
+        working-directory: ./api-node
+        run: yarn python-api:start
       - name: Run e2e tests
         working-directory: ./api-node
-        run: yarn python-api:start && yarn test:e2e
+        run: yarn test:e2e
+      - name: Stop Python API
+        working-directory: ./api-node
+        run: yarn python-api:stop

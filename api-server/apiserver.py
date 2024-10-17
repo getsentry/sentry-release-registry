@@ -2,7 +2,7 @@ import os
 import binascii
 from functools import partial
 
-#from datadog import initialize as datadog_initialize, statsd
+from datadog import initialize as datadog_initialize, statsd
 
 import sentry_sdk
 from flask import Flask, json, abort, jsonify, request, redirect
@@ -16,36 +16,36 @@ TRUTHY_VALUES = {"1", "true", "yes"}
 NAMESPACE_FILE_MARKER = "__NAMESPACE__"
 
 
-# class Metrics:
+class Metrics:
 
-#     PREFIX = os.getenv("METRICS_PREFIX", "release_registry")
+    PREFIX = os.getenv("METRICS_PREFIX", "release_registry")
 
-#     def initialize(self, **kwargs):
-#         # DATADOG_API_KEY, DATADOG_APP_KEY can be provided from env
-#         # TODO(michal): Pass statsd_constant_tags from env?
-#         #datadog_initialize(**kwargs)
-#         return self
+    def initialize(self, **kwargs):
+        # DATADOG_API_KEY, DATADOG_APP_KEY can be provided from env
+        # TODO(michal): Pass statsd_constant_tags from env?
+        datadog_initialize(**kwargs)
+        return self
 
-#     @staticmethod
-#     def tags_from_request():
-#         tags = []
-#         if request.url_rule:
-#             tags.append(f"route:{request.url_rule.rule}")
-#         return tags
+    @staticmethod
+    def tags_from_request():
+        tags = []
+        if request.url_rule:
+            tags.append(f"route:{request.url_rule.rule}")
+        return tags
 
-#     def _metric(self, name):
-#         return f"{self.PREFIX}.{name}"
+    def _metric(self, name):
+        return f"{self.PREFIX}.{name}"
 
-#     def increment(self, name, value=1, tags=None, sample_rate=None):
-#         statsd.increment(
-#             self._metric(name),
-#             value=value,
-#             tags=self.tags_from_request() + (tags or []),
-#             sample_rate=sample_rate,
-#         )
+    def increment(self, name, value=1, tags=None, sample_rate=None):
+        statsd.increment(
+            self._metric(name),
+            value=value,
+            tags=self.tags_from_request() + (tags or []),
+            sample_rate=sample_rate,
+        )
 
 
-# metrics = Metrics().initialize()
+metrics = Metrics().initialize()
 
 # SENTRY_DSN will be taken from env
 sentry_sdk.init(integrations=[FlaskIntegration()])
@@ -284,17 +284,17 @@ def return_cached():
     if not request.values:
         response = cache.get(request.path)
         if response:
-            #metrics.increment("cache_hit")
+            metrics.increment("cache_hit")
             response.headers["X-From-Cache"] = "1"
             return response
-    #metrics.increment("cache_miss")
+    metrics.increment("cache_miss")
 
 
 def cache_response(response):
     if not request.values:
         # Make the response picklable
         response.freeze()
-        #metrics.increment("cache_set")
+        metrics.increment("cache_set")
         cache.set(request.path, response)
     return response
 
@@ -353,7 +353,7 @@ app.config.from_envvar("APISERVER_CONFIG", silent=True)
 
 # Must come before the caching callbacks otherwise it will never be called for
 # request served by the caching callback.
-#app.before_request(partial(metrics.increment, "request"))
+app.before_request(partial(metrics.increment, "request"))
 
 app.enable_cache = partial(set_cache_enabled, app)
 app.enable_cache(is_caching_enabled())
