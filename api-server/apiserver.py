@@ -149,6 +149,8 @@ class Registry(object):
 
     def iter_packages(self):
         for package_registry in os.listdir(self._path("packages")):
+            if not os.path.isdir(self._path("packages", package_registry)):
+                continue
             for item in os.listdir(self._path("packages", package_registry)):
                 if os.path.exists(
                     os.path.join(
