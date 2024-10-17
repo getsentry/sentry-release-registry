@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build",
+    "build": "nest build && yarn sentry:sourcemaps",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -20,12 +20,15 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "python-api:build": "docker build -t registry-api-server ../",
     "python-api:start": "docker run -d -p 5031:5030 registry-api-server",
-    "python-api:stop": "docker stop $(docker ps -q --filter ancestor=registry-api-server)"
+    "python-api:stop": "docker stop $(docker ps -q --filter ancestor=registry-api-server)",
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org sentry --project release-registry-nestjs ./dist && sentry-cli sourcemaps upload --org sentry --project release-registry-nestjs ./dist"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
+    "@sentry/cli": "^2.37.0",
+    "@sentry/nestjs": "^8.34.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1"
   },

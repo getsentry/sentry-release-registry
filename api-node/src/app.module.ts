@@ -6,9 +6,10 @@ import { AppsController } from './apps/apps.controller';
 import { SdksController } from './sdks/sdks.controller';
 import { AwsLambdaLayersController } from './aws-lambda-layers/aws-lambda-layers.controller';
 import { RegistryService } from './common/registry.service';
-
+import { SentryGlobalFilter, SentryModule } from '@sentry/nestjs/setup';
+import { APP_FILTER } from '@nestjs/core';
 @Module({
-  imports: [],
+  imports: [SentryModule.forRoot()],
   controllers: [
     HealthCheckController,
     PackagesController,
@@ -17,6 +18,9 @@ import { RegistryService } from './common/registry.service';
     SdksController,
     AwsLambdaLayersController,
   ],
-  providers: [RegistryService],
+  providers: [
+    RegistryService,
+    { provide: APP_FILTER, useClass: SentryGlobalFilter },
+  ],
 })
 export class AppModule {}
