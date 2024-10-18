@@ -1,0 +1,125 @@
+name: Node API
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  setup:
+    name: Install Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20.x"
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Install dependencies
+        working-directory: ./api-node
+        run: yarn install --frozen-lockfile
+
+  build:
+    name: Build
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20.x"
+      - name: Restore cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+      - name: Install dependencies
+        working-directory: ./api-node
+        run: yarn install --frozen-lockfile
+      - name: Build
+        working-directory: ./api-node
+        run: yarn build:ci
+
+  lint:
+    name: Lint
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20.x"
+      - name: Restore cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+      - name: Install dependencies
+        working-directory: ./api-node
+        run: yarn install --frozen-lockfile
+      - name: Lint
+        working-directory: ./api-node
+        run: yarn lint
+
+  test:
+    name: Unit Tests
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20.x"
+      - name: Restore cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+      - name: Install dependencies
+        working-directory: ./api-node
+        run: yarn install --frozen-lockfile
+      - name: Run unit tests
+        working-directory: ./api-node
+        run: yarn test
+
+  e2e-test:
+    name: E2E Tests
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20.x"
+      - name: Restore cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+      - name: Install dependencies
+        working-directory: ./api-node
+        run: yarn install --frozen-lockfile
+      - name: Build Python API
+        working-directory: ./api-node
+        run: yarn python-api:build
+      - name: Start Python API
+        working-directory: ./api-node
+        run: yarn python-api:start
+      - name: Run e2e tests
+        working-directory: ./api-node
+        run: yarn test:e2e
+      - name: Stop Python API
+        working-directory: ./api-node
+        run: yarn python-api:stop
