@@ -8,12 +8,9 @@ import type {
   MarketingSlugs,
 } from '../marketing/types';
 import type { AppEntry, Apps } from '../apps/types';
-import type {
-  PackageEntry,
-  Packages,
-  PackageVersions,
-} from '../packages/types';
+import type { PackageEntry, Packages } from '../packages/types';
 import type { AwsLambdaLayers } from '../aws-lambda-layers/types';
+import * as semver from 'semver';
 
 const SDKS_PATH = path.join('..', 'sdks');
 const APPS_PATH = path.join('..', 'apps');
@@ -79,13 +76,13 @@ export class RegistryService {
 
   getSdkVersions(sdkId: string): SdkVersions {
     const latest = this.getSdk(sdkId);
-    const { versions } = this.getPackageVersions(latest.canonical);
+    const versions = this.getPackageVersions(latest.canonical);
     return { latest, versions };
   }
 
   // Packages
 
-  getPackages(): Packages {
+  getPackages(strict: boolean = false): Packages {
     return this.#packages.reduce((acc, canonical) => {
       const packageDir = getPackageDirFromCanonical(canonical);
       const latestFilePath = path.join(packageDir, 'latest.json');
@@ -105,7 +102,7 @@ export class RegistryService {
     }, {});
   }
 
-  getPackageVersions(packageName: string): PackageVersions {
+  getPackageVersions(packageName: string): string[] | null {
     const packageDir = getPackageDirFromCanonical(packageName);
     try {
       const versions = fs
@@ -118,27 +115,31 @@ export class RegistryService {
           return versionFile.version;
         });
 
-      const dedupedVersions = Array.from(new Set(versions));
-
-      const latest = JSON.parse(
-        fs.readFileSync(path.join(packageDir, 'latest.json')).toString(),
-      );
-
-      return { versions: dedupedVersions, latest };
+      // dedupe and sort versions
+      return Array.from(new Set(versions)).sort((a, b) => {
+        return semver.parse(a).compare(semver.parse(b));
+      });
     } catch (e) {
       console.error(`Failed to read package versions: ${packageName}`);
       console.error(e);
+      return [];
     }
   }
 
-  getPackage(packageName: string, version: string = 'latest'): PackageEntry {
+  getPackage(
+    packageName: string,
+    version: string = 'latest',
+  ): PackageEntry | null {
     try {
       const packageDir = getPackageDirFromCanonical(packageName);
       const versionFilePath = path.join(packageDir, `${version}.json`);
       return JSON.parse(fs.readFileSync(versionFilePath).toString());
     } catch (e) {
-      console.error(`Failed to read package by version: ${packageName}`);
+      console.error(
+        `Failed to read package ${packageName} for version ${version}`,
+      );
       console.error(e);
+      return null;
     }
   }
 
@@ -177,7 +178,7 @@ export class RegistryService {
   // Marketing
 
   getMarketingSlugs(): MarketingSlugs {
-    return { slugs: Object.keys(this.#slugs) };
+    return { slugs: Object.keys(this.#slugs).sort() };
   }
 
   resolveMarketingSlug(slug: string): ResolvedMarketingSlug | null {

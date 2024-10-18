@@ -29,39 +29,68 @@ describe('PackagesController (e2e)', () => {
       });
   });
 
-  it('/packages/:packageName/versions (GET)', async () => {
-    const packageName = 'npm:@sentry/angular';
+  describe('/packages/:packageName/versions (GET)', () => {
+    it('returns versions for existing package', async () => {
+      const packageName = 'npm:@sentry/angular';
 
-    const pythonApiResponse = await fetch(
-      `${PYTHON_API_URL}/packages/${packageName}/versions`,
-    );
-    const pythonApiData = await pythonApiResponse.json();
+      const pythonApiResponse = await fetch(
+        `${PYTHON_API_URL}/packages/${packageName}/versions`,
+      );
+      const pythonApiData = await pythonApiResponse.json();
 
-    return request(app.getHttpServer())
-      .get(`/packages/${packageName}/versions`)
-      .expect((r) => {
-        expect(r.status).toEqual(200);
-        const { versions, latest } = r.body;
-        expect(versions.length).toEqual(pythonApiData.versions.length);
-        expect(versions.sort()).toEqual(pythonApiData.versions.sort());
-        expect(latest).toEqual(pythonApiData.latest);
-      });
+      return request(app.getHttpServer())
+        .get(`/packages/${packageName}/versions`)
+        .expect((r) => {
+          expect(r.status).toEqual(200);
+          expect(r.body).toEqual(pythonApiData);
+        });
+    });
+
+    it('returns 404 for non-existing package', async () => {
+      const nonExistingPackage = 'npm:@sentry/non-existing-package';
+
+      const pythonApiResponse = await fetch(
+        `${PYTHON_API_URL}/packages/${nonExistingPackage}/versions`,
+      );
+      expect(pythonApiResponse.status).toEqual(404);
+
+      return request(app.getHttpServer())
+        .get(`/packages/${nonExistingPackage}/versions`)
+        .expect(404);
+    });
   });
 
-  it('/packages/:packageName/:version (GET)', async () => {
-    const packageName = 'npm:@sentry/angular';
-    const version = '8.0.0';
+  describe('/packages/:packageName/:version (GET)', () => {
+    it('returns package info for existing package', async () => {
+      const packageName = 'npm:@sentry/angular';
+      const version = '8.0.0';
 
-    const pythonApiResponse = await fetch(
-      `${PYTHON_API_URL}/packages/${packageName}/${version}`,
-    );
-    const pythonApiData = await pythonApiResponse.json();
+      const pythonApiResponse = await fetch(
+        `${PYTHON_API_URL}/packages/${packageName}/${version}`,
+      );
+      const pythonApiData = await pythonApiResponse.json();
 
-    return request(app.getHttpServer())
-      .get(`/packages/${packageName}/${version}`)
-      .expect((r) => {
-        expect(r.status).toEqual(200);
-        expect(r.body).toEqual(pythonApiData);
-      });
+      return request(app.getHttpServer())
+        .get(`/packages/${packageName}/${version}`)
+        .expect((r) => {
+          expect(r.status).toEqual(200);
+          expect(r.body).toEqual(pythonApiData);
+        });
+    });
+
+    it('returns 404 for non-existent package', async () => {
+      const nonExistentPackage = 'npm:@sentry/non-existent-package';
+      const version = 'latest';
+
+      const pythonApiResponse = await fetch(
+        `${PYTHON_API_URL}/packages/${nonExistentPackage}/${version}`,
+      );
+
+      expect(pythonApiResponse.status).toEqual(404);
+
+      return request(app.getHttpServer())
+        .get(`/packages/${nonExistentPackage}/${version}`)
+        .expect(404);
+    });
   });
 });

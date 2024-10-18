@@ -24,7 +24,7 @@ describe('MarketingController (e2e)', () => {
       .get('/marketing-slugs')
       .expect((res) => {
         expect(res.status).toBe(200);
-        expect(res.body.slugs.sort()).toEqual(pythonApiData.slugs.sort());
+        expect(res.body.slugs).toEqual(pythonApiData.slugs);
       });
   });
 

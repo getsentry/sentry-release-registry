@@ -18,7 +18,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:e2e": "jest --config ./test/jest-e2e.json --testPathIgnorePatterns=everything.e2e-spec.ts",
+    "test:e2e:urls": "NODE_ENV=test jest --config ./test/jest-e2e.json everything.e2e-spec.ts",
+    "test:e2e:urls:generate": "ts-node ./test/utils/getUrls.ts",
     "python-api:build": "docker build -t registry-api-server ../",
     "python-api:start": "docker run -d -p 5031:5030 registry-api-server",
     "python-api:stop": "docker stop $(docker ps -q --filter ancestor=registry-api-server)",
@@ -33,7 +35,8 @@
     "@sentry/nestjs": "^8.34.0",
     "cache-manager": "^5.7.6",
     "reflect-metadata": "^0.2.0",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "semver": "^7.6.3"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

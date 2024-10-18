@@ -8,4 +8,5 @@ Sentry.init({
   release: packageJson.version,
   environment: process.env.NODE_ENV || 'development',
   tracesSampleRate: 1.0,
+  enabled: process.env.NODE_ENV !== 'test',
 });
