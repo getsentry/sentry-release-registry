@@ -7,6 +7,7 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, {
     logger: ['debug', 'error', 'fatal', 'verbose', 'log', 'warn'],
   });
+  app.enableCors({ origin: '*' });
   await app.listen(3000);
 }
 
