@@ -4,11 +4,14 @@ import {
   NotFoundException,
   Param,
   Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { RegistryService } from '../common/registry.service';
 import { PackageEntry, Packages, PackageVersions } from './types';
+import { ReleaseRegistryCacheInterceptor } from '../common/cache';
 
 @Controller('packages')
+@UseInterceptors(ReleaseRegistryCacheInterceptor)
 export class PackagesController {
   constructor(private registryService: RegistryService) {}
 

@@ -1,8 +1,16 @@
-import { Controller, Get, Param, NotFoundException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  NotFoundException,
+  UseInterceptors,
+} from '@nestjs/common';
 import { MarketingSlugs, ResolvedMarketingSlug } from './types';
 import { RegistryService } from '../common/registry.service';
+import { ReleaseRegistryCacheInterceptor } from '../common/cache';
 
 @Controller('marketing-slugs')
+@UseInterceptors(ReleaseRegistryCacheInterceptor)
 export class MarketingController {
   constructor(private readonly registryService: RegistryService) {}
 

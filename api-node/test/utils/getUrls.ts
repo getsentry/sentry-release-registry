@@ -14,7 +14,6 @@ export async function getAllYesAllUrls(): Promise<URLsList> {
     { url: '/apps', status: 200 },
     { url: '/marketing-slugs', status: 200 },
     { url: '/aws-lambda-layers', status: 200 },
-    { url: '/healthz', status: 200 },
   ];
 
   // ------- packages -------

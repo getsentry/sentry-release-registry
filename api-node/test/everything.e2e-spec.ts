@@ -1,31 +1,40 @@
 import { PYTHON_API_URL } from './utils';
 import * as fs from 'fs';
-describe('python and Node api responses match', () => {
+describe('Flask and NestJS api responses match', () => {
   const urls = JSON.parse(
     fs.readFileSync(`${__dirname}/utils/.urls.json`, 'utf8'),
   );
 
   it.each(urls)('%s', async ({ url, status }) => {
-    let pythonResponse, nodeResponse, pythonResponseStatus, nodeResponseStatus;
-    let pythonResponseBody, nodeResponseBody;
+    let pythonResponse,
+      pythonResponseStatus,
+      pythonResponseBody,
+      pythonResponseHeaders;
+
+    let nodeResponse, nodeResponseStatus, nodeResponseBody, nodeResponseHeaders;
+
     let attempts = 0;
     while (attempts < 3) {
       try {
-        pythonResponse = await fetch(`${PYTHON_API_URL}${url}`, {
-          redirect: 'manual',
-        });
-        nodeResponse = await fetch(`http://localhost:3000${url}`, {
-          redirect: 'manual',
-        });
+        const [pythonResponse, nodeResponse] = await Promise.all([
+          fetch(`${PYTHON_API_URL}${url}`, {
+            redirect: 'manual',
+          }),
+          fetch(`http://localhost:3000${url}`, {
+            redirect: 'manual',
+          }),
+        ]);
         if (pythonResponse?.status < 400 && nodeResponse?.status < 400) {
           pythonResponseStatus = pythonResponse?.status;
           nodeResponseStatus = nodeResponse?.status;
           pythonResponseBody = await pythonResponse?.text();
           nodeResponseBody = await nodeResponse?.text();
+          pythonResponseHeaders = pythonResponse?.headers;
+          nodeResponseHeaders = nodeResponse?.headers;
           break;
         }
-      } catch (error) {
-        console.error(`Attempt ${attempts + 1} failed:`, error);
+      } catch {
+        // console.error(`Attempt ${attempts + 1} failed:`, error);
       }
       attempts++;
       if (attempts < 3) {
@@ -33,6 +42,8 @@ describe('python and Node api responses match', () => {
         nodeResponseStatus = nodeResponse?.status;
         pythonResponseBody = await pythonResponse?.text();
         nodeResponseBody = await nodeResponse?.text();
+        pythonResponseHeaders = pythonResponse?.headers;
+        nodeResponseHeaders = nodeResponse?.headers;
         await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait 1 second before retrying
       }
     }
@@ -44,14 +55,12 @@ describe('python and Node api responses match', () => {
     expect(pythonResponseStatus).toBe(status);
     expect(nodeResponseStatus).toBe(pythonResponseStatus);
 
+    expect(pythonResponseHeaders).toEqual(nodeResponseHeaders);
+
     if (pythonResponseStatus === 200) {
-      try {
-        const pythonResponseJson = JSON.parse(pythonResponseBody);
-        const nodeResponseJson = JSON.parse(nodeResponseBody);
-        expect(nodeResponseJson).toEqual(pythonResponseJson);
-      } catch {
-        expect(nodeResponseBody).toEqual(pythonResponseBody);
-      }
+      const pythonResponseJson = JSON.parse(pythonResponseBody);
+      const nodeResponseJson = JSON.parse(nodeResponseBody);
+      expect(nodeResponseJson).toEqual(pythonResponseJson);
     }
   });
 });

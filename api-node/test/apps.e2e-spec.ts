@@ -18,13 +18,17 @@ describe('AppsController (e2e)', () => {
 
   it('/apps (GET)', async () => {
     const pythonApiResponse = await fetch(`${PYTHON_API_URL}/apps`);
+    const pythonApiHeaders = Object.fromEntries(pythonApiResponse.headers);
     const pythonApiData = await pythonApiResponse.json();
 
     return request(app.getHttpServer())
       .get('/apps')
       .expect((r) => {
         expect(r.status).toEqual(200);
-        expect(r.body).toEqual(pythonApiData);
+        expect(r.body).toEqual({ ...pythonApiData });
+        const headers = { ...r.headers };
+        expect(Object.keys(headers).length).toBe(6);
+        expect(headers).toEqual(pythonApiHeaders);
       });
   });
 

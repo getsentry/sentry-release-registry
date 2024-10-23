@@ -7,27 +7,19 @@ import { SdksController } from './sdks/sdks.controller';
 import { AwsLambdaLayersController } from './aws-lambda-layers/aws-lambda-layers.controller';
 import { RegistryService } from './common/registry.service';
 import { SentryGlobalFilter, SentryModule } from '@sentry/nestjs/setup';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
-import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
+import { APP_FILTER } from '@nestjs/core';
+import { CacheModule } from '@nestjs/cache-manager';
+import { CACHE_DEFAULT_SETTINGS } from './common/cache';
 
 const providers: Provider[] = [
   RegistryService,
   { provide: APP_FILTER, useClass: SentryGlobalFilter },
 ];
 
-if (process.env.REGISTRY_ENABLE_CACHE === '1') {
-  providers.push({
-    provide: APP_INTERCEPTOR,
-    useClass: CacheInterceptor,
-  });
-}
-
 @Module({
   imports: [
     SentryModule.forRoot(),
-    // max and ttl taken from apiserver.py cache config
-    // ttl of cache-manager@5 is in milliseconds
-    CacheModule.register({ max: 200, ttl: 3600 * 1000 }),
+    CacheModule.register(CACHE_DEFAULT_SETTINGS),
   ],
   controllers: [
     HealthCheckController,

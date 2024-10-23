@@ -1,15 +1,26 @@
-import { Controller, Get, Param, Query, Res } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Query,
+  Res,
+  UseInterceptors,
+} from '@nestjs/common';
 
 import type { Response } from 'express';
 import { RegistryService } from '../common/registry.service';
 import { findDownloadUrl, getUrlChecksums, makeDigest } from './utils';
 import type { Apps } from './types';
+import { ReleaseRegistryCacheInterceptor } from '../common/cache';
 
 @Controller('apps')
 export class AppsController {
   constructor(private readonly registryService: RegistryService) {}
 
   @Get()
+  // Registering interceptor on method level b/c the other endpoint uses @Res which is incompatible with the
+  // cache interceptor :(
+  @UseInterceptors(ReleaseRegistryCacheInterceptor)
   getApps(): Apps {
     return this.registryService.getApps();
   }

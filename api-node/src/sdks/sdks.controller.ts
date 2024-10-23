@@ -1,8 +1,10 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, UseInterceptors } from '@nestjs/common';
 import { SdkEntry, Sdks, SdkVersions } from './types';
 import { RegistryService } from '../common/registry.service';
+import { ReleaseRegistryCacheInterceptor } from '../common/cache';
 
 @Controller('sdks')
+@UseInterceptors(ReleaseRegistryCacheInterceptor)
 export class SdksController {
   constructor(private registryService: RegistryService) {}
 
