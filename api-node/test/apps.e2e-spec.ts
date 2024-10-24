@@ -1,71 +1,50 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { AppModule } from './../src/app.module';
-import { PYTHON_API_URL } from './utils';
+import {
+  BAD_REQUEST_HTML,
+  getRedirectHtml,
+  NOT_FOUND_HTML,
+} from '../src/common/htmlTemplates';
+import { makeDuplexRequest } from './utils/makeRequest';
 
 describe('AppsController (e2e)', () => {
-  let app: INestApplication;
-
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    await app.init();
-  });
-
   it('/apps (GET)', async () => {
-    const pythonApiResponse = await fetch(`${PYTHON_API_URL}/apps`);
-    const pythonApiHeaders = Object.fromEntries(pythonApiResponse.headers);
-    const pythonApiData = await pythonApiResponse.json();
+    const { python, node } = await makeDuplexRequest('/apps');
 
-    return request(app.getHttpServer())
-      .get('/apps')
-      .expect((r) => {
-        expect(r.status).toEqual(200);
-        expect(r.body).toEqual({ ...pythonApiData });
-        const headers = { ...r.headers };
-        expect(Object.keys(headers).length).toBe(6);
-        expect(headers).toEqual(pythonApiHeaders);
-      });
+    expect(node.status).toEqual(200);
+    expect(node.status).toEqual(python.status);
+
+    expect(node.headers).toEqual(python.headers);
+
+    expect(node.body).toEqual(python.body);
   });
 
   describe('/apps/:appId/:version (GET)', () => {
     it('no query params, with latest version', async () => {
       const appId = 'sentry-cli';
       const version = 'latest';
-
-      const pythonApiResponse = await fetch(
-        `${PYTHON_API_URL}/apps/${appId}/${version}`,
+      const { python, node } = await makeDuplexRequest(
+        `/apps/${appId}/${version}`,
       );
+      expect(node.status).toEqual(200);
+      expect(node.status).toEqual(python.status);
 
-      const pythonApiData = await pythonApiResponse.json();
+      expect(node.headers).toEqual(python.headers);
 
-      return request(app.getHttpServer())
-        .get(`/apps/${appId}/${version}`)
-        .expect((r) => {
-          expect(r.status).toEqual(200);
-          expect(r.body).toEqual(pythonApiData);
-        });
+      expect(node.body).toEqual(python.body);
     });
 
     it('no query params, with fixed version', async () => {
       const appId = 'sentry-cli';
       const version = '2.0.0';
-
-      const pythonApiResponse = await fetch(
-        `${PYTHON_API_URL}/apps/${appId}/${version}`,
+      const { python, node } = await makeDuplexRequest(
+        `/apps/${appId}/${version}`,
       );
-      const pythonApiData = await pythonApiResponse.json();
 
-      return request(app.getHttpServer())
-        .get(`/apps/${appId}/${version}`)
-        .expect((r) => {
-          expect(r.status).toEqual(200);
-          expect(r.body).toEqual(pythonApiData);
-        });
+      expect(node.status).toEqual(200);
+      expect(node.status).toEqual(python.status);
+
+      expect(node.headers).toEqual(python.headers);
+
+      expect(node.body).toEqual(python.body);
     });
 
     it('with response=download', async () => {
@@ -75,71 +54,61 @@ describe('AppsController (e2e)', () => {
       const platform = 'linux';
       const pkgName = 'sentry-cli';
 
-      const pythonApiResponse = await fetch(
-        `${PYTHON_API_URL}/apps/${appId}/${version}?response=download&arch=${arch}&platform=${platform}&package=${pkgName}`,
-        { redirect: 'manual' },
+      const urlPath = `/apps/${appId}/${version}?${new URLSearchParams({
+        response: 'download',
+        arch,
+        platform,
+        package: pkgName,
+      })}`;
+
+      const { python, node } = await makeDuplexRequest(urlPath);
+
+      expect(node.status).toEqual(302);
+      expect(node.status).toEqual(python.status);
+
+      expect(node.headers).toEqual(python.headers);
+
+      expect(node.headers.location).toEqual(
+        `https://downloads.sentry-cdn.com/sentry-cli/${version}/sentry-cli-Linux-x86_64`,
+      );
+      expect(node.headers.digest).toEqual(
+        'sha256=8cs/OTYjDCCuSrIIAmFPoggGPWI599KeBquwkXqTQRg=',
       );
 
-      expect(pythonApiResponse.status).toEqual(302);
-
-      return request(app.getHttpServer())
-        .get(`/apps/${appId}/${version}`)
-        .query({ response: 'download', arch, platform, package: pkgName })
-        .expect((r) => {
-          expect(r.status).toEqual(302);
-          expect(r.header.location).toEqual(
-            pythonApiResponse.headers.get('location'),
-          );
-          expect(r.header.digest).toEqual(
-            pythonApiResponse.headers.get('digest'),
-          );
-          expect(r.header.location).toEqual(
-            pythonApiResponse.headers.get('location'),
-          );
-          expect(r.header.location).toEqual(
-            `https://downloads.sentry-cdn.com/sentry-cli/${version}/sentry-cli-Linux-x86_64`,
-          );
-          expect(r.header.digest).toEqual(
-            'sha256=8cs/OTYjDCCuSrIIAmFPoggGPWI599KeBquwkXqTQRg=',
-          );
-        });
+      expect(node.body).toEqual(getRedirectHtml(node.headers.location));
+      expect(node.body).toEqual(python.body);
     });
 
     it('with invalid appId', async () => {
       const appId = 'invalid-app';
       const version = 'latest';
-
-      const pythonApiResponse = await fetch(
-        `${PYTHON_API_URL}/apps/${appId}/${version}`,
+      const { python, node } = await makeDuplexRequest(
+        `/apps/${appId}/${version}`,
       );
 
-      expect(pythonApiResponse.status).toEqual(404);
+      expect(node.status).toEqual(404);
+      expect(node.status).toEqual(python.status);
 
-      return request(app.getHttpServer())
-        .get(`/apps/${appId}/${version}`)
-        .expect((r) => {
-          expect(r.status).toEqual(404);
-          expect(r.text).toEqual('App not found');
-        });
+      expect(node.headers).toEqual(python.headers);
+
+      expect(node.body).toEqual(NOT_FOUND_HTML);
+      expect(node.body).toEqual(python.body);
     });
 
     it('with response=download and missing parameters', async () => {
       const appId = 'sentry-cli';
       const version = 'latest';
-
-      const pythonApiResponse = await fetch(
-        `${PYTHON_API_URL}/apps/${appId}/${version}?response=download`,
+      const { python, node } = await makeDuplexRequest(
+        `/apps/${appId}/${version}?response=download`,
       );
 
-      expect(pythonApiResponse.status).toEqual(400);
+      expect(node.status).toEqual(400);
+      expect(node.status).toEqual(python.status);
 
-      return request(app.getHttpServer())
-        .get(`/apps/${appId}/${version}`)
-        .query({ response: 'download' })
-        .expect((r) => {
-          expect(r.status).toEqual(400);
-          expect(r.text).toEqual('Missing required query parameters');
-        });
+      expect(node.headers).toEqual(python.headers);
+
+      expect(node.body).toEqual(BAD_REQUEST_HTML);
+      expect(node.body).toEqual(python.body);
     });
 
     it('with response=download and invalid parameters', async () => {
@@ -148,20 +117,17 @@ describe('AppsController (e2e)', () => {
       const arch = 'invalid-arch';
       const platform = 'invalid-platform';
       const pkgName = 'invalid-package';
-
-      const pythonApiResponse = await fetch(
-        `${PYTHON_API_URL}/apps/${appId}/${version}?response=download&arch=${arch}&platform=${platform}&package=${pkgName}`,
+      const { python, node } = await makeDuplexRequest(
+        `/apps/${appId}/${version}?response=download&arch=${arch}&platform=${platform}&package=${pkgName}`,
       );
 
-      expect(pythonApiResponse.status).toEqual(404);
+      expect(node.status).toEqual(404);
+      expect(node.status).toEqual(python.status);
 
-      return request(app.getHttpServer())
-        .get(`/apps/${appId}/${version}`)
-        .query({ response: 'download', arch, platform, package: pkgName })
-        .expect((r) => {
-          expect(r.status).toEqual(404);
-          expect(r.text).toEqual('Download URL not found');
-        });
+      expect(node.headers).toEqual(python.headers);
+
+      expect(node.body).toEqual(NOT_FOUND_HTML);
+      expect(node.body).toEqual(python.body);
     });
   });
 });

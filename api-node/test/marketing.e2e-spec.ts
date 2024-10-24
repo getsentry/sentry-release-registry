@@ -1,63 +1,46 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { AppModule } from './../src/app.module';
-import { PYTHON_API_URL } from './utils';
+import { makeDuplexRequest } from './utils/makeRequest';
 
 describe('MarketingController (e2e)', () => {
-  let app: INestApplication;
-
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    await app.init();
-  });
-
   it('/marketing-slugs (GET)', async () => {
-    const pythonApiResponse = await fetch(`${PYTHON_API_URL}/marketing-slugs`);
-    const pythonApiData = await pythonApiResponse.json();
+    const { python, node } = await makeDuplexRequest('/marketing-slugs');
 
-    return request(app.getHttpServer())
-      .get('/marketing-slugs')
-      .expect((res) => {
-        expect(res.status).toBe(200);
-        expect(res.body.slugs).toEqual(pythonApiData.slugs);
-      });
+    expect(node.status).toEqual(200);
+    expect(node.status).toEqual(python.status);
+
+    expect(node.headers).toEqual(python.headers);
+
+    expect(node.body).toEqual(python.body);
   });
 
   describe('/marketing-slugs/:slug (GET)', () => {
     it.each(['python', 'javascript', 'browser', 'flask', 'django', 'rust'])(
       'valid slug %s',
       async (slug) => {
-        const pythonApiResponse = await fetch(
-          `${PYTHON_API_URL}/marketing-slugs/${slug}`,
+        const { python, node } = await makeDuplexRequest(
+          `/marketing-slugs/${slug}`,
         );
-        const pythonApiData = await pythonApiResponse.json();
 
-        return request(app.getHttpServer())
-          .get(`/marketing-slugs/${slug}`)
-          .expect((res) => {
-            expect(res.status).toBe(200);
-            expect(res.body).toEqual(pythonApiData);
-          });
+        expect(node.status).toEqual(200);
+        expect(node.status).toEqual(python.status);
+
+        expect(node.headers).toEqual(python.headers);
+
+        expect(node.body).toEqual(python.body);
       },
     );
 
     it('invalid slug', async () => {
       const slug = 'invalid-slug';
-      const pythonApiResponse = await fetch(
-        `${PYTHON_API_URL}/marketing-slugs/${slug}`,
+      const { python, node } = await makeDuplexRequest(
+        `/marketing-slugs/${slug}`,
       );
 
-      return request(app.getHttpServer())
-        .get(`/marketing-slugs/${slug}`)
-        .expect((res) => {
-          expect(res.status).toBe(pythonApiResponse.status);
-          expect(res.status).toBe(404);
-        });
+      expect(node.status).toEqual(404);
+      expect(node.status).toEqual(python.status);
+
+      expect(node.headers).toEqual(python.headers);
+
+      expect(node.body).toEqual(python.body);
     });
   });
 });

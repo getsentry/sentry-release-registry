@@ -24,6 +24,7 @@
     "python-api:build": "docker build -t registry-api-server ../",
     "python-api:start": "docker run -d -p 5031:5030 registry-api-server",
     "python-api:stop": "docker stop $(docker ps -q --filter ancestor=registry-api-server)",
+    "start:all": "yarn build && yarn start:dev & yarn python-api:start",
     "sentry:sourcemaps": "sentry-cli sourcemaps inject --org sentry --project release-registry-nestjs ./dist && sentry-cli sourcemaps upload --org sentry --project release-registry-nestjs ./dist"
   },
   "dependencies": {

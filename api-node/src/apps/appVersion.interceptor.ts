@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import type { Response, Request } from 'express';
+import { getRedirectHtml } from '../common/htmlTemplates';
 
 @Injectable()
 export class AppVersionInterceptor implements NestInterceptor {
@@ -24,7 +25,7 @@ export class AppVersionInterceptor implements NestInterceptor {
           if (data.digest) {
             response.header('Digest', data.digest);
           }
-          return '';
+          return getRedirectHtml(data.url);
         }
 
         return data;

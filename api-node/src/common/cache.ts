@@ -11,7 +11,7 @@ export const CACHE_DEFAULT_SETTINGS = {
 
 /**
  * Custom interceptor to
- * - disable caching if the REGISTRY_ENABLE_CACHE environment variable is not set to '1'.
+ * - disable caching if the REGISTRY_ENABLE_CACHE environment variable is not set to '1' or FLASK_ENV is not 'production'.
  * - set the X-From-Cache header to 1 if the response is served from cache (hit).
  */
 export class ReleaseRegistryCacheInterceptor extends CacheInterceptor {

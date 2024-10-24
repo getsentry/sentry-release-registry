@@ -97,11 +97,13 @@ function normalizeHeaders(
   const pythonContentType = pythonHeaders['content-type'];
   if (
     nodeContentType &&
-    nodeContentType.startsWith('application/json') &&
+    (nodeContentType.startsWith('application/json') ||
+      nodeContentType.startsWith('text/html')) &&
     pythonContentType &&
-    pythonContentType === 'application/json'
+    (pythonContentType === 'application/json' ||
+      pythonContentType === 'text/html')
   ) {
-    nodeHeaders['content-type'] = 'application/json';
+    nodeHeaders['content-type'] = pythonContentType;
   }
 
   // caching headers might diverge, depending on number of requests made before

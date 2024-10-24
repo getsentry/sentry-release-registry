@@ -10,10 +10,17 @@ import { SentryGlobalFilter, SentryModule } from '@sentry/nestjs/setup';
 import { APP_FILTER } from '@nestjs/core';
 import { CacheModule } from '@nestjs/cache-manager';
 import { CACHE_DEFAULT_SETTINGS } from './common/cache';
+import { AppVersionInterceptor } from './apps/appVersion.interceptor';
+import { HttpClientExceptionFilter } from './common/httpClient.exceptionFilter';
 
 const providers: Provider[] = [
   RegistryService,
   { provide: APP_FILTER, useClass: SentryGlobalFilter },
+  {
+    provide: APP_FILTER,
+    useClass: HttpClientExceptionFilter,
+  },
+  AppVersionInterceptor,
 ];
 
 @Module({

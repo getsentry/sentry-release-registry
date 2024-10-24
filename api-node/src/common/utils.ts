@@ -1,3 +1,3 @@
 export function isTruthy(value: string): boolean {
-  return value.toLowerCase() === 'true' || value === '1' || value === 'yes';
+  return ['true', '1', 'yes'].includes(value.toLowerCase());
 }

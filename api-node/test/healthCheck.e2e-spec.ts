@@ -1,28 +1,14 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { AppModule } from './../src/app.module';
-import { PYTHON_API_URL } from './utils';
+import { makeDuplexRequest } from './utils/makeRequest';
 
 describe('HealthCheckController (e2e)', () => {
-  let app: INestApplication;
-
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    await app.init();
-  });
-
   it('/healthz (GET)', async () => {
-    const pythonApiResponse = await fetch(`${PYTHON_API_URL}/healthz`);
-    const pythonApiData = await pythonApiResponse.text();
+    const { python, node } = await makeDuplexRequest('/healthz');
 
-    return request(app.getHttpServer())
-      .get('/healthz')
-      .expect(200)
-      .expect(pythonApiData);
+    expect(node.status).toEqual(200);
+    expect(node.status).toEqual(python.status);
+
+    expect(node.headers).toEqual(python.headers);
+
+    expect(node.body).toEqual(python.body);
   });
 });
