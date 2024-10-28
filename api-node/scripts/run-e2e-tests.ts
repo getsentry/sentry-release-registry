@@ -22,6 +22,13 @@ nodeApi.stderr.on('data', (data) => {
   console.error('[NestJS]', data.toString());
 });
 
+nodeApi.on('close', (code) => {
+  if (code !== 0) {
+    console.error(`NestJS finished with code ${code}`);
+    process.exit(code);
+  }
+});
+
 const pythonApi = childProcess.spawn('yarn', ['python-api:start']);
 
 pythonApi.stdout.on('data', (data) => {
@@ -34,6 +41,13 @@ pythonApi.stdout.on('data', (data) => {
 
 pythonApi.stderr.on('data', (data) => {
   console.error('[Flask]', data.toString());
+});
+
+pythonApi.on('close', (code) => {
+  if (code !== 0) {
+    console.error(`Flask finished with code ${code}`);
+    process.exit(code);
+  }
 });
 
 function checkAndRunTests(): void {
