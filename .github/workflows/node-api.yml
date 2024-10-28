@@ -114,12 +114,6 @@ jobs:
       - name: Build Python API
         working-directory: ./api-node
         run: yarn python-api:build
-      - name: Start Python API
+      - name: Run E2E tests
         working-directory: ./api-node
-        run: yarn python-api:start
-      - name: Run e2e tests
-        working-directory: ./api-node
-        run: yarn test:e2e
-      - name: Stop Python API
-        working-directory: ./api-node
-        run: yarn python-api:stop
+        run: yarn test:e2e:ci

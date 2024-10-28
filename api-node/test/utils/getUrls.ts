@@ -1,4 +1,4 @@
-import { PYTHON_API_URL } from '../utils';
+import { PYTHON_API_URL } from './makeRequest';
 import * as fs from 'fs';
 import * as path from 'path';
 

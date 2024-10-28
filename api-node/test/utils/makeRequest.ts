@@ -26,10 +26,11 @@ export async function makeDuplexRequest(
   path: string,
   options: RequestInit = { redirect: 'manual' },
 ): Promise<{ python: ResponseParts; node: ResponseParts }> {
-  const [pythonResponse, nodeResponse] = await Promise.all([
-    fetch(`${PYTHON_API_URL}${path}`, options),
-    fetch(`${API_NODE_URL}${path}`, options),
-  ]);
+  const pythonResponse = await fetch(`${PYTHON_API_URL}${path}`, options);
+  const pythonBody = await pythonResponse.text();
+
+  const nodeResponse = await fetch(`${API_NODE_URL}${path}`, options);
+  const nodeBody = await nodeResponse.text();
 
   const pythonStatus = pythonResponse.status;
   const nodeStatus = nodeResponse.status;
@@ -44,9 +45,6 @@ export async function makeDuplexRequest(
     pythonHeaders: normalizedPythonHeaders,
     nodeHeaders: normalizedNodeHeaders,
   } = normalizeHeaders(originalPythonHeaders, originalNodeHeaders);
-
-  const pythonBody = await pythonResponse.text();
-  const nodeBody = await nodeResponse.text();
 
   return {
     python: {
@@ -86,7 +84,7 @@ function normalizeHeaders(
     const pythonContentLength = parseInt(pythonHeaders['content-length']);
     const nodeContentLength = parseInt(nodeHeaders['content-length']);
     if (pythonContentLength - nodeContentLength === 1) {
-      pythonHeaders['content-length'] = nodeHeaders['content-length'];
+      nodeHeaders['content-length'] = pythonHeaders['content-length'];
     }
   }
 

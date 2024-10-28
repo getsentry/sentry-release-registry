@@ -8,6 +8,8 @@
   "scripts": {
     "build": "nest build && yarn sentry:sourcemaps",
     "build:ci": "nest build",
+    "clean": "rm -rf dist",
+    "clean:all": "yarn clean && rm -rf dist node_modules && yarn install",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -19,10 +21,11 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json --testPathIgnorePatterns=everything.e2e-spec.ts",
+    "test:e2e:ci": "NODE_ENV=test ts-node ./scripts/run-e2e-tests.ts",
     "test:e2e:urls": "NODE_ENV=test jest --config ./test/jest-e2e.json everything.e2e-spec.ts",
     "test:e2e:urls:generate": "ts-node ./test/utils/getUrls.ts",
     "python-api:build": "docker build -t registry-api-server ../",
-    "python-api:start": "docker run -d -p 5031:5030 registry-api-server",
+    "python-api:start": "docker start $(docker ps -aq --filter ancestor=registry-api-server) && echo 'Flask API started successfully' || (docker run -d -p 5031:5030 registry-api-server && echo 'Flask API started successfully')",
     "python-api:stop": "docker stop $(docker ps -q --filter ancestor=registry-api-server)",
     "start:all": "yarn build && yarn start:dev & yarn python-api:start",
     "sentry:sourcemaps": "sentry-cli sourcemaps inject --org sentry --project release-registry-nestjs ./dist && sentry-cli sourcemaps upload --org sentry --project release-registry-nestjs ./dist"
