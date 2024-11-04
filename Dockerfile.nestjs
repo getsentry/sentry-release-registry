@@ -1,10 +1,6 @@
 FROM node:22-alpine
 
 ENV \
-    NODE_ENV=production \
-    PORT=5030
-
-ENV \
     REGISTRY_UID=10011 \
     REGISTRY_GID=10011
 
@@ -21,6 +17,12 @@ COPY api-node/package.json api-node/yarn.lock api-node/
 RUN cd api-node && yarn install --frozen-lockfile
 
 COPY . .
+
+# Set to production environment
+# Importantly, after installing deps, otherwise dev deps aren't installed
+ENV \
+    NODE_ENV=production \
+    PORT=5030
 
 WORKDIR /work/api-node
 
