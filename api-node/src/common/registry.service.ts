@@ -11,6 +11,7 @@ import type { AppEntry, Apps } from '../apps/types';
 import type { PackageEntry, Packages } from '../packages/types';
 import type { AwsLambdaLayers } from '../aws-lambda-layers/types';
 import * as semver from 'semver';
+import { ValueError } from './valueError';
 
 const SDKS_PATH = path.join('..', 'sdks');
 const APPS_PATH = path.join('..', 'apps');
@@ -37,15 +38,15 @@ export class RegistryService {
           if (pkg) {
             sdks[link] = pkg;
           } else if (strict) {
-            throw new Error(
+            throw new ValueError(
               `Package ${link}, canonical cannot be resolved: ${canonical}`,
             );
           }
         } catch (error) {
-          if (strict) {
+          if (error instanceof ValueError) {
             throw error;
           }
-          // If not strict, continue to the next SDK
+          // IO and other errors are ignored
         }
       }
     } catch (error) {
@@ -73,22 +74,16 @@ export class RegistryService {
   // Packages
 
   getPackages(strict: boolean = false): Packages {
-    return Array.from(iterPackages()).reduce((acc, canonical) => {
-      const packageDir = getPackageDirFromCanonical(canonical);
-      const latestFilePath = path.join(packageDir, 'latest.json');
-
-      try {
-        const packageInfo = JSON.parse(
-          fs.readFileSync(latestFilePath).toString(),
+    return Array.from(iterPackages()).reduce((acc, pkgName) => {
+      const pkg = this.getPackage(pkgName);
+      if (!pkg && strict) {
+        throw new ValueError(
+          `Package does not exist or invalid canonical: ${pkgName}`,
         );
-        return {
-          ...acc,
-          [packageInfo.canonical]: packageInfo,
-        };
-      } catch (e) {
-        console.error(`Failed to read package: ${canonical}`);
-        console.error(e);
       }
+
+      acc[pkg.canonical] = pkg;
+      return acc;
     }, {});
   }
 

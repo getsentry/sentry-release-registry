@@ -9,6 +9,7 @@ import {
 import { RegistryService } from '../common/registry.service';
 import { PackageEntry, Packages, PackageVersions } from './types';
 import { ReleaseRegistryCacheInterceptor } from '../common/cache';
+import { isTruthy } from 'src/common/utils';
 
 @Controller('packages')
 @UseInterceptors(ReleaseRegistryCacheInterceptor)
@@ -16,8 +17,8 @@ export class PackagesController {
   constructor(private registryService: RegistryService) {}
 
   @Get()
-  getPackages(@Query('strict') strict: boolean = false): Packages {
-    return this.registryService.getPackages(strict);
+  getPackages(@Query('strict') strict?: string): Packages {
+    return this.registryService.getPackages(isTruthy(strict));
   }
 
   @Get('/:package(*)/versions')
