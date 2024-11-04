@@ -1,4 +1,4 @@
-import { PYTHON_API_URL } from './utils';
+import { makeDuplexRequest } from './utils/makeRequest';
 import * as fs from 'fs';
 describe('Flask and NestJS api responses match', () => {
   const urls = JSON.parse(
@@ -16,27 +16,22 @@ describe('Flask and NestJS api responses match', () => {
     let attempts = 0;
     while (attempts < 3) {
       try {
-        const [pythonResponse, nodeResponse] = await Promise.all([
-          fetch(`${PYTHON_API_URL}${url}`, {
-            redirect: 'manual',
-          }),
-          fetch(`http://localhost:3000${url}`, {
-            redirect: 'manual',
-          }),
-        ]);
-        if (pythonResponse?.status < 400 && nodeResponse?.status < 400) {
-          pythonResponseStatus = pythonResponse?.status;
-          nodeResponseStatus = nodeResponse?.status;
-          pythonResponseBody = await pythonResponse?.text();
-          nodeResponseBody = await nodeResponse?.text();
-          pythonResponseHeaders = pythonResponse?.headers;
-          nodeResponseHeaders = nodeResponse?.headers;
-          break;
+        const { node, python } = await makeDuplexRequest(url);
+
+        pythonResponseStatus = python.status;
+        nodeResponseStatus = node.status;
+        pythonResponseBody = python.body;
+        nodeResponseBody = node.body;
+        pythonResponseHeaders = python.headers;
+        nodeResponseHeaders = node.headers;
+        break;
+      } catch (error) {
+        console.error(`Attempt ${attempts + 1} failed:`, error);
+        attempts++;
+        if (attempts >= 3) {
+          console.error(`Failed to fetch ${url} after 3 attempts`);
         }
-      } catch {
-        // console.error(`Attempt ${attempts + 1} failed:`, error);
       }
-      attempts++;
       if (attempts < 3) {
         pythonResponseStatus = pythonResponse?.status;
         nodeResponseStatus = nodeResponse?.status;
@@ -48,19 +43,11 @@ describe('Flask and NestJS api responses match', () => {
       }
     }
 
-    if (attempts === 3) {
-      console.error(`Failed to fetch ${url} after 3 attempts`);
-    }
-
     expect(pythonResponseStatus).toBe(status);
     expect(nodeResponseStatus).toBe(pythonResponseStatus);
 
-    expect(pythonResponseHeaders).toEqual(nodeResponseHeaders);
+    expect(nodeResponseHeaders).toEqual(pythonResponseHeaders);
 
-    if (pythonResponseStatus === 200) {
-      const pythonResponseJson = JSON.parse(pythonResponseBody);
-      const nodeResponseJson = JSON.parse(nodeResponseBody);
-      expect(nodeResponseJson).toEqual(pythonResponseJson);
-    }
+    expect(nodeResponseBody).toEqual(pythonResponseBody);
   });
 });

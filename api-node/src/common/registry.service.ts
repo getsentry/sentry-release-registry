@@ -23,16 +23,6 @@ const NAMESPACE_FILE_MARKER = '__NAMESPACE__';
 
 @Injectable()
 export class RegistryService {
-  #packages: string[];
-  #slugs: Record<string, MarketingSlugEntry>;
-
-  constructor() {
-    this.#packages = Array.from(iterPackages());
-    this.#slugs = JSON.parse(
-      fs.readFileSync(path.join('..', 'misc', 'marketing-slugs.json'), 'utf8'),
-    );
-  }
-
   // SDKs
   getSdks(strict: boolean = false): Sdks {
     const sdks: Sdks = {};
@@ -83,7 +73,7 @@ export class RegistryService {
   // Packages
 
   getPackages(strict: boolean = false): Packages {
-    return this.#packages.reduce((acc, canonical) => {
+    return Array.from(iterPackages()).reduce((acc, canonical) => {
       const packageDir = getPackageDirFromCanonical(canonical);
       const latestFilePath = path.join(packageDir, 'latest.json');
 
@@ -178,11 +168,11 @@ export class RegistryService {
   // Marketing
 
   getMarketingSlugs(): MarketingSlugs {
-    return { slugs: Object.keys(this.#slugs).sort() };
+    return { slugs: Object.keys(getSlugs()).sort() };
   }
 
   resolveMarketingSlug(slug: string): ResolvedMarketingSlug | null {
-    const data = this.#slugs[slug];
+    const data = getSlugs()[slug];
     if (!data) {
       return null;
     }
@@ -212,8 +202,6 @@ export class RegistryService {
       target,
     };
   }
-
-  // AWS Lambda Layers
 
   getAwsLambdaLayers(): AwsLambdaLayers {
     const layers: AwsLambdaLayers = {};
@@ -287,4 +275,10 @@ function getPackageDirFromCanonical(canonicalPackageName: string): string {
     .replaceAll(':', path.sep)
     .split(path.sep);
   return path.resolve(path.join(PACKAGES_PATH, ...pkgPath));
+}
+
+function getSlugs(): Record<string, MarketingSlugEntry> {
+  return JSON.parse(
+    fs.readFileSync(path.join('..', 'misc', 'marketing-slugs.json'), 'utf8'),
+  );
 }
