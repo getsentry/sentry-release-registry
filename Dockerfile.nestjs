@@ -1,0 +1,50 @@
+FROM node:22-alpine
+
+ENV \
+    NODE_ENV=production \
+    PORT=5030
+
+ENV \
+    REGISTRY_UID=10011 \
+    REGISTRY_GID=10011
+
+# Create a new user and group with fixed uid/gid
+RUN addgroup -S registry -g $REGISTRY_GID \
+    && adduser -S registry -G registry -u $REGISTRY_UID
+
+WORKDIR /work
+
+# Copy package files
+COPY api-node/package.json api-node/yarn.lock api-node/
+
+# Remove dev dependencies
+RUN cd api-node && yarn install --production --frozen-lockfile
+
+COPY . .
+
+WORKDIR /work/api-node
+
+# Build the application
+RUN yarn build
+
+# Set ownership
+RUN chown -R registry:registry ./
+
+# Smoke test
+RUN node -v && node dist/main.js --smoke
+
+EXPOSE 5030
+
+USER registry
+
+CMD ["node", "dist/main.js"]
+# To start this Docker container, use the following commands:
+
+# Build the Docker image:
+# docker build -t registry-api-nestjs-server -f Dockerfile.nestjs .
+
+# Run the Docker container:
+# docker run -p 503x:5030 registry-api-nestjs-server
+
+# These commands should be run from the directory containing this Dockerfile.
+# The -p 5030:5030 flag maps the container's port 5030 to the host's port 5030.

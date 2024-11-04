@@ -18,6 +18,19 @@ async function bootstrap(): Promise<void> {
   // disable setting the etag header
   app.getHttpAdapter().getInstance().set('etag', false);
 
+  // Add signal handlers
+  process.on('SIGINT', async () => {
+    console.log('Received SIGINT. Graceful shutdown...');
+    await app.close();
+    process.exit(0);
+  });
+
+  process.on('SIGTERM', async () => {
+    console.log('Received SIGTERM. Graceful shutdown...');
+    await app.close();
+    process.exit(0);
+  });
+
   await app.listen(getPort());
 }
 
@@ -32,4 +45,8 @@ function getPort(): number {
   return DEFAULT_PORT;
 }
 
-bootstrap();
+if (process.argv.includes('--smoke')) {
+  console.log('Smoke test successful!');
+} else {
+  bootstrap();
+}
