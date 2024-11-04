@@ -2,6 +2,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: [
         'build',
+        '-f', 'Dockerfile.nestjs',
         '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/sentry-release-registry/image:latest',
         '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/sentry-release-registry/image:$COMMIT_SHA',
         "--cache-from", 'us-central1-docker.pkg.dev/$PROJECT_ID/sentry-release-registry/image:latest',
