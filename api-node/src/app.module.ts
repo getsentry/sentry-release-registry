@@ -1,4 +1,4 @@
-import { Module, Provider } from '@nestjs/common';
+import { Logger, Module, Provider } from '@nestjs/common';
 import { PackagesController } from './packages/packages.controller';
 import { HealthCheckController } from './health/healthCheck.controller';
 import { MarketingController } from './marketing/marketing.controller';
@@ -12,6 +12,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { CACHE_DEFAULT_SETTINGS } from './common/cache';
 import { AppVersionInterceptor } from './apps/appVersion.interceptor';
 import { HttpClientExceptionFilter } from './common/httpClient.exceptionFilter';
+import { getPort } from './common/port';
 
 const providers: Provider[] = [
   RegistryService,
@@ -38,4 +39,9 @@ const providers: Provider[] = [
   ],
   providers,
 })
-export class AppModule {}
+export class AppModule {
+  private readonly logger = new Logger(AppModule.name);
+  constructor() {
+    this.logger.log(`Server is running on port ${getPort()}`);
+  }
+}

@@ -3,8 +3,7 @@ import './instrument';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AlignHeadersInterceptor } from './common/alignHeaders.interceptor';
-
-const DEFAULT_PORT = 3000;
+import { getPort } from './common/port';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, {
@@ -32,17 +31,6 @@ async function bootstrap(): Promise<void> {
   });
 
   await app.listen(getPort());
-}
-
-function getPort(): number {
-  try {
-    if (process.env.PORT) {
-      return parseInt(process.env.PORT);
-    }
-  } catch (error) {
-    console.error('Invalid port number', error);
-  }
-  return DEFAULT_PORT;
 }
 
 if (process.argv.includes('--smoke')) {

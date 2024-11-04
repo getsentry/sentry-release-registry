@@ -27,6 +27,9 @@
     "python-api:build": "docker build -t registry-api-server ../",
     "python-api:start": "docker start $(docker ps -aq --filter ancestor=registry-api-server) && echo 'Flask API started successfully' || (docker run -d -p 5031:5030 registry-api-server && echo 'Flask API started successfully')",
     "python-api:stop": "docker stop $(docker ps -q --filter ancestor=registry-api-server)",
+    "docker:build": "docker build -t registry-api-nestjs-server -f Dockerfile.nestjs .",
+    "docker:stop": "docker stop $(docker ps -q --filter ancestor=registry-api-nestjs-server)",
+    "docker:run": "docker run -p 5032:5030 registry-api-nestjs-server",
     "start:all": "yarn build && yarn start:dev & yarn python-api:start",
     "sentry:sourcemaps": "sentry-cli sourcemaps inject --org sentry --project release-registry-nestjs ./dist && sentry-cli sourcemaps upload --org sentry --project release-registry-nestjs ./dist"
   },

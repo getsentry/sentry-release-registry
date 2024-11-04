@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import * as path from 'path';
 import * as fs from 'fs';
 import type { SdkEntry, Sdks, SdkVersions } from '../sdks/types';
@@ -24,6 +24,8 @@ const NAMESPACE_FILE_MARKER = '__NAMESPACE__';
 
 @Injectable()
 export class RegistryService {
+  private readonly logger = new Logger(RegistryService.name);
+
   // SDKs
   getSdks(strict: boolean = false): Sdks {
     const sdks: Sdks = {};
@@ -50,7 +52,7 @@ export class RegistryService {
         }
       }
     } catch (error) {
-      console.error('Error reading SDKs directory:', error);
+      this.logger.error('Error reading SDKs directory:', error);
     }
     return sdks;
   }
@@ -61,7 +63,7 @@ export class RegistryService {
       const { canonical } = JSON.parse(fs.readFileSync(sdkFilePath, 'utf8'));
       return this.getPackage(canonical, version);
     } catch (error) {
-      console.error('Error reading SDK file:', error);
+      this.logger.error('Error reading SDK file:', error);
     }
   }
 
@@ -105,8 +107,8 @@ export class RegistryService {
         return semver.parse(a).compare(semver.parse(b));
       });
     } catch (e) {
-      console.error(`Failed to read package versions: ${packageName}`);
-      console.error(e);
+      this.logger.error(`Failed to read package versions: ${packageName}`);
+      this.logger.error(e);
       return [];
     }
   }
@@ -120,10 +122,10 @@ export class RegistryService {
       const versionFilePath = path.join(packageDir, `${version}.json`);
       return JSON.parse(fs.readFileSync(versionFilePath).toString());
     } catch (e) {
-      console.error(
+      this.logger.error(
         `Failed to read package ${packageName} for version ${version}`,
       );
-      console.error(e);
+      this.logger.error(e);
       return null;
     }
   }
@@ -146,7 +148,7 @@ export class RegistryService {
       }, {});
     } catch (error) {
       // Handle error (e.g., log it or throw a custom exception)
-      console.error('Error reading apps directory:', error);
+      this.logger.error('Error reading apps directory:', error);
     }
   }
 
@@ -217,7 +219,7 @@ export class RegistryService {
         }
       }
     } catch (error) {
-      console.error('Error reading AWS Lambda Layers directory:', error);
+      this.logger.error('Error reading AWS Lambda Layers directory:', error);
     }
 
     return layers;
