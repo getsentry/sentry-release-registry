@@ -140,7 +140,7 @@ class Registry(object):
         if ":" not in canonical:
             return
         registry, package = canonical.split(":", 1)
-         # Allow ":" to be used as a path separator
+        # Allow ":" to be used as a path separator
         package = package.replace(":", "/")
         rv = set()
         for filename in os.listdir(self._path("packages", registry, package)):
