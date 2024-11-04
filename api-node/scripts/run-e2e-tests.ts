@@ -5,7 +5,7 @@
 
 import * as childProcess from 'child_process';
 
-const nodeApi = childProcess.spawn('yarn', ['start:prod']);
+const nodeApi = childProcess.spawn('yarn', ['docker:start']);
 
 let nodeApiStarted = false;
 let pythonApiStarted = false;
@@ -76,6 +76,7 @@ function cleanup(code: number): void {
   nodeApi.kill();
   pythonApi.kill();
   childProcess.execSync('yarn python-api:stop');
+  childProcess.execSync('yarn docker:stop');
   process.exit(code);
 }
 

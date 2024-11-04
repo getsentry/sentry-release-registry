@@ -116,7 +116,7 @@ jobs:
         run: yarn python-api:build
       - name: Build Node API
         working-directory: ./api-node
-        run: yarn build:ci
+        run: yarn docker:build
       - name: Run E2E tests
         working-directory: ./api-node
         run: yarn test:e2e:ci

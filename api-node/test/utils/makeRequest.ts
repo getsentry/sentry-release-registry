@@ -1,8 +1,8 @@
-const PYTHON_API_PORT = 5031;
-const API_NODE_PORT = 3000;
+const PYTHON_API_TEST_PORT = 5031;
+const NODE_API_TEST_PORT = 5032;
 
-export const PYTHON_API_URL = `http://localhost:${PYTHON_API_PORT}`;
-export const API_NODE_URL = `http://localhost:${API_NODE_PORT}`;
+export const PYTHON_API_URL = `http://localhost:${PYTHON_API_TEST_PORT}`;
+export const API_NODE_URL = `http://localhost:${NODE_API_TEST_PORT}`;
 
 interface ResponseParts {
   status: number;
