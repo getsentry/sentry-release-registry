@@ -18,7 +18,7 @@ WORKDIR /work
 COPY api-node/package.json api-node/yarn.lock api-node/
 
 # Remove dev dependencies
-RUN cd api-node && yarn install --production --frozen-lockfile
+RUN cd api-node && yarn install --frozen-lockfile
 
 COPY . .
 
