@@ -27,7 +27,7 @@ ENV \
 WORKDIR /work/api-node
 
 # Build the application
-RUN yarn build
+RUN yarn build:ci
 
 # Set ownership
 RUN chown -R registry:registry ./
