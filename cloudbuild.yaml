@@ -2,6 +2,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: [
         'build',
+        "--secret", "id=SENTRY_AUTH_TOKEN,env=SENTRY_AUTH_TOKEN",
         '-f', 'Dockerfile.nestjs',
         '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/sentry-release-registry/image:latest',
         '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/sentry-release-registry/image:$COMMIT_SHA',
@@ -25,3 +26,7 @@ steps:
 images: [
   'us-central1-docker.pkg.dev/$PROJECT_ID/sentry-release-registry/image:$COMMIT_SHA',
 ]
+availableSecrets:
+  secretManager:
+  - versionName: projects/294472738882/secrets/release-registry-oauth-token
+    env: 'SENTRY_AUTH_TOKEN'

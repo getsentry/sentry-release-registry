@@ -27,7 +27,9 @@ ENV \
 WORKDIR /work/api-node
 
 # Build the application
-RUN yarn build:ci
+RUN --mount=type=secret,id=SENTRY_AUTH_TOKEN \
+    export SENTRY_AUTH_TOKEN=$(cat /run/secrets/SENTRY_AUTH_TOKEN) && \
+    yarn build
 
 # Set ownership
 RUN chown -R registry:registry ./
