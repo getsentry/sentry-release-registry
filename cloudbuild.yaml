@@ -12,6 +12,7 @@ steps:
         '.'
       ]
     env: [DOCKER_BUILDKIT=1]
+    secretEnv: ['SENTRY_AUTH_TOKEN']
 
   # Only tag "latest" when on master
   - name: 'gcr.io/cloud-builders/docker'
