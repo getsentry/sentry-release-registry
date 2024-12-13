@@ -140,6 +140,8 @@ class Registry(object):
         if ":" not in canonical:
             return
         registry, package = canonical.split(":", 1)
+        # Allow ":" to be used as a path separator
+        package = package.replace(":", "/")
         rv = set()
         for filename in os.listdir(self._path("packages", registry, package)):
             if filename.endswith(".json"):
@@ -149,6 +151,8 @@ class Registry(object):
 
     def iter_packages(self):
         for package_registry in os.listdir(self._path("packages")):
+            if not os.path.isdir(self._path("packages", package_registry)):
+                continue
             for item in os.listdir(self._path("packages", package_registry)):
                 if os.path.exists(
                     os.path.join(

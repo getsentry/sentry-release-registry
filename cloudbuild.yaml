@@ -2,6 +2,8 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: [
         'build',
+        "--secret", "id=SENTRY_AUTH_TOKEN,env=SENTRY_AUTH_TOKEN",
+        '-f', 'Dockerfile.nestjs',
         '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/sentry-release-registry/image:latest',
         '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/sentry-release-registry/image:$COMMIT_SHA',
         "--cache-from", 'us-central1-docker.pkg.dev/$PROJECT_ID/sentry-release-registry/image:latest',
@@ -10,6 +12,7 @@ steps:
         '.'
       ]
     env: [DOCKER_BUILDKIT=1]
+    secretEnv: ['SENTRY_AUTH_TOKEN']
 
   # Only tag "latest" when on master
   - name: 'gcr.io/cloud-builders/docker'
@@ -24,3 +27,7 @@ steps:
 images: [
   'us-central1-docker.pkg.dev/$PROJECT_ID/sentry-release-registry/image:$COMMIT_SHA',
 ]
+availableSecrets:
+  secretManager:
+  - versionName: projects/345757944225/secrets/release-registry-oauth-token/versions/1
+    env: 'SENTRY_AUTH_TOKEN'
