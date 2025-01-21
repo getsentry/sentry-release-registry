@@ -9,5 +9,5 @@ docker run \
     -v $(pwd):/work \
     -w /work \
     -e TARGET="${TARGET:-test}" \
-    python:3.7 \
+    python:3.12 \
     ./api-server/bin/test-utils/run-tests
