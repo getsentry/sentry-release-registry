@@ -1,12 +1,12 @@
-FROM python:3.7-slim
+FROM python:3.13-slim
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends build-essential gosu \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
-ENV PIP_NO_CACHE_DIR off
-ENV PIP_DISABLE_PIP_VERSION_CHECK on
+ENV PIP_NO_CACHE_DIR=off
+ENV PIP_DISABLE_PIP_VERSION_CHECK=on
 
 ENV \
   FLASK_APP=./apiserver.py \
