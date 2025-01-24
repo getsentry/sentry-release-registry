@@ -300,7 +300,7 @@ def cache_response(response):
 def set_cache_enabled(app, enable: bool):
     app.config["CACHE_ENABLED"] = enable
 
-    assert type(enable) == bool
+    assert type(enable) is bool
     if enable:
         app.before_request(return_cached)
         app.after_request(cache_response)
