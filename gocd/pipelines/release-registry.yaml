@@ -35,10 +35,12 @@ pipelines:
                                     ${GO_REVISION_RELEASE_REGISTRY_REPO} \
                                     "main"
                               - script: |
-                                    /devinfra/scripts/checks/googlecloud/checkcloudbuild.py \
+                                    /devinfra/scripts/checks/googlecloud/check_cloudbuild.py \
+                                    sentryio \
+                                    sentry-release-registry \
+                                    sentry-release-registry-build-image \
                                     ${GO_REVISION_RELEASE_REGISTRY_REPO} \
-                                    "sentryio" \
-                                    "us-central1-docker.pkg.dev/sentryio/sentry-release-registry/image"
+                                    master
             - deploy:
                   approval:
                       type: success
