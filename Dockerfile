@@ -27,6 +27,8 @@ COPY api-server/requirements*.txt api-server/setup.py api-server/
 
 RUN cd api-server && pip install -e .
 
+RUN pip install granian==2.3.0
+
 COPY . .
 
 RUN chown -R registry:registry ./
@@ -40,4 +42,4 @@ EXPOSE 5030
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
-CMD [ "mywsgi", "apiserver:app", "0.0.0.0:5030" ]
+CMD [ "granian", "--interface", "wsgi", "--host", "0.0.0.0", "--port", "5030", "apiserver:app" ]
