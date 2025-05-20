@@ -5,10 +5,10 @@ from functools import partial
 from datadog import initialize as datadog_initialize, statsd
 
 import sentry_sdk
+from cachelib import SimpleCache
 from flask import Flask, json, abort, jsonify, request, redirect
 from semver import VersionInfo
 from sentry_sdk.integrations.flask import FlaskIntegration
-from werkzeug.contrib.cache import SimpleCache
 
 TRUTHY_VALUES = {"1", "true", "yes"}
 
