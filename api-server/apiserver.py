@@ -8,7 +8,6 @@ import sentry_sdk
 from cachelib import SimpleCache
 from flask import Flask, json, abort, jsonify, request, redirect
 from semver import VersionInfo
-from sentry_sdk.integrations.flask import FlaskIntegration
 
 TRUTHY_VALUES = {"1", "true", "yes"}
 
@@ -47,8 +46,19 @@ class Metrics:
 
 metrics = Metrics().initialize()
 
+
+def traces_sampler(sampling_context):
+    path = sampling_context.get("wsgi_environ", {}).get("PATH_INFO", None)
+    if path is None:
+        return 0.0
+    if path == "/healthz":
+        return 0.0
+
+    return 1.0
+
+
 # SENTRY_DSN will be taken from env
-sentry_sdk.init(integrations=[FlaskIntegration()])
+sentry_sdk.init(traces_sampler=traces_sampler)
 
 CACHE_TIMEOUT = 3600
 cache = SimpleCache(threshold=200, default_timeout=CACHE_TIMEOUT)
@@ -133,6 +143,7 @@ class Registry(object):
             with open(path) as f:
                 return PackageInfo(self, json.load(f))
         except (IOError, OSError):
+            sentry_sdk.capture_exception()
             return
 
     def get_package_versions(self, canonical):
@@ -197,6 +208,7 @@ class Registry(object):
                     else:
                         rv[link] = pkg
             except (IOError, OSError):
+                sentry_sdk.capture_exception()
                 continue
         return rv
 
@@ -206,16 +218,19 @@ class Registry(object):
                 canonical = json.load(f)["canonical"]
                 return self.get_package(canonical, version)
         except (IOError, OSError):
+            sentry_sdk.capture_exception()
             pass
 
     def get_aws_lambda_layers(self):
         rv = {}
         for link in os.listdir(self._path("aws-lambda-layers")):
             try:
-                with open(self._path("aws-lambda-layers", link, "latest.json")) as f:
-                    data = json.load(f)
-                    rv[data["canonical"]] = data
+                with sentry_sdk.start_span(op="open_json", description=f"aws-lambda-layers/{link}/latest.json"):
+                    with open(self._path("aws-lambda-layers", link, "latest.json")) as f:
+                        data = json.load(f)
+                        rv[data["canonical"]] = data
             except (IOError, OSError):
+                sentry_sdk.capture_exception()
                 continue
         return rv
 
@@ -227,6 +242,7 @@ class Registry(object):
                 if app is not None:
                     rv[link] = app
             except (IOError, OSError):
+                sentry_sdk.capture_exception()
                 continue
         return rv
 
@@ -235,6 +251,7 @@ class Registry(object):
             with open(self._path("apps", app_id, "%s.json" % version)) as f:
                 return json.load(f)
         except (IOError, OSError):
+            sentry_sdk.capture_exception()
             pass
 
     def get_marketing_slugs(self):
