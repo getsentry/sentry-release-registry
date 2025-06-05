@@ -58,7 +58,10 @@ def traces_sampler(sampling_context):
 
 
 # SENTRY_DSN will be taken from env
-sentry_sdk.init(traces_sampler=traces_sampler)
+sentry_sdk.init(
+    traces_sampler=traces_sampler,
+    profiles_sample_rate=1.0,
+)
 
 CACHE_TIMEOUT = 3600
 cache = SimpleCache(threshold=200, default_timeout=CACHE_TIMEOUT)
