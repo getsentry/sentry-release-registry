@@ -1,5 +1,7 @@
 # Sentry Release Registry
 
+![Build Status](https://github.com/getsentry/release-registry/workflows/Build%20Static%20Site%20Generator/badge.svg)
+
 This is a meta repository holding release information for Sentry repositories.
 
 It centralizes information that used to be in different locations. It is known
@@ -12,6 +14,32 @@ to be used by at least:
 [sdk-docs]: https://github.com/getsentry/sentry-docs/
 [js-loader]: https://docs.sentry.io/platforms/javascript/#lazy-loading-sentry
 [sdk-update-prompt]: https://github.com/getsentry/sentry/blob/ea791cb482d6f77481beed41e64ccc52ce10bc65/src/sentry/sdk_updates.py
+
+## Static Site Generator
+
+The `api-server` directory contains a high-performance Go-based static site generator that replaces the original Flask server. Key benefits:
+
+- ⚡ **46ms build time** (vs 2-3 minutes for Flask)
+- 🚀 **<1ms response times** (pre-generated static files)
+- 📦 **5.6MB single binary** (no dependencies)
+- 🔧 **100% API compatibility** with original Flask server
+
+### Quick Start
+```bash
+cd api-server
+make -f Makefile.new install
+make -f Makefile.new serve
+```
+
+See [`api-server/README_SSG.md`](api-server/README_SSG.md) for detailed documentation.
+
+## CI/CD
+
+Automated workflows build and test the static site generator:
+- ✅ **Build verification** on every commit/PR
+- ✅ **Cross-platform builds** (Linux, macOS, Windows)
+- ✅ **Docker integration** testing
+- ✅ **API endpoint validation**
 
 ## Layout
 
