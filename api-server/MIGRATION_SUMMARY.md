@@ -139,10 +139,25 @@ docker run -p 8080:8080 registry-ssg
 ✅ **Health Checks**: Monitoring endpoint available  
 ✅ **Error Handling**: 404s for missing resources  
 
+## CI/CD Integration
+
+### GitHub Actions Workflow
+The project includes automated workflows that:
+- ✅ **Generate static site** on every commit/PR
+- ✅ **Validate content** (JSON structure, completeness)
+- ✅ **Upload artifacts** for deployment (30-day retention)
+- ✅ **Run quality checks** (go vet, go fmt)
+
+### Deployment Ready
+The generated static site is automatically uploaded as an artifact and can be:
+- Downloaded for manual deployment
+- Integrated with CD pipelines for automatic deployment
+- Used for testing and validation
+
 ## Next Steps
 
-1. **Replace Flask**: Update deployment to use Go binary
-2. **Update CI/CD**: Modify build pipelines for Go
+1. **Replace Flask**: Update deployment to use generated static files
+2. **Integrate CD Pipeline**: Connect artifact upload to deployment system
 3. **Monitor Performance**: Track improvements in production
 4. **Documentation**: Update API documentation if needed
 5. **Rollback Plan**: Keep Flask server available during transition

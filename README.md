@@ -1,6 +1,6 @@
 # Sentry Release Registry
 
-![Build Status](https://github.com/getsentry/release-registry/workflows/Build%20Static%20Site%20Generator/badge.svg)
+![Build Status](https://github.com/getsentry/release-registry/workflows/Generate%20Static%20Site/badge.svg)
 
 This is a meta repository holding release information for Sentry repositories.
 
@@ -35,11 +35,11 @@ See [`api-server/README_SSG.md`](api-server/README_SSG.md) for detailed document
 
 ## CI/CD
 
-Automated workflows build and test the static site generator:
-- ✅ **Build verification** on every commit/PR
-- ✅ **Cross-platform builds** (Linux, macOS, Windows)
-- ✅ **Docker integration** testing
-- ✅ **API endpoint validation**
+Automated workflow generates and uploads the static site:
+- ✅ **Static site generation** on every commit/PR
+- ✅ **Content validation** (JSON structure, completeness)
+- ✅ **Code quality checks** (go vet, go fmt)
+- ✅ **Artifact upload** for deployment (30-day retention)
 
 ## Layout
 

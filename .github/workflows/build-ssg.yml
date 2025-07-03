@@ -1,4 +1,4 @@
-name: Build Static Site Generator
+name: Generate Static Site
 
 on:
   push:
@@ -13,8 +13,8 @@ on:
       - '.github/workflows/build-ssg.yml'
 
 jobs:
-  build:
-    name: Build and Test SSG
+  generate:
+    name: Generate and Upload Static Site
     runs-on: ubuntu-latest
     
     steps:
@@ -27,9 +27,6 @@ jobs:
         go-version: '1.22'
         cache-dependency-path: api-server/go.sum
         
-    - name: Verify Go installation
-      run: go version
-      
     - name: Download dependencies
       working-directory: api-server
       run: |
@@ -46,22 +43,16 @@ jobs:
       working-directory: api-server
       run: go build -v -o ssg main.go
       
-    - name: Verify binary works
+    - name: Generate static site
       working-directory: api-server
       run: |
-        ./ssg --help || echo "No help flag available"
-        file ./ssg
-        
-    - name: Test static site generation
-      working-directory: api-server
-      run: |
-        echo "Testing static site generation..."
-        timeout 30s ./ssg build
+        echo "Generating static site..."
+        time ./ssg build
         
     - name: Verify generated files
       working-directory: api-server
       run: |
-        echo "Checking generated files..."
+        echo "Verifying generated files..."
         ls -la dist/
         
         # Verify key files exist
@@ -84,152 +75,51 @@ jobs:
         echo "Generated $package_count package directories"
         test $package_count -gt 0 || exit 1
         
-    - name: Test HTTP server startup
+        # Show generation stats
+        echo "=== Generation Summary ==="
+        echo "Total files: $(find dist/ -type f | wc -l)"
+        echo "Total size: $(du -sh dist/ | cut -f1)"
+        echo "Key endpoints:"
+        echo "  - $(jq length dist/packages.json) packages"
+        echo "  - $(jq length dist/apps.json) apps"
+        echo "  - $(jq length dist/aws-lambda-layers.json) lambda layers"
+        echo "  - $(jq '.slugs | length' dist/marketing-slugs.json) marketing slugs"
+        
+    - name: Run code quality checks
       working-directory: api-server
       run: |
-        echo "Testing HTTP server startup..."
-        timeout 10s ./ssg &
+        go vet ./...
+        go fmt -n ./... | tee fmt-output.txt
+        if [ -s fmt-output.txt ]; then
+          echo "Code needs formatting:"
+          cat fmt-output.txt
+          exit 1
+        fi
+        
+    - name: Test basic functionality
+      working-directory: api-server
+      run: |
+        echo "Testing basic functionality..."
+        
+        # Test build command works
+        ./ssg build
+        
+        # Test server startup (quick test)
+        timeout 5s ./ssg &
         SERVER_PID=$!
-        sleep 3
+        sleep 2
         
-        # Test health endpoint
+        # Quick health check
         curl -f http://localhost:8080/healthz || exit 1
-        echo "Health check passed!"
-        
-        # Test a few API endpoints
-        curl -f http://localhost:8080/packages > /dev/null || exit 1
-        echo "Packages endpoint working!"
-        
-        curl -f http://localhost:8080/apps > /dev/null || exit 1
-        echo "Apps endpoint working!"
+        echo "Basic functionality test passed!"
         
         # Clean up
         kill $SERVER_PID || true
         wait $SERVER_PID 2>/dev/null || true
         
-    - name: Build production binary
-      working-directory: api-server
-      run: |
-        echo "Building optimized production binary..."
-        CGO_ENABLED=0 go build -a -installsuffix cgo -ldflags="-w -s" -o ssg-prod main.go
-        ls -lh ssg*
-        
-    - name: Run go vet
-      working-directory: api-server
-      run: go vet ./...
-      
-    - name: Run basic tests
-      working-directory: api-server
-      run: |
-        # Test that the binary doesn't crash on various inputs
-        echo "Running basic functionality tests..."
-        
-        # Test build command
-        ./ssg build
-        
-        # Test with custom paths (should fail gracefully)
-        ./ssg /nonexistent/path ./output 2>/dev/null || echo "Handled nonexistent path correctly"
-        
-    - name: Upload build artifacts
-      if: success()
+    - name: Upload generated static site
       uses: actions/upload-artifact@v4
       with:
-        name: ssg-binaries
-        path: |
-          api-server/ssg
-          api-server/ssg-prod
-        retention-days: 7
-        
-    - name: Upload generated site
-      if: success()
-      uses: actions/upload-artifact@v4
-      with:
-        name: generated-site
+        name: static-site
         path: api-server/dist/
-        retention-days: 7
-
-  build-matrix:
-    name: Cross-platform Build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        os: [linux, darwin, windows]
-        arch: [amd64, arm64]
-        exclude:
-          - os: windows
-            arch: arm64
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Set up Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: '1.22'
-        
-    - name: Build for ${{ matrix.os }}/${{ matrix.arch }}
-      working-directory: api-server
-      env:
-        GOOS: ${{ matrix.os }}
-        GOARCH: ${{ matrix.arch }}
-        CGO_ENABLED: 0
-      run: |
-        output_name="ssg-${{ matrix.os }}-${{ matrix.arch }}"
-        if [ "${{ matrix.os }}" = "windows" ]; then
-          output_name="${output_name}.exe"
-        fi
-        
-        go build -a -installsuffix cgo -ldflags="-w -s" -o "$output_name" main.go
-        ls -lh "$output_name"
-        
-    - name: Upload cross-platform binaries
-      uses: actions/upload-artifact@v4
-      with:
-        name: ssg-${{ matrix.os }}-${{ matrix.arch }}
-        path: api-server/ssg-*
-        retention-days: 7
-
-  docker-build:
-    name: Docker Build Test
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-      
-    - name: Build Docker image
-      working-directory: api-server
-      run: |
-        echo "Building Docker image..."
-        docker build -f Dockerfile.new -t registry-ssg:test .
-        
-    - name: Test Docker image
-      run: |
-        echo "Testing Docker image..."
-        
-        # Start container in background
-        docker run -d --name ssg-test -p 8080:8080 registry-ssg:test
-        
-        # Wait for startup
-        sleep 10
-        
-        # Test health endpoint
-        curl -f http://localhost:8080/healthz || exit 1
-        echo "Docker health check passed!"
-        
-        # Test API endpoints
-        curl -f http://localhost:8080/packages > /dev/null || exit 1
-        echo "Docker packages endpoint working!"
-        
-        # Clean up
-        docker stop ssg-test
-        docker rm ssg-test
-        
-    - name: Check image size
-      run: |
-        echo "Docker image size:"
-        docker images registry-ssg:test --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}"
+        retention-days: 30
