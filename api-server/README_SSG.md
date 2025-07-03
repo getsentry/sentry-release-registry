@@ -40,7 +40,7 @@ The static site generator maintains 100% API compatibility with the original Fla
 
 ### Prerequisites
 
-- Go 1.21 or later
+- Go 1.22 or later
 - Access to the package data directories (`packages/`, `sdks/`, `apps/`, etc.)
 
 ### Installation

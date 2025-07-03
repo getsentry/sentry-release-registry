@@ -13,7 +13,7 @@ Builds and tests the Go-based static site generator in the `api-server/` directo
 ### Jobs
 
 #### 1. `build` - Main Build and Test
-- ✅ Sets up Go 1.21
+- ✅ Sets up Go 1.22
 - ✅ Downloads and verifies dependencies
 - ✅ Builds the static site generator
 - ✅ Tests static site generation (processes packages, SDKs, apps, etc.)
