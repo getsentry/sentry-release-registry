@@ -1,0 +1,36 @@
+.PHONY: build serve dev clean install
+
+# Build the static site generator
+build:
+	go build -o ssg main.go
+
+# Build and generate static files only
+generate: build
+	./ssg build
+
+# Build and serve the site
+serve: build
+	./ssg
+
+# Development mode with auto-rebuild (requires air)
+dev:
+	@command -v air >/dev/null 2>&1 || (echo "Installing air..." && go install github.com/air-verse/air@latest)
+	air
+
+# Clean build artifacts and generated files
+clean:
+	rm -f ssg
+	rm -rf dist/
+
+# Install dependencies
+install:
+	go mod download
+	go mod tidy
+
+# Quick test build
+test:
+	go build -o /tmp/ssg-test main.go && rm /tmp/ssg-test
+
+# Production build (optimized)
+build-prod:
+	CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags="-w -s" -o ssg main.go
