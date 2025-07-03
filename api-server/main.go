@@ -12,7 +12,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gorilla/mux"
 	"golang.org/x/mod/semver"
 )
 
@@ -569,14 +568,13 @@ func main() {
 		log.Fatalf("Initial build failed: %v", err)
 	}
 
-	// Set up HTTP server
-	router := mux.NewRouter()
-	router.PathPrefix("/").Handler(ssg)
+	// Set up HTTP server using standard library
+	http.Handle("/", ssg)
 
 	log.Printf("Static site server starting on port %s", port)
 	log.Printf("Serving from: %s", outputPath)
 	
-	if err := http.ListenAndServe(":"+port, router); err != nil {
+	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Fatalf("Server failed: %v", err)
 	}
 }

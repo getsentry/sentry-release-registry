@@ -22,7 +22,7 @@ clean:
 	rm -f ssg
 	rm -rf dist/
 
-# Install dependencies
+# Install dependencies (minimal - only golang.org/x/mod for semver)
 install:
 	go mod download
 	go mod tidy

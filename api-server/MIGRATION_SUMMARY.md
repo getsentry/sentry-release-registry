@@ -63,8 +63,8 @@ All original Flask endpoints are preserved:
 - **Memory Optimization**: Streaming JSON encoding
 
 ### Files Added
-- `main.go` - Core static site generator (450+ lines)
-- `go.mod` - Go module dependencies
+- `main.go` - Core static site generator (450+ lines, standard library only)
+- `go.mod` - Minimal Go module (only golang.org/x/mod for semver)
 - `Makefile.new` - Build automation
 - `Dockerfile.new` - Optimized container builds
 - `.air.toml` - Hot reload configuration
@@ -84,7 +84,8 @@ All original Flask endpoints are preserved:
 - ⚡ **Instant feedback**: 49ms rebuild time
 - 🔄 **Hot reloading**: Automatic rebuilds with Air
 - 🐛 **Better debugging**: Go's excellent tooling
-- 📦 **Single binary**: No dependency management
+- 📦 **Minimal dependencies**: Only standard library + semver (golang.org/x/mod)
+- 🚀 **Single binary**: No external dependency management
 
 ### For Production  
 - 🚀 **Ultra-fast startup**: <100ms vs minutes
