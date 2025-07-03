@@ -1,4 +1,4 @@
-.PHONY: build serve dev clean install
+.PHONY: build serve dev clean install format check
 
 # Build the static site generator
 build:
@@ -34,3 +34,25 @@ test:
 # Production build (optimized)
 build-prod:
 	CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags="-w -s" -o ssg main.go
+
+# Format code and run quality checks
+format:
+	@echo "🔧 Formatting Go code..."
+	go fmt ./...
+	@echo "✅ Code formatted!"
+
+# Check code quality (formatting + vet)
+check:
+	@echo "🔍 Checking code formatting..."
+	@unformatted=$$(gofmt -l .); \
+	if [ -n "$$unformatted" ]; then \
+		echo "❌ The following files need formatting:"; \
+		echo "$$unformatted"; \
+		echo ""; \
+		echo "To fix, run: make format"; \
+		exit 1; \
+	fi
+	@echo "✅ All files are properly formatted"
+	@echo "🔍 Running go vet..."
+	go vet ./...
+	@echo "✅ Code quality checks passed!"

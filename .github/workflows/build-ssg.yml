@@ -88,13 +88,19 @@ jobs:
     - name: Run code quality checks
       working-directory: api-server
       run: |
+        echo "Running go vet..."
         go vet ./...
-        go fmt -n ./... | tee fmt-output.txt
-        if [ -s fmt-output.txt ]; then
-          echo "Code needs formatting:"
-          cat fmt-output.txt
+        
+        echo "Checking code formatting..."
+        unformatted_files=$(gofmt -l .)
+        if [ -n "$unformatted_files" ]; then
+          echo "❌ The following files need formatting:"
+          echo "$unformatted_files"
+          echo ""
+          echo "To fix, run: go fmt ./..."
           exit 1
         fi
+        echo "✅ All files are properly formatted"
         
     - name: Test basic functionality
       working-directory: api-server

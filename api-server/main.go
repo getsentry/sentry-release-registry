@@ -16,14 +16,14 @@ import (
 )
 
 type PackageInfo struct {
-	Name          string `json:"name"`
-	Canonical     string `json:"canonical"`
-	Version       string `json:"version"`
-	PackageURL    string `json:"package_url,omitempty"`
-	RepoURL       string `json:"repo_url,omitempty"`
-	MainDocsURL   string `json:"main_docs_url,omitempty"`
-	CreatedAt     string `json:"created_at,omitempty"`
-	SDKID         string `json:"sdk_id,omitempty"`
+	Name        string `json:"name"`
+	Canonical   string `json:"canonical"`
+	Version     string `json:"version"`
+	PackageURL  string `json:"package_url,omitempty"`
+	RepoURL     string `json:"repo_url,omitempty"`
+	MainDocsURL string `json:"main_docs_url,omitempty"`
+	CreatedAt   string `json:"created_at,omitempty"`
+	SDKID       string `json:"sdk_id,omitempty"`
 }
 
 type VersionsResponse struct {
@@ -37,10 +37,10 @@ type MarketingSlugResponse struct {
 }
 
 type StaticSiteGenerator struct {
-	rootPath    string
-	outputPath  string
-	cache       map[string]interface{}
-	mu          sync.RWMutex
+	rootPath   string
+	outputPath string
+	cache      map[string]interface{}
+	mu         sync.RWMutex
 }
 
 func NewStaticSiteGenerator(rootPath, outputPath string) *StaticSiteGenerator {
@@ -61,7 +61,7 @@ func (ssg *StaticSiteGenerator) loadPackage(canonical, version string) (*Package
 	packagePath := strings.ReplaceAll(parts[1], ":", "/")
 
 	filePath := filepath.Join(ssg.rootPath, "packages", registry, packagePath, version+".json")
-	
+
 	data, err := os.ReadFile(filePath)
 	if err != nil {
 		return nil, err
@@ -85,7 +85,7 @@ func (ssg *StaticSiteGenerator) getPackageVersions(canonical string) ([]string, 
 	packagePath := strings.ReplaceAll(parts[1], ":", "/")
 
 	dirPath := filepath.Join(ssg.rootPath, "packages", registry, packagePath)
-	
+
 	entries, err := os.ReadDir(dirPath)
 	if err != nil {
 		return nil, err
@@ -303,7 +303,7 @@ func (ssg *StaticSiteGenerator) getMarketingSlugs() (map[string]interface{}, err
 
 func (ssg *StaticSiteGenerator) writeJSON(path string, data interface{}) error {
 	outputPath := filepath.Join(ssg.outputPath, path)
-	
+
 	// Create directory if it doesn't exist
 	if err := os.MkdirAll(filepath.Dir(outputPath), 0755); err != nil {
 		return err
@@ -353,7 +353,7 @@ func (ssg *StaticSiteGenerator) Build() error {
 
 		escapedCanonical := strings.ReplaceAll(canonical, ":", "__COLON__")
 		escapedCanonical = strings.ReplaceAll(escapedCanonical, "/", "__SLASH__")
-		
+
 		if err := ssg.writeJSON(fmt.Sprintf("packages/%s/latest.json", escapedCanonical), pkg); err != nil {
 			log.Printf("Warning: Failed to write package %s: %v", canonical, err)
 			continue
@@ -452,7 +452,7 @@ func (ssg *StaticSiteGenerator) Build() error {
 
 	duration := time.Since(start)
 	log.Printf("Static site generation completed in %v", duration)
-	log.Printf("Generated %d packages, %d SDKs, %d apps, %d lambda layers", 
+	log.Printf("Generated %d packages, %d SDKs, %d apps, %d lambda layers",
 		packageCount, len(sdks), len(apps), len(layers))
 
 	return nil
@@ -479,17 +479,17 @@ func (ssg *StaticSiteGenerator) ServeHTTP(w http.ResponseWriter, r *http.Request
 
 	// Convert dynamic paths to static file paths
 	var filePath string
-	
+
 	if strings.HasPrefix(path, "packages/") && !strings.HasSuffix(path, ".json") {
 		// Handle package endpoints: packages/npm:react/latest -> packages/npm__COLON__react/latest.json
 		parts := strings.Split(path, "/")
 		if len(parts) >= 3 {
 			canonical := parts[1]
 			version := parts[2]
-			
+
 			escapedCanonical := strings.ReplaceAll(canonical, ":", "__COLON__")
 			escapedCanonical = strings.ReplaceAll(escapedCanonical, "/", "__SLASH__")
-			
+
 			if version == "versions" {
 				filePath = fmt.Sprintf("packages/%s/versions.json", escapedCanonical)
 			} else {
@@ -502,7 +502,7 @@ func (ssg *StaticSiteGenerator) ServeHTTP(w http.ResponseWriter, r *http.Request
 		if len(parts) >= 3 {
 			sdkID := parts[1]
 			version := parts[2]
-			
+
 			if version == "versions" {
 				filePath = fmt.Sprintf("sdks/%s/versions.json", sdkID)
 			} else {
@@ -518,7 +518,7 @@ func (ssg *StaticSiteGenerator) ServeHTTP(w http.ResponseWriter, r *http.Request
 
 	// Serve the file
 	fullPath := filepath.Join(ssg.outputPath, filePath)
-	
+
 	data, err := os.ReadFile(fullPath)
 	if err != nil {
 		http.Error(w, "Not found", http.StatusNotFound)
@@ -573,7 +573,7 @@ func main() {
 
 	log.Printf("Static site server starting on port %s", port)
 	log.Printf("Serving from: %s", outputPath)
-	
+
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Fatalf("Server failed: %v", err)
 	}

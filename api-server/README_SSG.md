@@ -61,6 +61,12 @@ make serve
 ```bash
 # Start development server with hot reloading
 make dev
+
+# Format code before committing
+make format
+
+# Check code quality (formatting + vet)
+make check
 ```
 
 ### Production Build
@@ -212,15 +218,25 @@ git clone <repo>
 cd api-server
 make install
 
+# Format code and run quality checks
+make check
+
+# Or format code only
+make format
+
 # Run tests
 go test ./...
-
-# Format code
-go fmt ./...
-
-# Check for issues
-go vet ./...
 ```
+
+### Code Quality
+
+Before committing changes:
+
+1. **Format code**: `make format` or `./scripts/format.sh`
+2. **Run quality checks**: `make check`
+3. **Test functionality**: `make test`
+
+The CI workflow will automatically check formatting and run quality checks on all commits and pull requests.
 
 ### Adding Features
 
