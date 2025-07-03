@@ -40,4 +40,4 @@ EXPOSE 5030
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
-CMD [ "mywsgi", "apiserver:app", "0.0.0.0:5030" ]
+CMD [ "granian", "--interface", "wsgi", "--host", "0.0.0.0", "apiserver:app" ]
