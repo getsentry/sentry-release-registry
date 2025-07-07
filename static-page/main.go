@@ -720,7 +720,11 @@ func (ssg *StaticSiteGenerator) ServeHTTP(w http.ResponseWriter, r *http.Request
 		// Handle package endpoints: packages/npm:react/latest -> packages/npm/react/latest.json
 		parts := strings.Split(path, "/")
 		if len(parts) >= 3 {
-			canonical := parts[1]
+			// URL decode the canonical part
+			canonical, err := url.QueryUnescape(parts[1])
+			if err != nil {
+				canonical = parts[1] // fallback to non-decoded
+			}
 			version := parts[2]
 
 			// Split canonical into registry and package name
