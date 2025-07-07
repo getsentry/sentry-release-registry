@@ -310,6 +310,48 @@ func (ssg *StaticSiteGenerator) getAllApps() (map[string]interface{}, error) {
 	return result, nil
 }
 
+func (ssg *StaticSiteGenerator) getAppVersions(appID string) ([]string, error) {
+	appDir := filepath.Join(ssg.rootPath, "apps", appID)
+	
+	entries, err := os.ReadDir(appDir)
+	if err != nil {
+		return nil, err
+	}
+	
+	var versions []string
+	for _, entry := range entries {
+		if !entry.IsDir() && strings.HasSuffix(entry.Name(), ".json") {
+			version := strings.TrimSuffix(entry.Name(), ".json")
+			if version != "latest" {
+				versions = append(versions, version)
+			}
+		}
+	}
+	
+	// Sort versions using semantic versioning
+	sort.Slice(versions, func(i, j int) bool {
+		return semver.Compare("v"+versions[i], "v"+versions[j]) < 0
+	})
+	
+	return versions, nil
+}
+
+func (ssg *StaticSiteGenerator) loadApp(appID, version string) (map[string]interface{}, error) {
+	appPath := filepath.Join(ssg.rootPath, "apps", appID, version+".json")
+	
+	data, err := os.ReadFile(appPath)
+	if err != nil {
+		return nil, err
+	}
+	
+	var appData map[string]interface{}
+	if err := json.Unmarshal(data, &appData); err != nil {
+		return nil, err
+	}
+	
+	return appData, nil
+}
+
 func (ssg *StaticSiteGenerator) getAWSLambdaLayers() (map[string]interface{}, error) {
 	layersDir := filepath.Join(ssg.rootPath, "aws-lambda-layers")
 	result := make(map[string]interface{})
@@ -357,6 +399,31 @@ func (ssg *StaticSiteGenerator) getMarketingSlugs() (map[string]interface{}, err
 	}
 
 	return slugs, nil
+}
+
+func (ssg *StaticSiteGenerator) getMarketingSlug(slug string) (*MarketingSlugResponse, error) {
+	slugsData, err := ssg.getMarketingSlugs()
+	if err != nil {
+		return nil, err
+	}
+
+	definition, exists := slugsData[slug]
+	if !exists {
+		return nil, fmt.Errorf("slug not found: %s", slug)
+	}
+
+	// Convert to MarketingSlugResponse
+	defMap, ok := definition.(map[string]interface{})
+	if !ok {
+		return nil, fmt.Errorf("invalid slug definition for: %s", slug)
+	}
+
+	response := &MarketingSlugResponse{
+		Definition: defMap,
+		Target:     defMap["target"],
+	}
+
+	return response, nil
 }
 
 func (ssg *StaticSiteGenerator) writeJSON(path string, data interface{}) error {
@@ -410,10 +477,20 @@ func (ssg *StaticSiteGenerator) Build() error {
 			continue
 		}
 
-		escapedCanonical := strings.ReplaceAll(canonical, ":", "__COLON__")
-		escapedCanonical = strings.ReplaceAll(escapedCanonical, "/", "__SLASH__")
+		// Split canonical into registry and package name
+		// e.g., "npm:@sentry/react" -> ["npm", "@sentry/react"]
+		parts := strings.SplitN(canonical, ":", 2)
+		if len(parts) != 2 {
+			log.Printf("Warning: Invalid canonical format %s", canonical)
+			continue
+		}
+		registry := parts[0]
+		packageName := parts[1]
 
-		if err := ssg.writeJSON(fmt.Sprintf("packages/%s/latest.json", escapedCanonical), pkg); err != nil {
+		// Create proper folder structure: packages/npm/@sentry/react/
+		packagePath := fmt.Sprintf("packages/%s/%s", registry, packageName)
+
+		if err := ssg.writeJSON(fmt.Sprintf("%s/latest.json", packagePath), pkg); err != nil {
 			log.Printf("Warning: Failed to write package %s: %v", canonical, err)
 			continue
 		}
@@ -428,7 +505,7 @@ func (ssg *StaticSiteGenerator) Build() error {
 			Latest:   pkg,
 			Versions: versions,
 		}
-		if err := ssg.writeJSON(fmt.Sprintf("packages/%s/versions.json", escapedCanonical), versionsResp); err != nil {
+		if err := ssg.writeJSON(fmt.Sprintf("%s/versions.json", packagePath), versionsResp); err != nil {
 			log.Printf("Warning: Failed to write package versions %s: %v", canonical, err)
 			continue
 		}
@@ -482,6 +559,19 @@ func (ssg *StaticSiteGenerator) Build() error {
 		if err := ssg.writeJSON(fmt.Sprintf("sdks/%s/versions.json", sdkID), versionsResp); err != nil {
 			log.Printf("Warning: Failed to write SDK versions %s: %v", sdkID, err)
 		}
+
+		// Write individual version files for SDKs
+		for _, version := range versions {
+			versionPkg, err := ssg.loadPackage(canonical, version)
+			if err != nil {
+				log.Printf("Warning: Failed to load SDK version %s@%s: %v", canonical, version, err)
+				continue
+			}
+			if err := ssg.writeJSON(fmt.Sprintf("sdks/%s/%s.json", sdkID, version), versionPkg); err != nil {
+				log.Printf("Warning: Failed to write SDK version %s@%s: %v", sdkID, version, err)
+				continue
+			}
+		}
 	}
 
 	// Generate apps
@@ -492,6 +582,35 @@ func (ssg *StaticSiteGenerator) Build() error {
 	}
 	if err := ssg.writeJSON("apps.json", apps); err != nil {
 		return err
+	}
+
+	// Generate individual app endpoints
+	for appID, appData := range apps {
+		// Write latest version
+		if err := ssg.writeJSON(fmt.Sprintf("apps/%s/latest.json", appID), appData); err != nil {
+			log.Printf("Warning: Failed to write app %s: %v", appID, err)
+			continue
+		}
+
+		// Get all versions for this app
+		versions, err := ssg.getAppVersions(appID)
+		if err != nil {
+			log.Printf("Warning: Failed to get app versions %s: %v", appID, err)
+			continue
+		}
+
+		// Write individual version files
+		for _, version := range versions {
+			versionData, err := ssg.loadApp(appID, version)
+			if err != nil {
+				log.Printf("Warning: Failed to load app version %s@%s: %v", appID, version, err)
+				continue
+			}
+			if err := ssg.writeJSON(fmt.Sprintf("apps/%s/%s.json", appID, version), versionData); err != nil {
+				log.Printf("Warning: Failed to write app version %s@%s: %v", appID, version, err)
+				continue
+			}
+		}
 	}
 
 	// Generate AWS Lambda layers
@@ -519,6 +638,33 @@ func (ssg *StaticSiteGenerator) Build() error {
 
 	if err := ssg.writeJSON("marketing-slugs.json", map[string][]string{"slugs": slugs}); err != nil {
 		return err
+	}
+
+	// Generate individual marketing slug endpoints
+	for slug, definition := range slugsData {
+		// Skip special keys like "createdAt"
+		if slug == "createdAt" {
+			continue
+		}
+		
+		// The definition should be the actual slug data
+		var slugResponse MarketingSlugResponse
+		
+		// Check if definition is a map
+		if defMap, ok := definition.(map[string]interface{}); ok {
+			slugResponse = MarketingSlugResponse{
+				Definition: defMap,
+				Target:     defMap["target"], // Extract target from definition
+			}
+		} else {
+			// Skip if not a map (e.g., createdAt is a string)
+			continue
+		}
+		
+		if err := ssg.writeJSON(fmt.Sprintf("marketing-slugs/%s.json", slug), slugResponse); err != nil {
+			log.Printf("Warning: Failed to write marketing slug %s: %v", slug, err)
+			continue
+		}
 	}
 
 	// Generate health check
@@ -557,19 +703,23 @@ func (ssg *StaticSiteGenerator) ServeHTTP(w http.ResponseWriter, r *http.Request
 	var filePath string
 
 	if strings.HasPrefix(path, "packages/") && !strings.HasSuffix(path, ".json") {
-		// Handle package endpoints: packages/npm:react/latest -> packages/npm__COLON__react/latest.json
+		// Handle package endpoints: packages/npm:react/latest -> packages/npm/react/latest.json
 		parts := strings.Split(path, "/")
 		if len(parts) >= 3 {
 			canonical := parts[1]
 			version := parts[2]
 
-			escapedCanonical := strings.ReplaceAll(canonical, ":", "__COLON__")
-			escapedCanonical = strings.ReplaceAll(escapedCanonical, "/", "__SLASH__")
+			// Split canonical into registry and package name
+			canonicalParts := strings.SplitN(canonical, ":", 2)
+			if len(canonicalParts) == 2 {
+				registry := canonicalParts[0]
+				packageName := canonicalParts[1]
 
-			if version == "versions" {
-				filePath = fmt.Sprintf("packages/%s/versions.json", escapedCanonical)
-			} else {
-				filePath = fmt.Sprintf("packages/%s/%s.json", escapedCanonical, version)
+				if version == "versions" {
+					filePath = fmt.Sprintf("packages/%s/%s/versions.json", registry, packageName)
+				} else {
+					filePath = fmt.Sprintf("packages/%s/%s/%s.json", registry, packageName, version)
+				}
 			}
 		}
 	} else if strings.HasPrefix(path, "sdks/") && !strings.HasSuffix(path, ".json") {
@@ -584,6 +734,21 @@ func (ssg *StaticSiteGenerator) ServeHTTP(w http.ResponseWriter, r *http.Request
 			} else {
 				filePath = fmt.Sprintf("sdks/%s/%s.json", sdkID, version)
 			}
+		}
+	} else if strings.HasPrefix(path, "apps/") && !strings.HasSuffix(path, ".json") {
+		// Handle app endpoints: apps/sentry-cli/latest -> apps/sentry-cli/latest.json
+		parts := strings.Split(path, "/")
+		if len(parts) >= 3 {
+			appID := parts[1]
+			version := parts[2]
+			filePath = fmt.Sprintf("apps/%s/%s.json", appID, version)
+		}
+	} else if strings.HasPrefix(path, "marketing-slugs/") && !strings.HasSuffix(path, ".json") {
+		// Handle marketing slug endpoints: marketing-slugs/react -> marketing-slugs/react.json
+		parts := strings.Split(path, "/")
+		if len(parts) >= 2 {
+			slug := parts[1]
+			filePath = fmt.Sprintf("marketing-slugs/%s.json", slug)
 		}
 	} else if !strings.HasSuffix(path, ".json") {
 		// Add .json extension for other endpoints
