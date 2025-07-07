@@ -1,6 +1,14 @@
 {
   "version": 2,
-  "buildCommand": "cd static-site/cmd && go run .",
+  "builds": [
+    {
+      "src": "static-site/cmd/build.go",
+      "use": "@vercel/go",
+      "config": {
+        "buildCommand": "go mod vendor && go build -o output static-site/cmd/build.go"
+      }
+    }
+  ],
   "outputDirectory": "static-site/dist",
   "routes": [
     {
