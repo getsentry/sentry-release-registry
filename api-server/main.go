@@ -15,15 +15,24 @@ import (
 	"golang.org/x/mod/semver"
 )
 
+func getString(m map[string]interface{}, key string) string {
+	if v, ok := m[key].(string); ok {
+		return v
+	}
+	return ""
+}
+
 type PackageInfo struct {
-	Name        string `json:"name"`
-	Canonical   string `json:"canonical"`
-	Version     string `json:"version"`
-	PackageURL  string `json:"package_url,omitempty"`
-	RepoURL     string `json:"repo_url,omitempty"`
-	MainDocsURL string `json:"main_docs_url,omitempty"`
-	CreatedAt   string `json:"created_at,omitempty"`
-	SDKID       string `json:"sdk_id,omitempty"`
+	Name        string                 `json:"name,omitempty"`
+	Canonical   string                 `json:"canonical"`
+	Version     string                 `json:"version"`
+	PackageURL  string                 `json:"package_url,omitempty"`
+	RepoURL     string                 `json:"repo_url,omitempty"`
+	MainDocsURL string                 `json:"main_docs_url,omitempty"`
+	CreatedAt   string                 `json:"created_at,omitempty"`
+	APIDocsURL  string                 `json:"api_docs_url,omitempty"`
+	Categories  []string               `json:"categories,omitempty"`
+	Features    map[string]interface{} `json:"features,omitempty"`
 }
 
 type VersionsResponse struct {
@@ -67,12 +76,37 @@ func (ssg *StaticSiteGenerator) loadPackage(canonical, version string) (*Package
 		return nil, err
 	}
 
-	var pkg PackageInfo
+	var pkg map[string]interface{}
 	if err := json.Unmarshal(data, &pkg); err != nil {
 		return nil, err
 	}
+	
+	// Convert map to PackageInfo struct
+	result := &PackageInfo{
+		Canonical:   getString(pkg, "canonical"),
+		Version:     getString(pkg, "version"),
+		Name:        getString(pkg, "name"),
+		PackageURL:  getString(pkg, "package_url"),
+		RepoURL:     getString(pkg, "repo_url"),
+		MainDocsURL: getString(pkg, "main_docs_url"),
+		CreatedAt:   getString(pkg, "created_at"),
+		APIDocsURL:  getString(pkg, "api_docs_url"),
+	}
+	
+	if categories, ok := pkg["categories"].([]interface{}); ok {
+		result.Categories = make([]string, len(categories))
+		for i, cat := range categories {
+			if s, ok := cat.(string); ok {
+				result.Categories[i] = s
+			}
+		}
+	}
+	
+	if features, ok := pkg["features"].(map[string]interface{}); ok {
+		result.Features = features
+	}
 
-	return &pkg, nil
+	return result, nil
 }
 
 func (ssg *StaticSiteGenerator) getPackageVersions(canonical string) ([]string, error) {
@@ -177,9 +211,9 @@ func (ssg *StaticSiteGenerator) getAllPackages() (map[string]*PackageInfo, error
 	return result, nil
 }
 
-func (ssg *StaticSiteGenerator) getAllSDKs() (map[string]*PackageInfo, error) {
+func (ssg *StaticSiteGenerator) getAllSDKs() (map[string]interface{}, error) {
 	sdksDir := filepath.Join(ssg.rootPath, "sdks")
-	result := make(map[string]*PackageInfo)
+	result := make(map[string]interface{})
 
 	entries, err := os.ReadDir(sdksDir)
 	if err != nil {
@@ -187,7 +221,17 @@ func (ssg *StaticSiteGenerator) getAllSDKs() (map[string]*PackageInfo, error) {
 	}
 
 	for _, entry := range entries {
-		if !entry.IsDir() {
+		// Skip non-directory entries (symlinks are not considered directories by IsDir())
+		// We need to check the file info of the symlink target
+		entryPath := filepath.Join(sdksDir, entry.Name())
+		fileInfo, err := os.Stat(entryPath)
+		if err != nil {
+			log.Printf("Warning: Could not stat SDK %s: %v", entry.Name(), err)
+			continue
+		}
+		
+		if !fileInfo.IsDir() {
+			log.Printf("Warning: SDK %s is not a directory", entry.Name())
 			continue
 		}
 
@@ -208,14 +252,28 @@ func (ssg *StaticSiteGenerator) getAllSDKs() (map[string]*PackageInfo, error) {
 			continue
 		}
 
-		pkg, err := ssg.loadPackage(canonical, "latest")
+		// Load the package data as raw JSON
+		parts := strings.SplitN(canonical, ":", 2)
+		if len(parts) != 2 {
+			continue
+		}
+		registry := parts[0]
+		packagePath := strings.ReplaceAll(parts[1], ":", "/")
+		
+		pkgFilePath := filepath.Join(ssg.rootPath, "packages", registry, packagePath, "latest.json")
+		pkgData, err := os.ReadFile(pkgFilePath)
 		if err != nil {
 			log.Printf("Warning: Could not load SDK package %s: %v", canonical, err)
 			continue
 		}
-
-		pkg.SDKID = entry.Name()
-		result[entry.Name()] = pkg
+		
+		var pkgJSON map[string]interface{}
+		if err := json.Unmarshal(pkgData, &pkgJSON); err != nil {
+			log.Printf("Warning: Could not parse SDK package %s: %v", canonical, err)
+			continue
+		}
+		
+		result[entry.Name()] = pkgJSON
 	}
 
 	return result, nil
@@ -309,15 +367,16 @@ func (ssg *StaticSiteGenerator) writeJSON(path string, data interface{}) error {
 		return err
 	}
 
-	file, err := os.Create(outputPath)
+	// Marshal to compact JSON (no indentation)
+	jsonData, err := json.Marshal(data)
 	if err != nil {
 		return err
 	}
-	defer file.Close()
-
-	encoder := json.NewEncoder(file)
-	encoder.SetIndent("", "  ")
-	return encoder.Encode(data)
+	
+	// Add newline at the end to match expected format
+	jsonData = append(jsonData, '\n')
+	
+	return os.WriteFile(outputPath, jsonData, 0644)
 }
 
 func (ssg *StaticSiteGenerator) Build() error {
@@ -388,17 +447,34 @@ func (ssg *StaticSiteGenerator) Build() error {
 	}
 
 	// Generate individual SDK endpoints
-	for sdkID, pkg := range sdks {
-		if err := ssg.writeJSON(fmt.Sprintf("sdks/%s/latest.json", sdkID), pkg); err != nil {
+	for sdkID, pkgData := range sdks {
+		if err := ssg.writeJSON(fmt.Sprintf("sdks/%s/latest.json", sdkID), pkgData); err != nil {
 			log.Printf("Warning: Failed to write SDK %s: %v", sdkID, err)
 			continue
 		}
 
-		versions, err := ssg.getPackageVersions(pkg.Canonical)
+		// Get canonical from package data to fetch versions
+		pkgMap, ok := pkgData.(map[string]interface{})
+		if !ok {
+			continue
+		}
+		
+		canonical, ok := pkgMap["canonical"].(string)
+		if !ok {
+			continue
+		}
+		
+		versions, err := ssg.getPackageVersions(canonical)
 		if err != nil {
 			continue
 		}
 
+		// Convert to PackageInfo for the versions response
+		pkg, err := ssg.loadPackage(canonical, "latest")
+		if err != nil {
+			continue
+		}
+		
 		versionsResp := VersionsResponse{
 			Latest:   pkg,
 			Versions: versions,
