@@ -24,13 +24,6 @@ func ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Special handling for healthz
-	if path == "healthz" {
-		w.Header().Set("Content-Type", "text/plain")
-		w.Write([]byte("ok\n"))
-		return
-	}
-
 	// Convert dynamic paths to static file paths
 	var filePath string
 
