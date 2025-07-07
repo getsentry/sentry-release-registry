@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "buildCommand": "cd static-site/cmd && go run .",
+  "outputDirectory": "static-site/dist",
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ]
+}
