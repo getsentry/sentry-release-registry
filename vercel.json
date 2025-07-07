@@ -5,7 +5,7 @@
       "src": "static-site/cmd/build.go",
       "use": "@vercel/go",
       "config": {
-        "buildCommand": "go mod vendor && go build -o output static-site/cmd/build.go"
+        "buildCommand": "cd static-site/cmd && go run ."
       }
     }
   ],
