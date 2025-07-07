@@ -398,31 +398,6 @@ func (ssg *StaticSiteGenerator) getMarketingSlugs() (map[string]interface{}, err
 	return slugs, nil
 }
 
-func (ssg *StaticSiteGenerator) getMarketingSlug(slug string) (*MarketingSlugResponse, error) {
-	slugsData, err := ssg.getMarketingSlugs()
-	if err != nil {
-		return nil, err
-	}
-
-	definition, exists := slugsData[slug]
-	if !exists {
-		return nil, fmt.Errorf("slug not found: %s", slug)
-	}
-
-	// Convert to MarketingSlugResponse
-	defMap, ok := definition.(map[string]interface{})
-	if !ok {
-		return nil, fmt.Errorf("invalid slug definition for: %s", slug)
-	}
-
-	response := &MarketingSlugResponse{
-		Definition: defMap,
-		Target:     defMap["target"],
-	}
-
-	return response, nil
-}
-
 func (ssg *StaticSiteGenerator) writeJSON(path string, data interface{}) error {
 	outputPath := filepath.Join(ssg.outputPath, path)
 
@@ -436,9 +411,6 @@ func (ssg *StaticSiteGenerator) writeJSON(path string, data interface{}) error {
 	if err != nil {
 		return err
 	}
-
-	// Add newline at the end to match expected format
-	jsonData = append(jsonData, '\n')
 
 	return os.WriteFile(outputPath, jsonData, 0644)
 }
