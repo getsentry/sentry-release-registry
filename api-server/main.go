@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"sort"
@@ -508,6 +509,19 @@ func (ssg *StaticSiteGenerator) Build() error {
 		if err := ssg.writeJSON(fmt.Sprintf("%s/versions.json", packagePath), versionsResp); err != nil {
 			log.Printf("Warning: Failed to write package versions %s: %v", canonical, err)
 			continue
+		}
+
+		// Write individual version files for packages
+		for _, version := range versions {
+			versionPkg, err := ssg.loadPackage(canonical, version)
+			if err != nil {
+				log.Printf("Warning: Failed to load package version %s@%s: %v", canonical, version, err)
+				continue
+			}
+			if err := ssg.writeJSON(fmt.Sprintf("%s/%s.json", packagePath, version), versionPkg); err != nil {
+				log.Printf("Warning: Failed to write package version %s@%s: %v", canonical, version, err)
+				continue
+			}
 		}
 
 		packageCount++
