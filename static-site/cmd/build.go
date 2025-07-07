@@ -649,11 +649,6 @@ func (ssg *StaticSiteGenerator) Build() error {
 		}
 	}
 
-	// Generate health check
-	if err := ssg.writeJSON("healthz.json", map[string]string{"status": "ok"}); err != nil {
-		return err
-	}
-
 	duration := time.Since(start)
 	log.Printf("Static site generation completed in %v", duration)
 	log.Printf("Generated %d packages, %d SDKs, %d apps, %d lambda layers",
