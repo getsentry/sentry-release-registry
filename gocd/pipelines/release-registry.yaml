@@ -52,7 +52,7 @@ pipelines:
                           elastic_profile_id: sentry-release-registry
                           tasks:
                               - script: |
-                                    /devinfra/scripts/k8s/k8stunnel \
+                                    /devinfra/scripts/get-cluster-credentials \
                                     && k8s-deploy \
                                     --label-selector="service=release-registry" \
                                     --image="us-central1-docker.pkg.dev/sentryio/sentry-release-registry/image:${GO_REVISION_RELEASE_REGISTRY_REPO}" \
