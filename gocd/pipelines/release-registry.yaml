@@ -30,12 +30,12 @@ pipelines:
                           elastic_profile_id: sentry-release-registry
                           tasks:
                               - script: |
-                                    /devinfra/scripts/checks/githubactions/checkruns.py \
+                                    checks-githubactions-checkruns \
                                     getsentry/sentry-release-registry \
                                     ${GO_REVISION_RELEASE_REGISTRY_REPO} \
                                     "main"
                               - script: |
-                                    /devinfra/scripts/checks/googlecloud/check_cloudbuild.py \
+                                    checks-googlecloud-check-cloudbuild \
                                     sentryio \
                                     sentry-release-registry \
                                     sentry-release-registry-build-image \
@@ -52,8 +52,8 @@ pipelines:
                           elastic_profile_id: sentry-release-registry
                           tasks:
                               - script: |
-                                    /devinfra/scripts/k8s/k8stunnel \
-                                    && /devinfra/scripts/k8s/k8s-deploy.py \
+                                    /devinfra/scripts/get-cluster-credentials \
+                                    && k8s-deploy \
                                     --label-selector="service=release-registry" \
                                     --image="us-central1-docker.pkg.dev/sentryio/sentry-release-registry/image:${GO_REVISION_RELEASE_REGISTRY_REPO}" \
                                     --container-name="release-registry"
