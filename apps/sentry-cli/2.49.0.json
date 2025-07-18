@@ -1,0 +1,222 @@
+{
+  "name": "Sentry CLI",
+  "canonical": "app:sentry-cli",
+  "version": "2.49.0",
+  "repo_url": "https://github.com/getsentry/sentry-cli",
+  "main_docs_url": "https://docs.sentry.io/learn/cli",
+  "file_urls": {
+    "sentry-cli-darwin-2.49.0.tgz": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-darwin-2.49.0.tgz",
+    "sentry-cli-linux-arm-2.49.0.tgz": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-linux-arm-2.49.0.tgz",
+    "sentry-cli-linux-arm64-2.49.0.tgz": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-linux-arm64-2.49.0.tgz",
+    "sentry-cli-linux-i686-2.49.0.tgz": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-linux-i686-2.49.0.tgz",
+    "sentry-cli-linux-x64-2.49.0.tgz": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-linux-x64-2.49.0.tgz",
+    "sentry-cli-2.49.0.tgz": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-2.49.0.tgz",
+    "sentry-cli-Darwin-arm64": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-Darwin-arm64",
+    "sentry-cli-Darwin-universal": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-Darwin-universal",
+    "sentry-cli-Darwin-x86_64": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-Darwin-x86_64",
+    "sentry-cli-Linux-aarch64": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-Linux-aarch64",
+    "sentry-cli-Linux-armv7": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-Linux-armv7",
+    "sentry-cli-Linux-i686": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-Linux-i686",
+    "sentry-cli-Linux-x86_64": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-Linux-x86_64",
+    "sentry-cli-Windows-aarch64.exe": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-Windows-aarch64.exe",
+    "sentry-cli-Windows-i686.exe": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-Windows-i686.exe",
+    "sentry-cli-Windows-x86_64.exe": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-Windows-x86_64.exe",
+    "sentry_cli-2.49.0-py3-none-macosx_10_15_x86_64.whl": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry_cli-2.49.0-py3-none-macosx_10_15_x86_64.whl",
+    "sentry_cli-2.49.0-py3-none-macosx_11_0_arm64.whl": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry_cli-2.49.0-py3-none-macosx_11_0_arm64.whl",
+    "sentry_cli-2.49.0-py3-none-macosx_11_0_universal2.whl": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry_cli-2.49.0-py3-none-macosx_11_0_universal2.whl",
+    "sentry_cli-2.49.0-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_2_aarch64.whl": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry_cli-2.49.0-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_2_aarch64.whl",
+    "sentry_cli-2.49.0-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.musllinux_1_2_armv7l.whl": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry_cli-2.49.0-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.musllinux_1_2_armv7l.whl",
+    "sentry_cli-2.49.0-py3-none-manylinux_2_17_i686.manylinux2014_i686.musllinux_1_2_i686.whl": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry_cli-2.49.0-py3-none-manylinux_2_17_i686.manylinux2014_i686.musllinux_1_2_i686.whl",
+    "sentry_cli-2.49.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.musllinux_1_2_x86_64.whl": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry_cli-2.49.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.musllinux_1_2_x86_64.whl",
+    "sentry_cli-2.49.0-py3-none-win32.whl": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry_cli-2.49.0-py3-none-win32.whl",
+    "sentry_cli-2.49.0-py3-none-win_amd64.whl": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry_cli-2.49.0-py3-none-win_amd64.whl",
+    "sentry_cli-2.49.0-py3-none-win_arm64.whl": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry_cli-2.49.0-py3-none-win_arm64.whl",
+    "sentry_cli-2.49.0.tar.gz": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry_cli-2.49.0.tar.gz",
+    "sentry-cli-win32-arm64-2.49.0.tgz": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-win32-arm64-2.49.0.tgz",
+    "sentry-cli-win32-i686-2.49.0.tgz": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-win32-i686-2.49.0.tgz",
+    "sentry-cli-win32-x64-2.49.0.tgz": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-win32-x64-2.49.0.tgz"
+  },
+  "created_at": "2025-07-18T09:47:18.229Z",
+  "files": {
+    "sentry-cli-darwin-2.49.0.tgz": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-darwin-2.49.0.tgz",
+      "checksums": {
+        "sha256-hex": "d16cfb22c543c2adb03683235a8296df3ea1d479cba7396471019de7d02f2436"
+      }
+    },
+    "sentry-cli-linux-arm-2.49.0.tgz": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-linux-arm-2.49.0.tgz",
+      "checksums": {
+        "sha256-hex": "5064381e6c548c29b135de838d3feb3c9dc9a79da5dc871c95e9d9c0bf4456ef"
+      }
+    },
+    "sentry-cli-linux-arm64-2.49.0.tgz": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-linux-arm64-2.49.0.tgz",
+      "checksums": {
+        "sha256-hex": "fb69ef04ea15bc7b3bb1b899504fb6cf7101e780b752a4382d8d27a3a735a892"
+      }
+    },
+    "sentry-cli-linux-i686-2.49.0.tgz": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-linux-i686-2.49.0.tgz",
+      "checksums": {
+        "sha256-hex": "f9d3ef367167a7415ebf3a4757aade5bce702bfae97744e41f3091120b402994"
+      }
+    },
+    "sentry-cli-linux-x64-2.49.0.tgz": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-linux-x64-2.49.0.tgz",
+      "checksums": {
+        "sha256-hex": "f07df4e26550cc4a118823980d2729533a3c81b5dbf5213ee3afa285d2276d59"
+      }
+    },
+    "sentry-cli-2.49.0.tgz": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-2.49.0.tgz",
+      "checksums": {
+        "sha256-hex": "03690deb1fafce60121b3adf1b1366491301389f7e759e2aa5a065e89796fdf8"
+      }
+    },
+    "sentry-cli-Darwin-arm64": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-Darwin-arm64",
+      "checksums": {
+        "sha256-hex": "a259aae5190a4b74a9f10be0e4945977da15d5af4628f9c79a5a8e63f3089aa3"
+      }
+    },
+    "sentry-cli-Darwin-universal": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-Darwin-universal",
+      "checksums": {
+        "sha256-hex": "1206cd2890cc085b062497f406c361fc04b8c109a93f34cb0abfbb1884d702e3"
+      }
+    },
+    "sentry-cli-Darwin-x86_64": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-Darwin-x86_64",
+      "checksums": {
+        "sha256-hex": "2a1993992bc4aaee528192fca3a91f6b638940844df57cd326580cbec7f01f63"
+      }
+    },
+    "sentry-cli-Linux-aarch64": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-Linux-aarch64",
+      "checksums": {
+        "sha256-hex": "7af5d3cd3e5bfc60af6446c0e51a48e26aae44565d37da9b558db7536a2dc1ca"
+      }
+    },
+    "sentry-cli-Linux-armv7": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-Linux-armv7",
+      "checksums": {
+        "sha256-hex": "37a5cee041d6033f5692d7c0b0c4faa64b4e518775fbc0519d5a730a97f13a59"
+      }
+    },
+    "sentry-cli-Linux-i686": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-Linux-i686",
+      "checksums": {
+        "sha256-hex": "4279f33dc30f0c85dda9284eb77f5226d9a9095e17f5dc9e210b1d0af371a1bd"
+      }
+    },
+    "sentry-cli-Linux-x86_64": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-Linux-x86_64",
+      "checksums": {
+        "sha256-hex": "be4a9b22e8ac782728b2bf62a3bc61b2dcf20dae9c68acfc94ebaa8019ed5d78"
+      }
+    },
+    "sentry-cli-Windows-aarch64.exe": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-Windows-aarch64.exe",
+      "checksums": {
+        "sha256-hex": "8ba2cb06c2c303b2a4823653a90c2455f01bda432254ee3c820137af5b549beb"
+      }
+    },
+    "sentry-cli-Windows-i686.exe": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-Windows-i686.exe",
+      "checksums": {
+        "sha256-hex": "29d2203ea976821a8b975e8be68534600674aeb035262a1d209e33707eead10a"
+      }
+    },
+    "sentry-cli-Windows-x86_64.exe": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-Windows-x86_64.exe",
+      "checksums": {
+        "sha256-hex": "6bf6eb9e8dcf8ad882515716deed554d9ec1a375ace6113a2d1c4dc7bee23d87"
+      }
+    },
+    "sentry_cli-2.49.0-py3-none-macosx_10_15_x86_64.whl": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry_cli-2.49.0-py3-none-macosx_10_15_x86_64.whl",
+      "checksums": {
+        "sha256-hex": "04e4a30dabcfc9591dd6e228ae762fffd7ea7868f0e229303b7c2889184918e2"
+      }
+    },
+    "sentry_cli-2.49.0-py3-none-macosx_11_0_arm64.whl": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry_cli-2.49.0-py3-none-macosx_11_0_arm64.whl",
+      "checksums": {
+        "sha256-hex": "ce74b5bf0eead3e157f1336762c906efa13bd9c8c1e1409a7b64822b39a89c72"
+      }
+    },
+    "sentry_cli-2.49.0-py3-none-macosx_11_0_universal2.whl": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry_cli-2.49.0-py3-none-macosx_11_0_universal2.whl",
+      "checksums": {
+        "sha256-hex": "2504663f8101277669012379827e1537155ff615cf1edda051405650717e6688"
+      }
+    },
+    "sentry_cli-2.49.0-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_2_aarch64.whl": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry_cli-2.49.0-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_2_aarch64.whl",
+      "checksums": {
+        "sha256-hex": "69cee1dff9ceff9e1a0d7468847a0ed611e8823b76e98da48f98ace78bd90523"
+      }
+    },
+    "sentry_cli-2.49.0-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.musllinux_1_2_armv7l.whl": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry_cli-2.49.0-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.musllinux_1_2_armv7l.whl",
+      "checksums": {
+        "sha256-hex": "5e9c08c141b1d2c1acb612b6229a67d12f42ae450958beffc48a2c9d3ca62fdd"
+      }
+    },
+    "sentry_cli-2.49.0-py3-none-manylinux_2_17_i686.manylinux2014_i686.musllinux_1_2_i686.whl": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry_cli-2.49.0-py3-none-manylinux_2_17_i686.manylinux2014_i686.musllinux_1_2_i686.whl",
+      "checksums": {
+        "sha256-hex": "b5c1589f782f4a3ec6a9489fe3e997c0de2cf364bea663e5c01c38f2adfc65c2"
+      }
+    },
+    "sentry_cli-2.49.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.musllinux_1_2_x86_64.whl": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry_cli-2.49.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.musllinux_1_2_x86_64.whl",
+      "checksums": {
+        "sha256-hex": "a432cb38a21ec607ebb2c5f6d0373028d67eb440672d200a11cae1e8a427cb71"
+      }
+    },
+    "sentry_cli-2.49.0-py3-none-win32.whl": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry_cli-2.49.0-py3-none-win32.whl",
+      "checksums": {
+        "sha256-hex": "bdf6e28bbb3fa8c4d8de494a51cf5043469da91800372d498f8fc9b3820624bb"
+      }
+    },
+    "sentry_cli-2.49.0-py3-none-win_amd64.whl": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry_cli-2.49.0-py3-none-win_amd64.whl",
+      "checksums": {
+        "sha256-hex": "f4f3bf8bba958d63e7fa530015798c2c08b74177b858986acd41f6fe44afc759"
+      }
+    },
+    "sentry_cli-2.49.0-py3-none-win_arm64.whl": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry_cli-2.49.0-py3-none-win_arm64.whl",
+      "checksums": {
+        "sha256-hex": "522e5dde59b59a598ab92e40e40c744a7f0d8a86434d607eb21f0f815adfb1d0"
+      }
+    },
+    "sentry_cli-2.49.0.tar.gz": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry_cli-2.49.0.tar.gz",
+      "checksums": {
+        "sha256-hex": "53c8137b4f4eda0476628e7621bd18c971c1c1e5e98ca2b9d7a094af6aa63b14"
+      }
+    },
+    "sentry-cli-win32-arm64-2.49.0.tgz": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-win32-arm64-2.49.0.tgz",
+      "checksums": {
+        "sha256-hex": "c409883629570f972fc3bd34be8a51404aefac408655edee14d301749c3c5b46"
+      }
+    },
+    "sentry-cli-win32-i686-2.49.0.tgz": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-win32-i686-2.49.0.tgz",
+      "checksums": {
+        "sha256-hex": "b6b69238baaa655aaf8ff12c0d9122b1644ab02576f86344de710e0033a432d7"
+      }
+    },
+    "sentry-cli-win32-x64-2.49.0.tgz": {
+      "url": "https://downloads.sentry-cdn.com/sentry-cli/2.49.0/sentry-cli-win32-x64-2.49.0.tgz",
+      "checksums": {
+        "sha256-hex": "449773063040c0b216b7cca3bfb45edcbb787a05ddde3d8ee63195af8da859c4"
+      }
+    }
+  }
+}
