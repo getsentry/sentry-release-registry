@@ -299,6 +299,10 @@ def is_caching_enabled():
 
 
 def return_cached():
+    # Excluding AWS Lambda layer route from caching because it 
+    # produced race conditions and returned emtpy responses
+    if request.path == "/aws-lambda-layers":
+        return None
     if not request.values:
         response = cache.get(request.path)
         if response:
@@ -309,6 +313,13 @@ def return_cached():
 
 
 def cache_response(response):
+    # Excluding AWS Lambda layer route from caching because it 
+    # produced race conditions and returned emtpy responses
+    if request.path == "/aws-lambda-layers":
+        # Instead, we "simulate" a cache hit (see get_aws_lambda_layers())
+        metrics.increment("cache_hit")
+        response.headers["X-From-Cache"] = "1"
+        return response
     if not request.values:
         # Make the response picklable
         response.freeze()
@@ -477,7 +488,11 @@ def healthcheck():
 
 @app.route("/aws-lambda-layers")
 def aws_layers():
-    return ApiResponse(registry.get_aws_lambda_layers())
+    return ApiResponse(_aws_lambda_layers)
 
 
 registry = Registry()
+
+# "manually" caching AWS response upfront to avoid 
+# empty responses caused by cache race conditions
+_aws_lambda_layers = registry.get_aws_lambda_layers()
