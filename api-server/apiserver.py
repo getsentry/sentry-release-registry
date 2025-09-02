@@ -493,6 +493,6 @@ def aws_layers():
 
 registry = Registry()
 
-# "manually" caching AWS response upfront to avoid 
+# "manually" caching AWS response upfront to avoid
 # empty responses caused by cache race conditions
 _aws_lambda_layers = registry.get_aws_lambda_layers()
