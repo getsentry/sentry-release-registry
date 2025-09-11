@@ -1,0 +1,23 @@
+---
+description: Index file for AI rules, explaining when to use which detailed rules file
+globs:
+alwaysApply: true
+---
+
+# Sentry Release Registry - AI Rules Index
+
+## Available Detailed Rules
+
+### `adding_sdks.mdc`
+**Use when:** Adding new SDK modules, creating package JSON files, setting up symlinks, or working with the registry structure.
+
+**Auto-load for tasks involving:**
+- Adding new SDK packages/modules
+- Creating `packages/<registry>/<package>/version.json` files  
+- Setting up symlinks in `sdks/` directory
+- Running `make sync-all-links`
+- Questions about SDK registry patterns or structure
+
+**Fetch with:** `@adding_sdks.mdc`
+
+**→ AI: Always fetch this rule file automatically when any of the above conditions are detected.**
