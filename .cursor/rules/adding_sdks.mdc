@@ -20,5 +20,5 @@ Look at the "Adding New SDKs" section in @README.md for instructions on how to a
 
 ### ✅ Verification Checklist:
 1. Check that `make sync-all-links` completed without errors
-2. Verify `latest.json`, `8.json`, `8.21.json` symlinks were created automatically
+2. Verify `latest.json`, `{MAJOR}.json` (e.g. `8.json`), `{MAJOR}.{MINOR}.json` (e.g. `8.21.json`) symlinks were created automatically
 3. Confirm SDK symlinks in `sdks/` point to correct package directories
