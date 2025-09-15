@@ -1,0 +1,24 @@
+# Adding New SDKs to Sentry Release Registry
+
+Look at the "Adding New SDKs" section in @README.md for instructions on how to add a new SDK / module to this registry.
+
+## Critical Lessons Learned
+
+### ❌ Common Mistakes to Avoid:
+- **Never create `latest.json` files manually** - they must be symlinks created by `make sync-all-links`
+- **Don't forget the `created_at` field** in JSON files (use ISO 8601 format: "2025-09-09T15:24:51.381Z")
+- **Always run `make sync-all-links`** after creating files - this creates version symlinks automatically
+
+### 📝 Maven Java SDK Patterns:
+- Package path: `packages/maven/io.sentry/<module-name>/`
+- SDK symlink: `sentry.java.<module-name>`
+- Package URL: `https://search.maven.org/artifact/io.sentry/<module-name>`
+
+### 🔄 Spring Boot Module Conventions:
+- Main SDK (starter): `sentry.java.spring-boot-X` → `sentry-spring-boot-X-starter`
+- Autoconfigure: `sentry.java.spring-boot-X.autoconfigure` → `sentry-spring-boot-X`
+
+### ✅ Verification Checklist:
+1. Check that `make sync-all-links` completed without errors
+2. Verify `latest.json`, `{MAJOR}.json` (e.g. `8.json`), `{MAJOR}.{MINOR}.json` (e.g. `8.21.json`) symlinks were created automatically
+3. Confirm SDK symlinks in `sdks/` point to correct package directories
