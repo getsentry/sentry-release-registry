@@ -55,18 +55,13 @@ function App() {
     }
   }, [mode, availableRegistries, selectedRegistry]);
 
-  // Clear selected packages when switching mode or registry
+  // Auto-select all packages when switching mode or registry
   useEffect(() => {
-    setSelectedPackages([]);
-  }, [mode, selectedRegistry]);
-
-  // Auto-select all packages if none selected
-  useEffect(() => {
-    if (selectedPackages.length === 0 && Object.keys(currentPackages).length > 0) {
+    if (Object.keys(currentPackages).length > 0) {
       const packageKeys = Object.keys(currentPackages);
       setSelectedPackages(packageKeys);
     }
-  }, [currentPackages, selectedPackages]);
+  }, [currentPackages]);
 
   if (loading) {
     return (
