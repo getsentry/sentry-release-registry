@@ -280,24 +280,32 @@ body {
   overflow-x: auto;
 }
 
+.heatmap-wrapper {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
 .heatmap-labels {
   display: flex;
   flex-direction: column;
   gap: 2px;
   font-size: 0.75rem;
   color: #718096;
-  margin-bottom: 0.5rem;
-  padding-left: 2rem;
+  padding-top: 0;
 }
 
 .heatmap-labels > div {
   height: 12px;
   line-height: 12px;
+  display: flex;
+  align-items: center;
 }
 
 .heatmap-grid {
   display: flex;
   gap: 2px;
+  flex: 1;
 }
 
 .heatmap-week {

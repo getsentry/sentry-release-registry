@@ -60,6 +60,57 @@ function processDirectory(dir, isApp = false) {
       
       const packageName = entry.name;
       const packageDir = path.join(dir, packageName);
+      
+      // Check if this is a namespace directory (e.g., @sentry)
+      const namespaceMarker = path.join(packageDir, '__NAMESPACE__');
+      if (fs.existsSync(namespaceMarker)) {
+        // Process scoped packages within the namespace
+        const scopedEntries = fs.readdirSync(packageDir, { withFileTypes: true });
+        
+        for (const scopedEntry of scopedEntries) {
+          if (!scopedEntry.isDirectory()) continue;
+          
+          const scopedPackageName = `${packageName}/${scopedEntry.name}`;
+          const scopedPackageDir = path.join(packageDir, scopedEntry.name);
+          const versions = [];
+          
+          // Get all JSON files in this scoped package directory
+          const jsonFiles = getAllJsonFiles(scopedPackageDir);
+          
+          for (const jsonFile of jsonFiles) {
+            try {
+              const content = fs.readFileSync(jsonFile, 'utf-8');
+              const data = JSON.parse(content);
+              const version = parseVersion(data, jsonFile);
+              
+              if (version && version.version) {
+                versions.push(version);
+              }
+            } catch (err) {
+              console.warn(`Warning: Could not read ${jsonFile}:`, err.message);
+            }
+          }
+          
+          if (versions.length > 0) {
+            // Sort versions by date
+            versions.sort((a, b) => {
+              if (!a.created_at) return 1;
+              if (!b.created_at) return -1;
+              return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+            });
+            
+            result[scopedPackageName] = {
+              name: versions[0].name,
+              canonical: versions[0].canonical,
+              versions: versions,
+              latestVersion: versions[0],
+            };
+          }
+        }
+        continue; // Skip processing the namespace directory itself
+      }
+      
+      // Regular package (not a namespace)
       const versions = [];
       
       // Get all JSON files in this package directory

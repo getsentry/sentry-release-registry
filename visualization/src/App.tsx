@@ -17,7 +17,7 @@ function App() {
   const [mode, setMode] = useState<'apps' | 'sdks'>('apps');
   const [selectedRegistry, setSelectedRegistry] = useState<string>('npm');
   const [selectedPackages, setSelectedPackages] = useState<string[]>([]);
-  const [selectedYear, setSelectedYear] = useState<number | null>(null);
+  const [selectedYear, setSelectedYear] = useState<number | null>(new Date().getFullYear());
 
   useEffect(() => {
     loadRegistryData()
@@ -55,13 +55,18 @@ function App() {
     }
   }, [mode, availableRegistries, selectedRegistry]);
 
-  // Auto-select first few packages if none selected
+  // Clear selected packages when switching mode or registry
+  useEffect(() => {
+    setSelectedPackages([]);
+  }, [mode, selectedRegistry]);
+
+  // Auto-select all packages if none selected
   useEffect(() => {
     if (selectedPackages.length === 0 && Object.keys(currentPackages).length > 0) {
-      const packageKeys = Object.keys(currentPackages).slice(0, Math.min(5, Object.keys(currentPackages).length));
+      const packageKeys = Object.keys(currentPackages);
       setSelectedPackages(packageKeys);
     }
-  }, [currentPackages]);
+  }, [currentPackages, selectedPackages]);
 
   if (loading) {
     return (

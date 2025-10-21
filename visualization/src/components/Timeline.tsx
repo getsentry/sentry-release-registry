@@ -99,7 +99,7 @@ export const Timeline: React.FC<TimelineProps> = ({
         <LineChart data={timelineData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="month" />
-          <YAxis />
+          <YAxis label={{ value: 'Number of Releases', angle: -90, position: 'insideLeft' }} />
           <Tooltip />
           <Legend />
           {packageKeys.map((key, index) => (

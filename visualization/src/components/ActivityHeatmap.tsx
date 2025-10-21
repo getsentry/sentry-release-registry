@@ -78,35 +78,37 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({
     <div className="activity-heatmap">
       <h2>Release Activity - {year}</h2>
       <div className="heatmap-container">
-        <div className="heatmap-labels">
-          <div>Sun</div>
-          <div>Mon</div>
-          <div>Tue</div>
-          <div>Wed</div>
-          <div>Thu</div>
-          <div>Fri</div>
-          <div>Sat</div>
-        </div>
-        <div className="heatmap-grid">
-          {heatmapData.weeks.map((week, weekIndex) => (
-            <div key={weekIndex} className="heatmap-week">
-              {Array.from({ length: 7 }).map((_, dayIndex) => {
-                const dayData = week.find(d => getDay(d.day) === dayIndex);
-                if (!dayData) {
-                  return <div key={dayIndex} className="heatmap-day empty" />;
-                }
-                
-                return (
-                  <div
-                    key={dayIndex}
-                    className="heatmap-day"
-                    style={{ backgroundColor: getColor(dayData.count) }}
-                    title={`${format(dayData.day, 'MMM d, yyyy')}: ${dayData.count} release${dayData.count !== 1 ? 's' : ''}`}
-                  />
-                );
-              })}
-            </div>
-          ))}
+        <div className="heatmap-wrapper">
+          <div className="heatmap-labels">
+            <div>Sun</div>
+            <div>Mon</div>
+            <div>Tue</div>
+            <div>Wed</div>
+            <div>Thu</div>
+            <div>Fri</div>
+            <div>Sat</div>
+          </div>
+          <div className="heatmap-grid">
+            {heatmapData.weeks.map((week, weekIndex) => (
+              <div key={weekIndex} className="heatmap-week">
+                {Array.from({ length: 7 }).map((_, dayIndex) => {
+                  const dayData = week.find(d => getDay(d.day) === dayIndex);
+                  if (!dayData) {
+                    return <div key={dayIndex} className="heatmap-day empty" />;
+                  }
+                  
+                  return (
+                    <div
+                      key={dayIndex}
+                      className="heatmap-day"
+                      style={{ backgroundColor: getColor(dayData.count) }}
+                      title={`${format(dayData.day, 'MMM d, yyyy')}: ${dayData.count} release${dayData.count !== 1 ? 's' : ''}`}
+                    />
+                  );
+                })}
+              </div>
+            ))}
+          </div>
         </div>
         <div className="heatmap-legend">
           <span>Less</span>
