@@ -61,7 +61,7 @@ The visualization reads release data from JSON files in:
 - `apps/` - Sentry applications (CLI, Relay, Craft, etc.)
 - `packages/` - SDK packages across various registries (npm, pypi, maven, etc.)
 
-The data aggregation script (`../scripts/generate-data.js`) processes all JSON files and generates a consolidated `registry-data.json` file in the `public/` directory.
+The data aggregation script (`scripts/generate-data.js`) processes all JSON files and generates a consolidated `registry-data.json` file in the `public/` directory.
 
 ## Project Structure
 

@@ -5,10 +5,10 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const rootDir = path.join(__dirname, '..');
+const rootDir = path.join(__dirname, '../..');
 const appsDir = path.join(rootDir, 'apps');
 const packagesDir = path.join(rootDir, 'packages');
-const outputFile = path.join(rootDir, 'visualization', 'public', 'registry-data.json');
+const outputFile = path.join(__dirname, '../public', 'registry-data.json');
 
 function getAllJsonFiles(dir, baseDir = dir) {
   const files = [];

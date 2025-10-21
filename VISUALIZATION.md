@@ -207,6 +207,8 @@ visualization/
 │   └── utils/
 │       ├── dataLoader.ts          # Fetch registry data
 │       └── versionAnalysis.ts     # Version parsing & statistics
+├── scripts/
+│   └── generate-data.js           # Aggregates all JSON files
 ├── public/
 │   └── registry-data.json         # Generated aggregate data (6.7 MB)
 ├── dist/                          # Build output (gitignored)
@@ -216,14 +218,11 @@ visualization/
 ├── vite.config.ts
 ├── .gitignore
 └── README.md
-
-scripts/
-└── generate-data.js               # Aggregates all JSON files
 ```
 
 ## Data Processing
 
-The `scripts/generate-data.js` script:
+The `visualization/scripts/generate-data.js` script:
 1. Scans `apps/` and `packages/` directories recursively
 2. Parses all JSON files (except `latest.json`)
 3. Extracts version, release date, and metadata
@@ -281,7 +280,7 @@ Potential improvements:
 ## Files Created
 
 - `/visualization/` - Complete React application
-- `/scripts/generate-data.js` - Data aggregation script
+- `/visualization/scripts/generate-data.js` - Data aggregation script
 - `/VISUALIZATION.md` - This documentation
 
 All source code follows TypeScript best practices with strict mode enabled.
