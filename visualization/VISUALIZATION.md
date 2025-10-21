@@ -154,31 +154,51 @@ cd visualization
 npm run preview
 ```
 
-## Deployment Options
+## Live Deployment
 
-The built static site can be deployed to:
+The visualization is automatically deployed to GitHub Pages:
 
-1. **GitHub Pages**
-   - Push `dist/` folder to `gh-pages` branch
-   - Enable GitHub Pages in repository settings
+🔗 **Live Site**: `https://<username>.github.io/sentry-release-registry/`
 
-2. **Netlify**
+### Automatic Deployment
+
+Every push to the `main` branch that modifies:
+- `visualization/` directory
+- `apps/` or `packages/` directories (data sources)
+- The deployment workflow itself
+
+Will trigger an automatic build and deployment to GitHub Pages.
+
+**View Deployment Status**: Check the "Actions" tab in the repository to see the deployment progress and history.
+
+### Manual Deployment
+
+You can also trigger a deployment manually:
+1. Go to the "Actions" tab in the repository
+2. Select "Deploy Visualization to GitHub Pages"
+3. Click "Run workflow"
+
+## Alternative Deployment Options
+
+The built static site can also be deployed to:
+
+1. **Netlify**
    - Connect repository
    - Build command: `cd visualization && npm run build`
    - Publish directory: `visualization/dist`
 
-3. **Vercel**
+2. **Vercel**
    - Import repository
    - Root directory: `visualization`
    - Build command: `npm run build`
    - Output directory: `dist`
 
-4. **AWS S3 + CloudFront**
+3. **AWS S3 + CloudFront**
    - Upload contents of `dist/` to S3 bucket
    - Configure bucket for static website hosting
    - Optional: Add CloudFront distribution
 
-5. **Any Static Web Server**
+4. **Any Static Web Server**
    - Simply serve the contents of `dist/` directory
    - No server-side processing required
 

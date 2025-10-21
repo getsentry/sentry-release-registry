@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { PackageData } from '../types';
 
 interface LatestVersionsProps {
@@ -8,7 +8,6 @@ interface LatestVersionsProps {
 
 export const LatestVersions: React.FC<LatestVersionsProps> = ({ packages }) => {
   const navigate = useNavigate();
-  const location = useLocation();
   
   // Determine mode and registry from the current context
   // This is a simple approach - in a real app, you might pass these as props
