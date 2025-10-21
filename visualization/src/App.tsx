@@ -38,10 +38,20 @@ function App() {
       });
   }, []);
 
-  // Sync mode with query parameter
+  // Sync URL to mode state when URL changes (e.g., browser back/forward)
   useEffect(() => {
-    setSearchParams({ mode }, { replace: true });
-  }, [mode, setSearchParams]);
+    const modeParam = searchParams.get('mode');
+    const validMode = (modeParam === 'apps' || modeParam === 'sdks') ? modeParam : 'sdks';
+    setMode(validMode);
+  }, [searchParams]);
+
+  // Sync mode state to URL when mode changes (e.g., user toggles mode)
+  useEffect(() => {
+    const currentMode = searchParams.get('mode');
+    if (currentMode !== mode) {
+      setSearchParams({ mode }, { replace: true });
+    }
+  }, [mode]);
 
   // Get available registries
   const availableRegistries = useMemo(() => {
