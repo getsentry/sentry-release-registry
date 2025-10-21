@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { RegistryData, PackageData } from './types';
 import { loadRegistryData } from './utils/dataLoader';
 import { YearSelector } from './components/YearSelector';
@@ -7,6 +8,7 @@ import { StatsOverview } from './components/StatsOverview';
 import { LatestVersions } from './components/LatestVersions';
 import { Timeline } from './components/Timeline';
 import { ActivityHeatmap } from './components/ActivityHeatmap';
+import { PackageDetail } from './pages/PackageDetail';
 import './App.css';
 
 function App() {
@@ -83,8 +85,8 @@ function App() {
     return null;
   }
 
-  return (
-    <div className="app">
+  const Dashboard = () => (
+    <>
       <header className="app-header">
         <div className="header-content">
           <svg className="sentry-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 66">
@@ -141,6 +143,16 @@ function App() {
           />
         </main>
       </div>
+    </>
+  );
+
+  return (
+    <div className="app">
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/package/:mode/:registry/:packageName" element={<PackageDetail data={data} />} />
+        <Route path="/package/:mode/:packageName" element={<PackageDetail data={data} />} />
+      </Routes>
     </div>
   );
 }

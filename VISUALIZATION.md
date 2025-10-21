@@ -32,7 +32,7 @@ A comprehensive interactive dashboard for visualizing release history across all
    - "Select All" / "Deselect All" functionality
    - Auto-selects first 5 packages by default
 
-5. **Visualizations**
+5. **Dashboard Visualizations**
 
    **a) Statistics Overview**
    - Total packages in current view
@@ -56,6 +56,45 @@ A comprehensive interactive dashboard for visualizing release history across all
    - Links to repositories, documentation, and packages
    - Release dates
    - Canonical package identifiers
+   - Clickable cards to view package details
+
+6. **Package Detail Pages** (NEW)
+   
+   Click any package card to view comprehensive release information:
+   
+   **a) Package Header**
+   - Full package name and canonical identifier
+   - Latest version badge with release date
+   - Breadcrumb navigation
+   - Back to dashboard button
+   
+   **b) Release Statistics**
+   - Total number of releases
+   - Average time between releases (in days)
+   - Time since last release (human-readable)
+   - Breaking changes count
+   - Release cadence breakdown (major/minor/patch)
+   
+   **c) Release Velocity Chart**
+   - Line chart showing days between consecutive releases
+   - Identifies trends in release frequency
+   - Interactive tooltips with version details
+   
+   **d) Version Type Distribution**
+   - Pie chart showing major/minor/patch breakdown
+   - Color-coded by version type
+   - Highlights breaking changes count
+   
+   **e) Release Timeline & Activity**
+   - Same timeline and heatmap visualizations
+   - Shows all years (ignores year filter)
+   - Focused on single package
+   
+   **f) Complete Releases Table**
+   - All releases with version, date, and links
+   - Highlights major versions with visual badge
+   - Repository, documentation, and package links
+   - Sortable and scrollable
 
 ## Data Sources
 
@@ -148,7 +187,7 @@ The built static site can be deployed to:
 ```
 visualization/
 ├── src/
-│   ├── App.tsx                    # Main application
+│   ├── App.tsx                    # Main application with routing
 │   ├── main.tsx                   # React entry point
 │   ├── types.ts                   # TypeScript interfaces
 │   ├── App.css                    # Styling
@@ -157,10 +196,17 @@ visualization/
 │   │   ├── PackageSelector.tsx    # App/SDK/Registry selection
 │   │   ├── Timeline.tsx           # Monthly release line chart
 │   │   ├── ActivityHeatmap.tsx    # Calendar heatmap
-│   │   ├── LatestVersions.tsx     # Version cards grid
-│   │   └── StatsOverview.tsx      # High-level metrics
+│   │   ├── LatestVersions.tsx     # Version cards grid (clickable)
+│   │   ├── StatsOverview.tsx      # High-level metrics
+│   │   ├── DetailStats.tsx        # Package statistics (detail page)
+│   │   ├── ReleaseVelocityChart.tsx  # Release frequency chart
+│   │   ├── VersionTypeDistribution.tsx  # Version type pie chart
+│   │   └── ReleasesTable.tsx      # Complete releases table
+│   ├── pages/
+│   │   └── PackageDetail.tsx      # Package detail page
 │   └── utils/
-│       └── dataLoader.ts          # Fetch registry data
+│       ├── dataLoader.ts          # Fetch registry data
+│       └── versionAnalysis.ts     # Version parsing & statistics
 ├── public/
 │   └── registry-data.json         # Generated aggregate data (6.7 MB)
 ├── dist/                          # Build output (gitignored)
@@ -228,6 +274,7 @@ Potential improvements:
 - React 18
 - TypeScript 5
 - Vite 5
+- React Router 6
 - Recharts 2
 - date-fns 3
 
