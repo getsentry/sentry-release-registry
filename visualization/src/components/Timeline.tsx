@@ -14,6 +14,32 @@ const COLORS = [
   '#d084d0', '#ffb347', '#a4de6c', '#d0ed57', '#ffa07a'
 ];
 
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (!active || !payload) return null;
+
+  // Filter out entries with zero releases
+  const nonZeroPayload = payload.filter((entry: any) => entry.value > 0);
+
+  if (nonZeroPayload.length === 0) return null;
+
+  return (
+    <div style={{
+      backgroundColor: 'white',
+      border: '1px solid #ccc',
+      borderRadius: '4px',
+      padding: '10px',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+    }}>
+      <p style={{ margin: '0 0 8px 0', fontWeight: 'bold' }}>{label}</p>
+      {nonZeroPayload.map((entry: any, index: number) => (
+        <p key={index} style={{ margin: '4px 0', color: entry.color, fontSize: '14px' }}>
+          {entry.name}: {entry.value}
+        </p>
+      ))}
+    </div>
+  );
+};
+
 export const Timeline: React.FC<TimelineProps> = ({
   packages,
   selectedPackages,
@@ -100,7 +126,7 @@ export const Timeline: React.FC<TimelineProps> = ({
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="month" />
           <YAxis label={{ value: 'Number of Releases', angle: -90, position: 'insideLeft' }} />
-          <Tooltip />
+          <Tooltip content={<CustomTooltip />} />
           <Legend />
           {packageKeys.map((key, index) => (
             <Line
