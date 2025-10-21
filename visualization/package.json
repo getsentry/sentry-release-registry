@@ -1,0 +1,25 @@
+{
+  "name": "sentry-release-registry-visualization",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "generate-data": "node scripts/generate-data.js",
+    "dev": "npm run generate-data && vite",
+    "build": "npm run generate-data && tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "date-fns": "^4.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.9.4",
+    "recharts": "^2.15.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.0"
+  }
+}
