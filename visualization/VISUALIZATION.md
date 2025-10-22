@@ -32,6 +32,21 @@ A comprehensive interactive dashboard for visualizing release history across all
    - "Select All" / "Deselect All" functionality
    - Auto-selects first 5 packages by default
 
+### URL Query Parameters
+
+The dashboard supports URL query parameters for deep linking and sharing specific views:
+
+**Mode Parameter**
+- `?mode=sdks` - Shows SDK packages (default)
+- `?mode=apps` - Shows Sentry applications
+
+Examples:
+- `https://example.com/` - Loads with SDKs (default)
+- `https://example.com/?mode=apps` - Loads with Apps mode
+- `https://example.com/?mode=sdks` - Loads with SDKs mode
+
+The URL automatically updates when you switch between Apps and SDKs using the mode toggle, making it easy to share specific views with your team.
+
 5. **Dashboard Visualizations**
 
    **a) Statistics Overview**

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useSearchParams } from 'react-router-dom';
 import { RegistryData, PackageData } from './types';
 import { loadRegistryData } from './utils/dataLoader';
 import { YearSelector } from './components/YearSelector';
@@ -15,8 +15,13 @@ function App() {
   const [data, setData] = useState<RegistryData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
   
-  const [mode, setMode] = useState<'apps' | 'sdks'>('apps');
+  // Initialize mode from query param, default to 'sdks'
+  const [mode, setMode] = useState<'apps' | 'sdks'>(() => {
+    const modeParam = searchParams.get('mode');
+    return (modeParam === 'apps' || modeParam === 'sdks') ? modeParam : 'sdks';
+  });
   const [selectedRegistry, setSelectedRegistry] = useState<string>('npm');
   const [selectedPackages, setSelectedPackages] = useState<string[]>([]);
   const [selectedYear, setSelectedYear] = useState<number | null>(new Date().getFullYear());
@@ -32,6 +37,25 @@ function App() {
         setLoading(false);
       });
   }, []);
+
+  // Sync URL to mode state when URL changes (e.g., browser back/forward)
+  useEffect(() => {
+    const modeParam = searchParams.get('mode');
+    const validMode = (modeParam === 'apps' || modeParam === 'sdks') ? modeParam : 'sdks';
+    setMode(validMode);
+  }, [searchParams]);
+
+  // Sync mode state to URL when mode changes (e.g., user toggles mode)
+  useEffect(() => {
+    const currentMode = searchParams.get('mode');
+    if (currentMode !== mode) {
+      setSearchParams((prev) => {
+        const newParams = new URLSearchParams(prev);
+        newParams.set('mode', mode);
+        return newParams;
+      }, { replace: true });
+    }
+  }, [mode, searchParams, setSearchParams]);
 
   // Get available registries
   const availableRegistries = useMemo(() => {
