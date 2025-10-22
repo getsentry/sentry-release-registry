@@ -24,10 +24,27 @@ export const StatsOverview: React.FC<StatsOverviewProps> = ({
   const totalPackages = Object.keys(packages).length;
   const totalReleases = allVersions.length;
   
-  // Calculate average releases per package
-  const avgReleasesPerPackage = totalPackages > 0 
-    ? (totalReleases / totalPackages).toFixed(1) 
-    : '0';
+  // Calculate average releases per week
+  const calculateAvgReleasesPerWeek = () => {
+    if (allVersions.length === 0) return '0';
+    
+    const dates = allVersions
+      .map(v => v.created_at)
+      .filter((date): date is string => date !== undefined)
+      .map(date => new Date(date).getTime())
+      .filter(time => !isNaN(time));
+    
+    if (dates.length === 0) return '0';
+    
+    const minDate = Math.min(...dates);
+    const maxDate = Math.max(...dates);
+    const daysDifference = (maxDate - minDate) / (1000 * 60 * 60 * 24);
+    const weeks = Math.max(1, daysDifference / 7);
+    
+    return (totalReleases / weeks).toFixed(1);
+  };
+  
+  const avgReleasesPerWeek = calculateAvgReleasesPerWeek();
 
   return (
     <div className="stats-overview">
@@ -40,8 +57,8 @@ export const StatsOverview: React.FC<StatsOverviewProps> = ({
         <div className="stat-label">Total Releases</div>
       </div>
       <div className="stat-card">
-        <div className="stat-value">{avgReleasesPerPackage}</div>
-        <div className="stat-label">Avg Releases/Package</div>
+        <div className="stat-value">{avgReleasesPerWeek}</div>
+        <div className="stat-label">Avg Releases/Week</div>
       </div>
     </div>
   );
