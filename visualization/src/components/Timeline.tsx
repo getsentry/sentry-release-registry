@@ -127,7 +127,6 @@ export const Timeline: React.FC<TimelineProps> = ({
           <XAxis dataKey="month" />
           <YAxis label={{ value: 'Number of Releases', angle: -90, position: 'insideLeft' }} />
           <Tooltip content={<CustomTooltip />} />
-          <Legend />
           {packageKeys.map((key, index) => (
             <Line
               key={key}
