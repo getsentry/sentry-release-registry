@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { format, startOfMonth, eachMonthOfInterval } from 'date-fns';
 import { PackageData } from '../types';
 import { getDisplayName } from '../utils/packageUtils';
