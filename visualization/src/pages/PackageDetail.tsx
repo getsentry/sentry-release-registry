@@ -7,6 +7,7 @@ import { VersionTypeDistribution } from '../components/VersionTypeDistribution';
 import { ReleasesTable } from '../components/ReleasesTable';
 import { Timeline } from '../components/Timeline';
 import { ActivityHeatmap } from '../components/ActivityHeatmap';
+import { getDisplayName } from '../utils/packageUtils';
 
 interface PackageDetailProps {
   data: RegistryData;
@@ -72,13 +73,13 @@ export const PackageDetail: React.FC<PackageDetailProps> = ({ data }) => {
             </>
           )}
           <span className="separator">/</span>
-          <span className="current">{packageData.name}</span>
+          <span className="current">{getDisplayName(packageData.canonical)}</span>
         </div>
       </div>
 
       <div className="detail-content">
         <div className="detail-title">
-          <h1>{packageData.name}</h1>
+          <h1>{getDisplayName(packageData.canonical)}</h1>
           <p className="package-canonical">{packageData.canonical}</p>
           {packageData.latestVersion && (
             <div className="latest-version-info">

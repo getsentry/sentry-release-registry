@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PackageData } from '../types';
+import { getDisplayName } from '../utils/packageUtils';
 
 interface LatestVersionsProps {
   packages: { [key: string]: PackageData };
@@ -59,7 +60,7 @@ export const LatestVersions: React.FC<LatestVersionsProps> = ({ packages }) => {
             onClick={() => handleCardClick(pkg)}
           >
             <div className="version-card-header">
-              <h3>{pkg.name}</h3>
+              <h3>{getDisplayName(pkg.canonical)}</h3>
               <span className="version-badge">{pkg.latestVersion?.version}</span>
             </div>
             <div className="version-card-body">

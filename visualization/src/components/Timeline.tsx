@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { format, startOfMonth, eachMonthOfInterval } from 'date-fns';
 import { PackageData } from '../types';
+import { getDisplayName } from '../utils/packageUtils';
 
 interface TimelineProps {
   packages: { [key: string]: PackageData };
@@ -134,7 +135,7 @@ export const Timeline: React.FC<TimelineProps> = ({
               type="monotone"
               dataKey={key}
               stroke={COLORS[index % COLORS.length]}
-              name={packages[key]?.name || key}
+              name={getDisplayName(packages[key]?.canonical || key)}
               strokeWidth={2}
             />
           ))}

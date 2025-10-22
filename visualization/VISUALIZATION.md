@@ -68,6 +68,7 @@ The URL automatically updates when you switch between Apps and SDKs using the mo
 
    **d) Latest Versions Dashboard**
    - Grid of cards showing current versions
+   - Package names extracted from canonical identifiers (e.g., "@sentry/react", "sentry-sdk")
    - Links to repositories, documentation, and packages
    - Release dates
    - Canonical package identifiers
@@ -78,7 +79,8 @@ The URL automatically updates when you switch between Apps and SDKs using the mo
    Click any package card to view comprehensive release information:
    
    **a) Package Header**
-   - Full package name and canonical identifier
+   - Package name extracted from canonical identifier (e.g., "@sentry/react")
+   - Full canonical identifier (e.g., "npm:@sentry/react")
    - Latest version badge with release date
    - Breadcrumb navigation
    - Back to dashboard button
@@ -125,8 +127,8 @@ The visualization processes JSON files from:
 ### Packages (54 total across 13 registries)
 - **npm**: 32 packages (@sentry/react, @sentry/node, etc.)
 - **pypi**: 1 package (sentry-sdk)
-- **maven**: 1 package (io.sentry)
-- **cocoapods**: 1 package (sentry-cocoa)
+- **maven**: 1 package (io.sentry:sentry)
+- **cocoapods**: 1 package (Sentry)
 - **cargo**: 2 packages (sentry, sentry-actix)
 - **gem**: 8 packages (sentry-ruby, sentry-rails, etc.)
 - **composer**: 1 package (sentry/sentry)
@@ -136,6 +138,8 @@ The visualization processes JSON files from:
 - **github**: getsentry releases
 - **hex**: Elixir packages
 - **psgallery**: PowerShell modules
+
+**Note:** Package names displayed throughout the visualization are extracted from the canonical identifiers by removing the registry prefix. For example, `npm:@sentry/react` is displayed as `@sentry/react`.
 
 ### Historical Coverage
 - **Years**: 2018-2025 (8 years of data)
@@ -241,7 +245,8 @@ visualization/
 │   │   └── PackageDetail.tsx      # Package detail page
 │   └── utils/
 │       ├── dataLoader.ts          # Fetch registry data
-│       └── versionAnalysis.ts     # Version parsing & statistics
+│       ├── versionAnalysis.ts     # Version parsing & statistics
+│       └── packageUtils.ts        # Package name display utilities
 ├── scripts/
 │   └── generate-data.js           # Aggregates all JSON files
 ├── public/

@@ -1,5 +1,6 @@
 import React from 'react';
 import { PackageData } from '../types';
+import { getDisplayName } from '../utils/packageUtils';
 
 interface PackageSelectorProps {
   mode: 'apps' | 'sdks';
@@ -89,7 +90,7 @@ export const PackageSelector: React.FC<PackageSelectorProps> = ({
                 checked={selectedPackages.includes(packageName)}
                 onChange={() => handlePackageToggle(packageName)}
               />
-              <span>{availablePackages[packageName].name}</span>
+              <span>{getDisplayName(availablePackages[packageName].canonical)}</span>
             </label>
           ))}
         </div>
