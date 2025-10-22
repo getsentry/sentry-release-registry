@@ -49,9 +49,13 @@ function App() {
   useEffect(() => {
     const currentMode = searchParams.get('mode');
     if (currentMode !== mode) {
-      setSearchParams({ mode }, { replace: true });
+      setSearchParams((prev) => {
+        const newParams = new URLSearchParams(prev);
+        newParams.set('mode', mode);
+        return newParams;
+      }, { replace: true });
     }
-  }, [mode]);
+  }, [mode, searchParams, setSearchParams]);
 
   // Get available registries
   const availableRegistries = useMemo(() => {
