@@ -88,6 +88,7 @@ class RegistryFlask(Flask):
             response = Flask.make_response(self, result)
 
         response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "sentry-trace, baggage"
         return response
 
 
@@ -228,8 +229,12 @@ class Registry(object):
         rv = {}
         for link in os.listdir(self._path("aws-lambda-layers")):
             try:
-                with sentry_sdk.start_span(op="open_json", description=f"aws-lambda-layers/{link}/latest.json"):
-                    with open(self._path("aws-lambda-layers", link, "latest.json")) as f:
+                with sentry_sdk.start_span(
+                    op="open_json", description=f"aws-lambda-layers/{link}/latest.json"
+                ):
+                    with open(
+                        self._path("aws-lambda-layers", link, "latest.json")
+                    ) as f:
                         data = json.load(f)
                         rv[data["canonical"]] = data
             except (IOError, OSError):
@@ -484,6 +489,16 @@ def get_app_version(app_id, version):
 @app.route("/healthz")
 def healthcheck():
     return "ok\n", 200
+
+
+@app.before_request
+def handle_preflight():
+    if request.method == "OPTIONS":
+        response = app.make_response("")
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response.headers["Access-Control-Allow-Headers"] = "sentry-trace, baggage"
+        return response
 
 
 @app.route("/aws-lambda-layers")
