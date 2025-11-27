@@ -306,7 +306,7 @@ def is_caching_enabled():
 def return_cached():
     # Excluding AWS Lambda layer route from caching because it
     # produced race conditions and returned emtpy responses
-    if request.path == "/aws-lambda-layers":
+    if request.path == "/aws-lambda-layers" or request.method == "OPTIONS":
         return None
     if not request.values:
         response = cache.get(request.path)
