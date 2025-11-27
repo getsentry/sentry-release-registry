@@ -393,6 +393,16 @@ app.enable_cache = partial(set_cache_enabled, app)
 app.enable_cache(is_caching_enabled())
 
 
+@app.before_request
+def handle_preflight():
+    if request.method == "OPTIONS":
+        response = app.make_response("")
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response.headers["Access-Control-Allow-Headers"] = "sentry-trace, baggage"
+        return response
+
+
 @app.route("/packages/<path:package>/<version>")
 def get_package_version(package, version):
     pkg_info = registry.get_package(package, version)
@@ -489,16 +499,6 @@ def get_app_version(app_id, version):
 @app.route("/healthz")
 def healthcheck():
     return "ok\n", 200
-
-
-@app.before_request
-def handle_preflight():
-    if request.method == "OPTIONS":
-        response = app.make_response("")
-        response.headers["Access-Control-Allow-Origin"] = "*"
-        response.headers["Access-Control-Allow-Methods"] = "GET, OPTIONS"
-        response.headers["Access-Control-Allow-Headers"] = "sentry-trace, baggage"
-        return response
 
 
 @app.route("/aws-lambda-layers")
