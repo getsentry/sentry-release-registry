@@ -25,7 +25,7 @@ WORKDIR /work
 # Copy and install the server first
 COPY api-server/requirements*.txt api-server/setup.py api-server/
 
-RUN cd api-server && pip install -e .
+RUN cd api-server && pip install -i https://pypi.devinfra.sentry.io/simple -e .
 
 COPY . .
 
