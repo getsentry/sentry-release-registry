@@ -28,6 +28,20 @@ on unix platforms.
 
 ## Adding New SDKs
 
+### Order of actions
+
+1. update `.craft.yml` config to publish new package to your registry and GH
+2. cut the release
+3. update craft config to publish to release registry
+4. PR to this repository to manually add published new package. See steps below.
+
+### Pre-releases
+
+If you plan to perform a pre-release (e.g. `alpha`, `beta`, `rc` or similar)
+you do not need to add it to this repository.
+
+### Steps
+
 1. Create `packages/<registry>/<package_name>/<exact_version>.json` for each
    version you want to register.
 
