@@ -1,0 +1,89 @@
+# Fix GitHub Security reports
+
+## Findings
+
+Ran the three relevant GitHub security APIs against `getsentry/sentry-release-registry`:
+
+| Source | Open count |
+| --- | --- |
+| `/security-advisories` | **0** |
+| `/dependabot/alerts` | **0** (Dependabot security updates are enabled, no open alerts) |
+| `/code-scanning/alerts` | **2 open** (both CodeQL `actions/missing-workflow-permissions`, severity `warning` / security severity `medium`) |
+
+There is nothing to do for security advisories or Dependabot. The actionable items are the two open CodeQL alerts:
+
+| # | File | Job | Issue |
+| --- | --- | --- | --- |
+| 7 | `.github/workflows/lint.yml` | `main` (lines 7-32) | Workflow has no `permissions:` block — `GITHUB_TOKEN` falls back to repo/org defaults. |
+| 2 | `.github/workflows/validate-pipelines.yml` | `files-changed` (lines 13-27) | Job has no `permissions:` block. (The `validate` job in the same file already declares its own permissions and is not flagged.) |
+
+CodeQL's recommendation is to add an explicit least-privilege `permissions:` block so the principle of least privilege is documented and survives org-default changes / copies to other repos.
+
+The third workflow, `.github/workflows/deploy-visualization.yml`, already declares workflow-level `permissions:` and is not flagged.
+
+## Required changes
+
+### 1. `.github/workflows/lint.yml`
+
+Add a workflow-level `permissions:` block. The job only checks out code, runs Python tests, and verifies symlinks — `contents: read` is sufficient.
+
+```yaml
+name: lint then test
+on:
+  push:
+    branches: [master, test-me-*]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    ...
+```
+
+### 2. `.github/workflows/validate-pipelines.yml`
+
+Add a workflow-level default `permissions:` block scoped to `contents: read`. The `validate` job's existing `permissions:` block (`contents: read`, `id-token: write`) overrides it for that job and stays as-is. The `files-changed` job (which only does `actions/checkout` + `paths-filter`) inherits the workflow-level default.
+
+```yaml
+name: Validate Deployment Pipelines
+
+on:
+    pull_request:
+    push:
+        branches: [master, test-me-*]
+
+permissions:
+    contents: read
+
+concurrency:
+    ...
+```
+
+Per-job `permissions:` blocks override the workflow default, so the existing `validate` job permissions remain unchanged.
+
+## Files to modify
+
+- `.github/workflows/lint.yml` — add top-level `permissions: { contents: read }`.
+- `.github/workflows/validate-pipelines.yml` — add top-level `permissions: { contents: read }`.
+
+No other files (`deploy-visualization.yml` is already compliant; no source code changes needed).
+
+## Verification
+
+1. **Local sanity check** — `git diff` shows only the two `permissions:` insertions; no logic changes.
+2. **CI runs green** — push branch and confirm both `lint then test` and `Validate Deployment Pipelines` workflows still pass. The `lint` job needs no token writes; the `validate` job retains its own block (which grants `id-token: write` for Google OIDC auth).
+3. **CodeQL re-scan** — after merging to `master`, the `Actions` CodeQL analysis re-runs and the two open alerts (#2 and #7) should auto-transition to `fixed`. Verify via:
+   ```shell
+   gh api "/repos/getsentry/sentry-release-registry/code-scanning/alerts?per_page=100&state=open" \
+     --jq '[.[] | {number, rule_id: .rule.id, path: .most_recent_instance.location.path}]'
+   ```
+   Expected: `[]`.
+
+## Out of scope
+
+- No dependency upgrades needed (no Dependabot alerts).
+- No application-code changes needed.
+- Not touching `deploy-visualization.yml` (already compliant).
