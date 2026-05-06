@@ -1,3 +1,4 @@
+import json
 import os
 import binascii
 from functools import partial
@@ -6,7 +7,8 @@ from datadog import initialize as datadog_initialize, statsd
 
 import sentry_sdk
 from cachelib import SimpleCache
-from flask import Flask, json, abort, jsonify, request, redirect
+from flask import Flask, abort, jsonify, request, redirect
+from flask.json.provider import DefaultJSONProvider
 from semver import VersionInfo
 
 TRUTHY_VALUES = {"1", "true", "yes"}
@@ -71,15 +73,16 @@ class InvalidPathComponent(ValueError):
     pass
 
 
-class RegistryJsonEncoder(json.JSONEncoder):
-    def default(self, o):
+class RegistryJSONProvider(DefaultJSONProvider):
+    @staticmethod
+    def default(o):
         if hasattr(o, "to_json"):
             return o.to_json()
-        return json.JSONEncoder.default(self, o)
+        return DefaultJSONProvider.default(o)
 
 
 class RegistryFlask(Flask):
-    json_encoder = RegistryJsonEncoder
+    json_provider_class = RegistryJSONProvider
 
     def make_response(self, result):
         if isinstance(result, ApiResponse):
@@ -304,8 +307,10 @@ def is_caching_enabled():
 
 
 def return_cached():
+    if not app.config.get("CACHE_ENABLED"):
+        return None
     # Excluding AWS Lambda layer route from caching because it
-    # produced race conditions and returned emtpy responses
+    # produced race conditions and returned empty responses
     if request.path == "/aws-lambda-layers" or request.method == "OPTIONS":
         return None
     if not request.values:
@@ -318,15 +323,16 @@ def return_cached():
 
 
 def cache_response(response):
+    if not app.config.get("CACHE_ENABLED"):
+        return response
     # Excluding AWS Lambda layer route from caching because it
-    # produced race conditions and returned emtpy responses
+    # produced race conditions and returned empty responses.
+    # Instead, we "simulate" a cache hit (see get_aws_lambda_layers())
     if request.path == "/aws-lambda-layers":
-        # Instead, we "simulate" a cache hit (see get_aws_lambda_layers())
         metrics.increment("cache_hit")
         response.headers["X-From-Cache"] = "1"
         return response
     if not request.values:
-        # Make the response picklable
         response.freeze()
         metrics.increment("cache_set")
         cache.set(request.path, response)
@@ -334,12 +340,8 @@ def cache_response(response):
 
 
 def set_cache_enabled(app, enable: bool):
-    app.config["CACHE_ENABLED"] = enable
-
     assert type(enable) is bool
-    if enable:
-        app.before_request(return_cached)
-        app.after_request(cache_response)
+    app.config["CACHE_ENABLED"] = enable
 
 
 def find_download_url(app_info, package, arch, platform):
@@ -385,9 +387,9 @@ def get_url_checksums(app_info, url):
 app = RegistryFlask(__name__)
 app.config.from_envvar("APISERVER_CONFIG", silent=True)
 
-# Must come before the caching callbacks otherwise it will never be called for
-# request served by the caching callback.
 app.before_request(partial(metrics.increment, "request"))
+app.before_request(return_cached)
+app.after_request(cache_response)
 
 app.enable_cache = partial(set_cache_enabled, app)
 app.enable_cache(is_caching_enabled())
