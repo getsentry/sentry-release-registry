@@ -387,6 +387,8 @@ def get_url_checksums(app_info, url):
 app = RegistryFlask(__name__)
 app.config.from_envvar("APISERVER_CONFIG", silent=True)
 
+# Must come before the caching callbacks otherwise it will never be called for
+# requests served by the caching callback.
 app.before_request(partial(metrics.increment, "request"))
 app.before_request(return_cached)
 app.after_request(cache_response)
