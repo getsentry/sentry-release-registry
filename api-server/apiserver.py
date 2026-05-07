@@ -9,7 +9,7 @@ import sentry_sdk
 from cachelib import SimpleCache
 from flask import Flask, abort, jsonify, request, redirect
 from flask.json.provider import DefaultJSONProvider
-from semver import VersionInfo
+from semver import Version
 
 TRUTHY_VALUES = {"1", "true", "yes"}
 
@@ -163,7 +163,7 @@ class Registry(object):
             if filename.endswith(".json"):
                 with open(self._path("packages", registry, package, filename)) as f:
                     rv.add(json.load(f)["version"])
-        return sorted(rv, key=VersionInfo.parse)
+        return sorted(rv, key=Version.parse)
 
     def iter_packages(self):
         for package_registry in os.listdir(self._path("packages")):
@@ -331,6 +331,8 @@ def cache_response(response):
     if request.path == "/aws-lambda-layers":
         metrics.increment("cache_hit")
         response.headers["X-From-Cache"] = "1"
+        return response
+    if request.method == "OPTIONS":
         return response
     if not request.values:
         response.freeze()
