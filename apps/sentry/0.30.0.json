@@ -1,0 +1,174 @@
+{
+  "canonical": "app:sentry",
+  "repo_url": "https://github.com/getsentry/cli",
+  "name": "Sentry CLI",
+  "package_url": "https://www.npmjs.com/package/sentry",
+  "main_docs_url": "https://cli.sentry.dev",
+  "version": "0.30.0",
+  "created_at": "2026-04-29T15:33:56.771Z",
+  "file_urls": {
+    "sentry-darwin-arm64.patch": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-darwin-arm64.patch",
+    "sentry-darwin-x64.patch": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-darwin-x64.patch",
+    "sentry-linux-arm64-musl.patch": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-linux-arm64-musl.patch",
+    "sentry-linux-arm64.patch": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-linux-arm64.patch",
+    "sentry-linux-x64-musl.patch": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-linux-x64-musl.patch",
+    "sentry-linux-x64.patch": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-linux-x64.patch",
+    "sentry-windows-x64.exe.patch": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-windows-x64.exe.patch",
+    "gh-pages.zip": "https://github.com/getsentry/cli/releases/download/0.30.0/gh-pages.zip",
+    "sentry-windows-x64.exe.gz": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-windows-x64.exe.gz",
+    "sentry-windows-x64.exe": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-windows-x64.exe",
+    "sentry-linux-x64-musl.gz": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-linux-x64-musl.gz",
+    "sentry-linux-arm64-musl.gz": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-linux-arm64-musl.gz",
+    "sentry-linux-x64.gz": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-linux-x64.gz",
+    "sentry-0.30.0.tgz": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-0.30.0.tgz",
+    "sentry-linux-x64-musl": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-linux-x64-musl",
+    "sentry-darwin-x64.gz": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-darwin-x64.gz",
+    "sentry-linux-x64": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-linux-x64",
+    "sentry-darwin-x64": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-darwin-x64",
+    "sentry-linux-arm64-musl": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-linux-arm64-musl",
+    "sentry-darwin-arm64.gz": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-darwin-arm64.gz",
+    "sentry-darwin-arm64": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-darwin-arm64",
+    "sentry-linux-arm64.gz": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-linux-arm64.gz",
+    "sentry-linux-arm64": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-linux-arm64"
+  },
+  "files": {
+    "sentry-darwin-x64.patch": {
+      "url": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-darwin-x64.patch",
+      "checksums": {
+        "sha256-hex": "eb0d5f6028fdcf18cb7f4c9a52a9fd71f9d52d67cb3b6076dda145ba40c54c18"
+      }
+    },
+    "sentry-darwin-arm64.patch": {
+      "url": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-darwin-arm64.patch",
+      "checksums": {
+        "sha256-hex": "df4553da0ad7823cb541d6185238dbdae9583159c0416289d00a913afb3f658e"
+      }
+    },
+    "sentry-linux-arm64-musl.patch": {
+      "url": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-linux-arm64-musl.patch",
+      "checksums": {
+        "sha256-hex": "929109a2492bac532bfc42b56154d0be1d52b1dcd76fc071fba717532db7478e"
+      }
+    },
+    "sentry-linux-x64-musl.patch": {
+      "url": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-linux-x64-musl.patch",
+      "checksums": {
+        "sha256-hex": "00b95ab800270af026c7ed42a4680522009f1a9887d2e79033a7c1495a82bc75"
+      }
+    },
+    "sentry-linux-arm64.patch": {
+      "url": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-linux-arm64.patch",
+      "checksums": {
+        "sha256-hex": "6401e2ea818651c3be80ca14ae152ec8bc8c1d075c5b1bf5462e51e9b1932f47"
+      }
+    },
+    "sentry-linux-x64.patch": {
+      "url": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-linux-x64.patch",
+      "checksums": {
+        "sha256-hex": "077312f31e597da82c4fec78fe51215877ceff77e0180b1d8f5eb232cb316656"
+      }
+    },
+    "sentry-windows-x64.exe.patch": {
+      "url": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-windows-x64.exe.patch",
+      "checksums": {
+        "sha256-hex": "684b95f9adc0bb95cc04ddfff16d8f109ae2ee9b4ec3d980512c4634605d9dc7"
+      }
+    },
+    "gh-pages.zip": {
+      "url": "https://github.com/getsentry/cli/releases/download/0.30.0/gh-pages.zip",
+      "checksums": {
+        "sha256-hex": "08d200531dfd6df0563a571659c6b38f0d7e8c938cfcd4e2d9b8a3f15c9868f3"
+      }
+    },
+    "sentry-linux-x64-musl.gz": {
+      "url": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-linux-x64-musl.gz",
+      "checksums": {
+        "sha256-hex": "b803919d605705033d3f7f6d493c421de904f7aee12035e7602ccadb54b1b623"
+      }
+    },
+    "sentry-linux-arm64-musl.gz": {
+      "url": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-linux-arm64-musl.gz",
+      "checksums": {
+        "sha256-hex": "d6ebb7ef70c8b86409cb9a8c51ecfa24c3c53dc8b37ea20e953cc96958939bce"
+      }
+    },
+    "sentry-0.30.0.tgz": {
+      "url": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-0.30.0.tgz",
+      "checksums": {
+        "sha256-hex": "7d35f90595f49cfd182ee448a4ec4ec48d85bc17714fb5d8bd10011dea2a07ff"
+      }
+    },
+    "sentry-linux-x64.gz": {
+      "url": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-linux-x64.gz",
+      "checksums": {
+        "sha256-hex": "435a500e885b63b129ccc34b32a2c996f4530ad98f14c65c173bdeab6be380fb"
+      }
+    },
+    "sentry-windows-x64.exe.gz": {
+      "url": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-windows-x64.exe.gz",
+      "checksums": {
+        "sha256-hex": "4a578ee39b1637582d597424720437ff9e00555e3fcf6f6f4084dcc9f8dfb147"
+      }
+    },
+    "sentry-darwin-x64.gz": {
+      "url": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-darwin-x64.gz",
+      "checksums": {
+        "sha256-hex": "ecc046f2555d7465906282b758f2a8b9c5aaa20dcd082d2c45781fbf43e7b152"
+      }
+    },
+    "sentry-darwin-x64": {
+      "url": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-darwin-x64",
+      "checksums": {
+        "sha256-hex": "6a7a78905de6997f2579f7e8b9544b3ec3458527a7be252c421f715a039c37b7"
+      }
+    },
+    "sentry-windows-x64.exe": {
+      "url": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-windows-x64.exe",
+      "checksums": {
+        "sha256-hex": "218e42412640955c98b52b6c804b9311f08f147b1c8442e9da6ca22ccd905e43"
+      }
+    },
+    "sentry-linux-x64-musl": {
+      "url": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-linux-x64-musl",
+      "checksums": {
+        "sha256-hex": "c01106cd23d68c1a5040e0317c520e3ba5d99ff0396496e5d9d3791ac503bba9"
+      }
+    },
+    "sentry-darwin-arm64.gz": {
+      "url": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-darwin-arm64.gz",
+      "checksums": {
+        "sha256-hex": "a586391f916467d9022996db8c610b2aa34cc63eee58f5fd6ec472b5b3f260e7"
+      }
+    },
+    "sentry-linux-x64": {
+      "url": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-linux-x64",
+      "checksums": {
+        "sha256-hex": "9e130c385e0354bbe74f9dda82a9472da625ba3c2b49bb69e38211bc6f35806d"
+      }
+    },
+    "sentry-linux-arm64-musl": {
+      "url": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-linux-arm64-musl",
+      "checksums": {
+        "sha256-hex": "aabed6df3d06c717741b1a96f6f4e7ee6edaa16badf0899d45d92e72bd68b596"
+      }
+    },
+    "sentry-linux-arm64.gz": {
+      "url": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-linux-arm64.gz",
+      "checksums": {
+        "sha256-hex": "496f6e50fa8f79dab783a22e2cfc71cf75f1bc6eaf4a7154972df03cb6ebf3d0"
+      }
+    },
+    "sentry-darwin-arm64": {
+      "url": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-darwin-arm64",
+      "checksums": {
+        "sha256-hex": "651be825cf939ee868241eccff12b67ac2724b984824353121b4fde0dd685145"
+      }
+    },
+    "sentry-linux-arm64": {
+      "url": "https://github.com/getsentry/cli/releases/download/0.30.0/sentry-linux-arm64",
+      "checksums": {
+        "sha256-hex": "249753141a523943d769ce3c904284a162aa91ae72d4d38fd1aa8c3aa4eecb3d"
+      }
+    }
+  }
+}
