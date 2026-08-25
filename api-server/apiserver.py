@@ -278,6 +278,7 @@ class Registry(object):
         for runtime in os.listdir(self._path("aws-lambda-layers")):
             runtime_path = self._path("aws-lambda-layers", runtime)
             versions = []
+            version_metadata = {}
             latest = None
             major_layers = []
 
@@ -296,6 +297,14 @@ class Registry(object):
                     major_layers.append(layer)
                 elif Version.is_valid(version):
                     versions.append(version)
+                    metadata = {"sdk_version": layer["sdk_version"]}
+                    for field in (
+                        "compatible_runtimes",
+                        "compatible_architectures",
+                    ):
+                        if layer.get(field):
+                            metadata[field] = layer[field]
+                    version_metadata[version] = metadata
 
             if latest is None:
                 continue
@@ -307,6 +316,7 @@ class Registry(object):
                 "runtime": runtime,
                 "latest": latest["sdk_version"],
                 "versions": versions,
+                "version_metadata": version_metadata,
             }
 
         return summaries, version_indexes, layers
