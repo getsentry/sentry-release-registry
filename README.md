@@ -26,6 +26,18 @@ to be used by at least:
 Some of the information here is maintained as symlinks, so this repo only works
 on unix platforms.
 
+## AWS Lambda Layer API
+
+Lambda layers are exposed at `/aws-lambda-layers`; this includes the latest layer
+for each runtime (node, python) as well as one entry for each major version (e.g., 
+`aws-layer:python` and `aws-layer:python:v2`). All responses are precomputed on start-up
+since release-registry is re-deployed every day or so.
+
+SDK versions that publish a lambda layer are available at `/aws-lambda-layers/<runtime>/versions`.
+Full data for a specific version is available from `/aws-lambda-layers/<runtime>/<version>`, for
+example `/aws-lambda-layers/python/2.67.0` or `/aws-lambda-layers/python/latest`. Each layer includes 
+the SDK version, SDK major, runtime, layer name, compatible lambda runtimes, and region-specific layer versions.
+
 ## Adding New SDKs
 
 1. Create `packages/<registry>/<package_name>/<exact_version>.json` for each
