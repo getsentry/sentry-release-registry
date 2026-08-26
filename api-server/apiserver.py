@@ -225,18 +225,21 @@ class Registry(object):
         rv = {}
         for link in os.listdir(self._path("sdks")):
             try:
-                with open(self._path("sdks", link, "latest.json")) as f:
-                    canonical = json.load(f)["canonical"]
-                    pkg = self.get_package(canonical)
-                    if pkg is None:
-                        if strict:
-                            raise ValueError(
-                                "Package {}, canonical cannot be resolved: {}".format(
-                                    link, canonical
+                with sentry_sdk.start_span(
+                    op="open_json", description=f"sdks/{link}/latest.json"
+                ):
+                    with open(self._path("sdks", link, "latest.json")) as f:
+                        canonical = json.load(f)["canonical"]
+                        pkg = self.get_package(canonical)
+                        if pkg is None:
+                            if strict:
+                                raise ValueError(
+                                    "Package {}, canonical cannot be resolved: {}".format(
+                                        link, canonical
+                                    )
                                 )
-                            )
-                    else:
-                        rv[link] = pkg
+                        else:
+                            rv[link] = pkg
             except (IOError, OSError):
                 sentry_sdk.capture_exception()
                 continue
@@ -272,6 +275,7 @@ class Registry(object):
         return _normalize_aws_lambda_layer(data, runtime, canonical=canonical)
 
     def build_aws_lambda_layer_cache(self):
+        latest_layers = {}
         summaries = {}
         version_indexes = {}
         layers = {}
@@ -293,6 +297,14 @@ class Registry(object):
                 layers[(runtime, version)] = layer
                 if version == "latest":
                     latest = layer
+                    latest_layer = layer.copy()
+                    latest_layer.pop("runtime")
+                    latest_layer.pop("sdk_major")
+                    latest_layer["regions"] = [
+                        {"region": region["region"], "version": region["version"]}
+                        for region in layer["regions"]
+                    ]
+                    latest_layers[layer["canonical"]] = latest_layer
                 elif re.fullmatch(r"\d+", version):
                     major_layers.append(layer)
                 elif Version.is_valid(version):
@@ -319,7 +331,7 @@ class Registry(object):
                 "version_metadata": version_metadata,
             }
 
-        return summaries, version_indexes, layers
+        return latest_layers, summaries, version_indexes, layers
 
     def get_apps(self):
         rv = {}
@@ -588,6 +600,11 @@ def aws_layers() -> ApiResponse:
     return ApiResponse(_aws_lambda_layers)
 
 
+@app.route("/aws-lambda-layers/index")
+def aws_layers_index() -> ApiResponse:
+    return ApiResponse(_aws_lambda_layer_index)
+
+
 @app.route("/aws-lambda-layers/<runtime>/versions")
 def aws_layer_versions(runtime: str) -> ApiResponse:
     versions = _aws_lambda_layer_version_indexes.get(runtime)
@@ -610,6 +627,7 @@ registry = Registry()
 # empty responses caused by cache race conditions
 (
     _aws_lambda_layers,
+    _aws_lambda_layer_index,
     _aws_lambda_layer_version_indexes,
     _aws_lambda_layers_by_version,
 ) = registry.build_aws_lambda_layer_cache()
