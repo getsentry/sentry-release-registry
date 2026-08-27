@@ -31,7 +31,7 @@ pipelines:
                           elastic_profile_id: sentry-release-registry
                           tasks:
                               - script: |
-                                    checks-githubactions-checkruns \
+                                    checks-githubactions-checkruns2 \
                                     getsentry/sentry-release-registry \
                                     ${GO_REVISION_RELEASE_REGISTRY_REPO} \
                                     "main"
