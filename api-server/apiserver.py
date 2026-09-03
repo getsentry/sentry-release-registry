@@ -1,7 +1,9 @@
+import binascii
 import json
 import os
-import binascii
+import re
 from functools import partial
+from typing import Any, Optional
 
 from datadog import initialize as datadog_initialize, statsd
 
@@ -11,6 +13,7 @@ from flask import Flask, abort, jsonify, request, redirect
 from flask.json.provider import DefaultJSONProvider
 from semver import Version
 
+
 TRUTHY_VALUES = {"1", "true", "yes"}
 
 # If this file is present in a subfolder in "packages", that subfolder is a namespace.
@@ -18,7 +21,6 @@ NAMESPACE_FILE_MARKER = "__NAMESPACE__"
 
 
 class Metrics:
-
     PREFIX = os.getenv("METRICS_PREFIX", "release_registry")
 
     def initialize(self, **kwargs):
@@ -129,6 +131,27 @@ class PackageInfo(object):
         return self._data
 
 
+def _normalize_aws_lambda_layer(
+    data: dict[str, Any],
+    runtime: str,
+    canonical: Optional[str] = None,
+) -> dict[str, Any]:
+    normalized = {
+        **data,
+        "canonical": canonical or data["canonical"],
+        "runtime": runtime,
+        "regions": [
+            {
+                **region,
+                "layer_version": region["version"],
+            }
+            for region in data["regions"]
+        ],
+    }
+    normalized["sdk_major"] = str(Version.parse(data["sdk_version"]).major)
+    return normalized
+
+
 class Registry(object):
     def __init__(self):
         self.path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -202,18 +225,21 @@ class Registry(object):
         rv = {}
         for link in os.listdir(self._path("sdks")):
             try:
-                with open(self._path("sdks", link, "latest.json")) as f:
-                    canonical = json.load(f)["canonical"]
-                    pkg = self.get_package(canonical)
-                    if pkg is None:
-                        if strict:
-                            raise ValueError(
-                                "Package {}, canonical cannot be resolved: {}".format(
-                                    link, canonical
+                with sentry_sdk.start_span(
+                    op="open_json", description=f"sdks/{link}/latest.json"
+                ):
+                    with open(self._path("sdks", link, "latest.json")) as f:
+                        canonical = json.load(f)["canonical"]
+                        pkg = self.get_package(canonical)
+                        if pkg is None:
+                            if strict:
+                                raise ValueError(
+                                    "Package {}, canonical cannot be resolved: {}".format(
+                                        link, canonical
+                                    )
                                 )
-                            )
-                    else:
-                        rv[link] = pkg
+                        else:
+                            rv[link] = pkg
             except (IOError, OSError):
                 sentry_sdk.capture_exception()
                 continue
@@ -228,22 +254,84 @@ class Registry(object):
             sentry_sdk.capture_exception()
             pass
 
-    def get_aws_lambda_layers(self):
-        rv = {}
-        for link in os.listdir(self._path("aws-lambda-layers")):
-            try:
-                with sentry_sdk.start_span(
-                    op="open_json", description=f"aws-lambda-layers/{link}/latest.json"
-                ):
-                    with open(
-                        self._path("aws-lambda-layers", link, "latest.json")
-                    ) as f:
-                        data = json.load(f)
-                        rv[data["canonical"]] = data
-            except (IOError, OSError):
-                sentry_sdk.capture_exception()
+    def _read_aws_lambda_layer(self, runtime: str, filename: str):
+        with open(self._path("aws-lambda-layers", runtime, filename)) as f:
+            return json.load(f)
+
+    def get_aws_lambda_layer(self, runtime: str, version: str):
+        try:
+            data = self._read_aws_lambda_layer(runtime, f"{version}.json")
+        except OSError:
+            sentry_sdk.capture_exception()
+            return
+
+        canonical = data["canonical"]
+        if version != "latest":
+            canonical_version = (
+                version if re.fullmatch(r"\d+", version) else data["sdk_version"]
+            )
+            canonical = f"{canonical}:v{canonical_version}"
+
+        return _normalize_aws_lambda_layer(data, runtime, canonical=canonical)
+
+    def build_aws_lambda_layer_cache(self):
+        latest_layers = {}
+        summaries = {}
+        version_indexes = {}
+        layers = {}
+        for runtime in os.listdir(self._path("aws-lambda-layers")):
+            runtime_path = self._path("aws-lambda-layers", runtime)
+            versions = []
+            version_metadata = {}
+            latest = None
+            major_layers = []
+
+            for name in os.listdir(runtime_path):
+                if name == "base.json" or not name.endswith(".json"):
+                    continue
+                version = name.removesuffix(".json")
+                layer = self.get_aws_lambda_layer(runtime, version)
+                if layer is None:
+                    continue
+
+                layers[(runtime, version)] = layer
+                if version == "latest":
+                    latest = layer
+                    latest_layer = layer.copy()
+                    latest_layer.pop("runtime")
+                    latest_layer.pop("sdk_major")
+                    latest_layer["regions"] = [
+                        {"region": region["region"], "version": region["version"]}
+                        for region in layer["regions"]
+                    ]
+                    latest_layers[layer["canonical"]] = latest_layer
+                elif re.fullmatch(r"\d+", version):
+                    major_layers.append(layer)
+                elif Version.is_valid(version):
+                    versions.append(version)
+                    metadata = {"sdk_version": layer["sdk_version"]}
+                    for field in (
+                        "compatible_runtimes",
+                        "compatible_architectures",
+                    ):
+                        if layer.get(field):
+                            metadata[field] = layer[field]
+                    version_metadata[version] = metadata
+
+            if latest is None:
                 continue
-        return rv
+
+            summaries[latest["canonical"]] = latest
+            summaries.update((layer["canonical"], layer) for layer in major_layers)
+            versions.sort(key=Version.parse, reverse=True)
+            version_indexes[runtime] = {
+                "runtime": runtime,
+                "latest": latest["sdk_version"],
+                "versions": versions,
+                "version_metadata": version_metadata,
+            }
+
+        return latest_layers, summaries, version_indexes, layers
 
     def get_apps(self):
         rv = {}
@@ -508,12 +596,38 @@ def healthcheck():
 
 
 @app.route("/aws-lambda-layers")
-def aws_layers():
+def aws_layers() -> ApiResponse:
     return ApiResponse(_aws_lambda_layers)
+
+
+@app.route("/aws-lambda-layers/index")
+def aws_layers_index() -> ApiResponse:
+    return ApiResponse(_aws_lambda_layer_index)
+
+
+@app.route("/aws-lambda-layers/<runtime>/versions")
+def aws_layer_versions(runtime: str) -> ApiResponse:
+    versions = _aws_lambda_layer_version_indexes.get(runtime)
+    if versions is None:
+        abort(404)
+    return ApiResponse(versions)
+
+
+@app.route("/aws-lambda-layers/<runtime>/<version>")
+def aws_layer_version(runtime: str, version: str) -> ApiResponse:
+    layer = _aws_lambda_layers_by_version.get((runtime, version))
+    if layer is None:
+        abort(404)
+    return ApiResponse(layer)
 
 
 registry = Registry()
 
 # "manually" caching AWS response upfront to avoid
 # empty responses caused by cache race conditions
-_aws_lambda_layers = registry.get_aws_lambda_layers()
+(
+    _aws_lambda_layers,
+    _aws_lambda_layer_index,
+    _aws_lambda_layer_version_indexes,
+    _aws_lambda_layers_by_version,
+) = registry.build_aws_lambda_layer_cache()
