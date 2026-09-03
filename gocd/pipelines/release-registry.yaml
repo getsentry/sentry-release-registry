@@ -24,13 +24,14 @@ pipelines:
                   jobs:
                       checks:
                           environment_variables:
-                              # Required for checkruns.
-                              GITHUB_TOKEN: "{{SECRET:[devinfra-github][token]}}"
+                              # Required for checkruns2.
+                              GITHUB_APP_ID: "{{SECRET:[devinfra-github][app_id]}}"
+                              GITHUB_APP_PRIVATE_KEY: "{{SECRET:[devinfra-github][private_key]}}"
                           timeout: 1200
                           elastic_profile_id: sentry-release-registry
                           tasks:
                               - script: |
-                                    checks-githubactions-checkruns \
+                                    checks-githubactions-checkruns2 \
                                     getsentry/sentry-release-registry \
                                     ${GO_REVISION_RELEASE_REGISTRY_REPO} \
                                     "main"
