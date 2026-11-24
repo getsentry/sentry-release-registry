@@ -1,5 +1,6 @@
 import binascii
 import json
+import logging
 import os
 import re
 from functools import partial
@@ -12,6 +13,7 @@ from cachelib import SimpleCache
 from flask import Flask, abort, jsonify, request, redirect
 from flask.json.provider import DefaultJSONProvider
 from semver import Version
+from sentry_sdk.integrations.logging import LoggingIntegration
 
 
 TRUTHY_VALUES = {"1", "true", "yes"}
@@ -64,7 +66,34 @@ def traces_sampler(sampling_context):
 # SENTRY_DSN will be taken from env
 sentry_sdk.init(
     traces_sampler=traces_sampler,
-    profiles_sample_rate=1.0,
+    profile_session_sample_rate=1.0,
+    profile_lifecycle="trace",
+    data_collection={
+        "user_info": False,
+        "http_bodies": ["incoming_request"],
+        "graphql": {"document": False, "variables": False},
+        "gen_ai": {"inputs": False, "outputs": False},
+        "mcp": {"inputs": False, "outputs": False},
+        "database_query_data": False,
+        "queues": False,
+        "http_headers": {
+            "request": {
+                "mode": "denylist",
+                "terms": ["forwarded", "-ip", "remote-", "via", "-user"],
+            },
+        },
+        "cookies": {
+            "mode": "denylist",
+            "terms": ["forwarded", "-ip", "remote-", "via", "-user"],
+        },
+        "url_query_params": {
+            "mode": "denylist",
+            "terms": ["forwarded", "-ip", "remote-", "via", "-user"],
+        },
+        "stack_frame_variables": {"mode": "denylist"},
+    },
+    attach_stacktrace=False,
+    integrations=[LoggingIntegration(level=None, event_level=logging.ERROR)],
 )
 
 CACHE_TIMEOUT = 3600
@@ -226,7 +255,8 @@ class Registry(object):
         for link in os.listdir(self._path("sdks")):
             try:
                 with sentry_sdk.start_span(
-                    op="open_json", description=f"sdks/{link}/latest.json"
+                    name=f"sdks/{link}/latest.json",
+                    attributes={"sentry.op": "open_json"},
                 ):
                     with open(self._path("sdks", link, "latest.json")) as f:
                         canonical = json.load(f)["canonical"]
